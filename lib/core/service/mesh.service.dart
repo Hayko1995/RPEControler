@@ -125,6 +125,17 @@ Future<String> getData() async {
   return Future.value("");
 }
 
+Future<String> initMesh() async {
+  final MeshAPI _mashAPI = MeshAPI();
+  _mashAPI.meshInit();
+  // if (products != Null) {
+  //   var data = MeshModel.fromJson(jsonDecode(products)).data;
+  //   String jsonUser = jsonEncode(data);
+  //   return Future.value(jsonUser);
+  // }
+  return Future.value("");
+}
+
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   // Only available for flutter 3.0.0 and later
@@ -184,15 +195,17 @@ void onStart(ServiceInstance service) async {
     }
 
     // test using external plugin
-    Future<String> data = getData();
-    String response = await data;
-    if (response != "") {
-      service.invoke(
-        'update',
-        {
-          "data": response,
-        },
-      );
-    }
+
+    Future<String> data1 = initMesh();
+    // Future<String> data = getData();
+    // String response = await data;
+    // if (response != "") {
+    //   service.invoke(
+    //     'update',
+    //     {
+    //       "data": response,
+    //     },
+    //   );
+    // }
   });
 }

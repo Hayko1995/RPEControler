@@ -19,7 +19,6 @@ class DatabaseService {
 
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
-
     // Set the path to the database. Note: Using the `join` function from the
     // `path` package is best practice to ensure the path is correctly
     // constructed for each platform.
@@ -40,7 +39,7 @@ class DatabaseService {
   Future<void> _onCreate(Database db, int version) async {
     // Run the CREATE {lightSensors} TABLE statement on the database.
     await db.execute(
-      'CREATE TABLE $AppConstants.light (id INTEGER PRIMARY KEY, mac STRING, name TEXT, groups INTEGER, description TEXT, positionX DOUBLE, positionY DOUBLE )',
+      'CREATE TABLE lightSensors (id INTEGER PRIMARY KEY, mac STRING, name TEXT, groups INTEGER, description TEXT, positionX DOUBLE, positionY DOUBLE )',
     );
   }
 
