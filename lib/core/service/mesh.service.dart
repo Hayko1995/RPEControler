@@ -127,7 +127,7 @@ Future<String> getData() async {
 
 Future<String> initMesh() async {
   final MeshAPI _mashAPI = MeshAPI();
-  _mashAPI.meshInit();
+  // _mashAPI.meshInit();
   // if (products != Null) {
   //   var data = MeshModel.fromJson(jsonDecode(products)).data;
   //   String jsonUser = jsonEncode(data);

@@ -55,4 +55,21 @@ class ProductAPI {
     final body = response.body;
     return body;
   }
+
+  Future updateData() async {
+    //todo add problem response failure situation
+    const subUrl = '/getData';
+    final Uri uri = Uri.parse(ApiRoutes.esp32Url + subUrl);
+    try {
+      final http.Response response = await client.post(
+        uri,
+        headers: headers,
+      );
+      final body = response.body;
+      return body;
+    } catch (e) {
+      print("service = internet problem");
+      return Null;
+    }
+  }
 }

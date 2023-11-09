@@ -36,7 +36,7 @@ class MeshAPI {
       result.add(int.parse(pktHdr.substring(i, i + 2), radix: 16));
     }
     //todo add problem response failure situation
-    final Uri uri = Uri.parse("http://192.168.8.1:80");
+    final Uri uri = Uri.parse("http://192.168.0.12:80/");
 
     try {
       final http.Response response =

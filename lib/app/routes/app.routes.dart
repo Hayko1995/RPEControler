@@ -3,6 +3,7 @@
 import 'package:concentric_transition/concentric_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:lan_scanner/lan_scanner.dart';
+import 'package:rpe_c/presentation/screens/esp32/esp32.view.dart';
 import 'package:rpe_c/presentation/screens/mesh/meshStatus.screen.dart';
 import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
@@ -46,6 +47,7 @@ class AppRouter {
   static const String dashboardRoute = "/dashboard";
   static const String meshStatusRoute = "/meshStatus";
   static const String settingsRoute = "/settings";
+  static const String esp32Route = "/esp32";
 
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -59,6 +61,12 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => const SettingsScreen(),
+          );
+        }
+      case esp32Route:
+        {
+          return MaterialPageRoute(
+            builder: (_) => ESP32Screen(),
           );
         }
       case ipScanRoute:
