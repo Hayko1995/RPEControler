@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/api/product.api.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
@@ -45,21 +46,23 @@ class _ESP32ScreenState extends State<ESP32Screen> {
   }
 
   void _updateTables() async {
-    final _data = await _esp32.updateData();
-    try {
-      data = _data;
-    } catch (e) {
-      data = "";
-    }
+    // final MeshAPI _mashAPI = MeshAPI();
+    // _mashAPI.sendToMesh("E1FF060001FA");
+    // final _data = await _esp32.updateData();
+    // try {
+    //   data = _data;
+    // } catch (e) {
+    //   data = "error";
+    // }
 
-    DateTime dateToday = new DateTime.now();
-    String time = dateToday.toString().substring(0, 10);
-    DateTime now = DateTime.now();
-    String _time = DateFormat.Hms().format(now);
-    setState(() {
-      rpe32Data = data;
-      rpe32time = _time;
-    });
+    // DateTime dateToday = new DateTime.now();
+    // String time = dateToday.toString().substring(0, 10);
+    // DateTime now = DateTime.now();
+    // String _time = DateFormat.Hms().format(now);
+    // setState(() {
+    //   rpe32Data = data + " ^C";
+    //   rpe32time = _time;
+    // });
   }
 
   @override

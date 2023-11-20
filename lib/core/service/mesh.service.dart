@@ -127,7 +127,15 @@ Future<String> getData() async {
 
 Future<String> initMesh() async {
   final MeshAPI _mashAPI = MeshAPI();
-  // _mashAPI.meshInit();
+  // _mashAPI.sendToMesh("E3FF060001FA");
+  // _mashAPI.meshE1();
+  _mashAPI.meshTime();
+
+  // _mashAPI.sendToMesh("E2E2E2E2");
+  // _mashAPI.sendToMesh("38001000FF552ce6e811030000ca51");
+
+  // _mashAPI.sendToMesh("38,00,10,00,FF,55, 10");
+  // _mashAPI.sendToMesh("E1FF060001FA");
   // if (products != Null) {
   //   var data = MeshModel.fromJson(jsonDecode(products)).data;
   //   String jsonUser = jsonEncode(data);
@@ -167,7 +175,7 @@ void onStart(ServiceInstance service) async {
   });
 
   // bring to foreground
-  Timer.periodic(const Duration(seconds: 5), (timer) async {
+  Timer.periodic(const Duration(seconds: 10), (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification

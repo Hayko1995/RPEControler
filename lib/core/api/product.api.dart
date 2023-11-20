@@ -1,5 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:rpe_c/app/routes/api.routes.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:convert';
 
 class ProductAPI {
   final client = http.Client();
@@ -58,7 +60,8 @@ class ProductAPI {
 
   Future updateData() async {
     //todo add problem response failure situation
-    const subUrl = '/getData';
+    const subUrl = '/';
+    List<String> lint = [];
     final Uri uri = Uri.parse(ApiRoutes.esp32Url + subUrl);
     try {
       final http.Response response = await client.post(
@@ -66,6 +69,17 @@ class ProductAPI {
         headers: headers,
       );
       final body = response.body;
+      // print(body);
+
+      var stringList = body.split(' ');
+      print(stringList);
+      stringList.removeLast();
+
+      for (int i = 0; i < stringList.length; i++) {
+        int _integerData = int.parse(stringList[i]);
+        lint.add(_integerData.toRadixString(16));
+      }
+      print(lint);
       return body;
     } catch (e) {
       print("service = internet problem");
