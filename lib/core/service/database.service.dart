@@ -29,9 +29,11 @@ class DatabaseService {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    // Run the CREATE {lightSensors} TABLE statement on the database.
     await db.execute(
-      'CREATE TABLE crTable (id INTEGER PRIMARY KEY, nodeNumber INTEGER, nodeType INTEGER, nodeSubType INTEGER, Location TEXT, stackType INTEGER, numChild INTEGER, status INTEGER, parentNodeNum INTEGER, macAddress TEXT )',
+      'CREATE TABLE variables (id INTEGER PRIMARY KEY, key TEXT, val INTEGER)',
+    );
+    await db.execute(
+      'CREATE TABLE crTable (id INTEGER PRIMARY KEY, nodeNumber INTEGER, nodeType INTEGER, nodeSubType INTEGER, Location INTEGER, stackType INTEGER, numChild INTEGER, status INTEGER, parentNodeNum INTEGER, macAddress TEXT )',
     );
   }
 
@@ -62,7 +64,7 @@ class DatabaseService {
     final db = await _databaseService.database;
 
     await db.update(
-      AppConstants.light,
+      AppConstants.crTable,
       breed.toMap(),
       where: 'id = ?',
       whereArgs: [breed.id],
@@ -72,7 +74,7 @@ class DatabaseService {
   Future<void> deleteCR(int id) async {
     final db = await _databaseService.database;
     await db.delete(
-      AppConstants.light,
+      AppConstants.crTable,
       where: 'id = ?',
       whereArgs: [id],
     );

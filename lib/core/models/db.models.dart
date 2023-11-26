@@ -5,7 +5,7 @@ class CR {
   final int nodeNumber;
   final int nodeType;
   final int nodeSubType;
-  final String location;
+  final int location;
   final int stackType;
   final int numChild;
   final int status;
@@ -48,7 +48,7 @@ class CR {
       nodeNumber: map['nodeNumber'] ?? 0,
       nodeType: map['nodeType'] ?? 0,
       nodeSubType: map['nodeSubType'] ?? 0,
-      location: map['location'] ?? "",
+      location: map['location'] ?? 0,
       stackType: map['stackType'] ?? 0,
       numChild: map['numChild'] ?? 0,
       status: map['status'] ?? 0,
