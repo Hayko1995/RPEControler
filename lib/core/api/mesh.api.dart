@@ -1,12 +1,10 @@
-import 'dart:convert';
-import 'dart:ffi';
-import 'dart:typed_data';
-import 'package:intl/intl.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:rpe_c/app/routes/api.routes.dart';
-import "package:hex/hex.dart";
-import 'package:convert/convert.dart';
+import 'package:logger/logger.dart';
+
+var logger = Logger(
+  printer: PrettyPrinter(),
+);
 
 class MeshAPI {
   final client = http.Client();
@@ -22,16 +20,14 @@ class MeshAPI {
         headers: headers,
       );
       final body = response.body;
-      print(body);
+      ;
       return body;
     } catch (e) {
-      print("service = internet problem");
       return Null;
     }
   }
 
   Future sendToMesh(pktHdr) async {
-    var result = [];
     List<String> lint = [];
     // List<String> aa = [];
 
@@ -42,19 +38,18 @@ class MeshAPI {
     // for (int i = 0; i < result.length; i++) {
     //   aa.add(result[i].toRadixString(16));
     // }
-    // var command = aa.join("");
+    // var command = aa.join(" " );
     //todo add problem response failure situation
-    final Uri uri = Uri.parse("http://192.168.0.15/");
+    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
 
-    print("Send111");
     try {
       final http.Response response =
           await client.post(uri, headers: headers, body: pktHdr);
       final body = response.body;
-      print("Send");
+
       var stringList = body.split(' ');
       stringList.removeLast();
-      print("Send");
+
       for (int i = 0; i < stringList.length; i++) {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
@@ -62,14 +57,13 @@ class MeshAPI {
       print(lint);
       return body;
     } catch (e) {
-      print("service = internet problem");
+      print(" service = internet problem");
       return Null;
     }
   }
 
   Future meshE1() async {
-    String pktHdr = "E1FF060001FA";
-    var result = [];
+    String command = "E1FF060001FA";
     List<String> lint = [];
     // List<String> aa = [];
 
@@ -80,52 +74,48 @@ class MeshAPI {
     // for (int i = 0; i < result.length; i++) {
     //   aa.add(result[i].toRadixString(16));
     // }
-    // var command = aa.join("");
-    print("result         aaaaaaaa");
+    // var command = aa.join(" " );
     //todo add problem response failure situation
-    final Uri uri = Uri.parse("http://192.168.0.15/");
+    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
+    String mac = "";
 
     try {
       final http.Response response =
-          await client.post(uri, headers: headers, body: pktHdr);
+          await client.post(uri, headers: headers, body: command);
       final body = response.body;
+      logger.d(body);
       var stringList = body.split(' ');
       stringList.removeLast();
+      print(stringList);
       for (int i = 0; i < stringList.length; i++) {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-
-      print(lint);
-      print("Heder //////////////////");
-      print(lint[0] + "command type E1");
-      print(lint[1] + " " + lint[2] + "data Langht");
-      print(lint[2] + "number of nodes ");
-      print(lint[3] + lint[4] + lint[5] + lint[6] + "rpe id ");
-      print(lint[7] + "domain type ");
-      print(lint[8] + "preset packege ");
-      print(lint[9] + "network number ");
-      print(lint[10] + lint[11] + lint[12] + lint[13] + "CR reported time");
-      print(lint[14] + "reserved ");
-
-      print("Body  //////////////////");
-      // chage to for
-      print(lint[14] + "node num");
-      print(lint[15] + "node type");
-      print(lint[16] + "node subtype");
-      print(lint[17] + "node location");
-      print(lint[18] + "stuck location");
-      print(lint[19] + "stuck type");
-      print(lint[20] + "number or child");
-      print(lint[21] + "status");
-      print(lint[22] + "parent node number");
-      for (int i = 23; i < 23 + 9; i++) {
-        print(lint[i] + "mac address");
+      for (int i = 0; i < 15; i++) {
+        print(lint[i] + " command type E1");
+        print(lint[1] + "  " + lint[2] + " data Langht");
+        print(lint[3] + " number of nodes ");
+        print(lint[4] + lint[5] + lint[6] + lint[7] + " rpe id ");
+        print(lint[8] + " domain type ");
+        print(lint[9] + " preset packege ");
+        print(lint[10] + " network number ");
+        print(lint[11] + lint[12] + lint[13] + lint[14] + " CR reported time");
+        print(lint[15] + " reserved ");
+        break;
       }
+
+      print(" Body   CR //////////////////");
+      // chage to for
+      String CR = "";
+      print(int.parse(lint[3]));
+      for (int i = 16; i < 16 + int.parse(lint[3]) * 16; i++) {
+        CR += lint[i];
+      }
+      print(CR);
 
       return body;
     } catch (e) {
-      print("service = internet problem");
+      print(" service = internet problem");
       return Null;
     }
   }
@@ -166,11 +156,9 @@ class MeshAPI {
   }
 
   Future meshTime() async {
-    String pktHdr = "E1FF060001FA";
-    var result = [];
     List<String> lint = [];
 
-    var cmd = '38'; // new Broadcast time code = 0x38 instead of 8C
+    var cmd = '38';
     var cmdSub = '00';
     var msgLen = '10';
     var msgNode = '00';
@@ -180,37 +168,12 @@ class MeshAPI {
     var daySecCount = '00000000';
 
     DateTime d1 = new DateTime.now();
-    print(d1.microsecondsSinceEpoch);
 
-    // var d1 = new Date();
-    // //hb            console.log('T1: ' + d1);
     double d1t0 = d1.microsecondsSinceEpoch / 1000;
     int d1t2 = (d1t0 / 1000).toInt();
     int d1t3 = d1t2 - 946713600; //946684800 + 8hrs (28800);
 
-    // var msg = 'Testing various methods:' +
-    //     '1) Date.getTime()/1000   = ' +
-    //     d1t0.toString() +
-    //     '\n' +
-    //     '2) (Date.getTime()-Date.getMilliseconds())/1000 = ' +
-    //     d1t1.toString() +
-    //     '\n' +
-    //     '3) parseInt(Date.getTime()/1000)  = ' +
-    //     d1t2.toString() +
-    //     '\n' +
-    //     '4) Seconds since 2000 = ' +
-    //     d1t3.toString();
-
-    // print(msg);
-
-    // //hb            console.log(msg)
-    // //console.log('prev time: ' + prev_d1t3);
-    // //var pollRate = setInterval(pollCoord, 7000);
-    // //          if ((d1t3 - prev_d1t3) > 43200) {  // 12 hrs different, re-send time synch.
-    // //issue a time synch message to the coord
-
     String sd1t3 = d1t3.toRadixString(16);
-    print(sd1t3);
 
     weekday = '0' + (d1.day).toRadixString(16);
     int daySecCount1 = (d1.hour * 3600) + (d1.minute * 60) + d1.second;
@@ -218,9 +181,6 @@ class MeshAPI {
     daySecCount = daySecCount1.toRadixString(16);
     daySecCount = hexPadding(daySecCount1);
 
-    // daySecCount = _daySecCount.toRadixString(16);
-    print(daySecCount);
-    // console.log('time in sec = ' + d1t3 + ' weekday' + weekday + '  Time of day = ' + daySecCount1);  // 0= sunday 1=monday
     String timePkt = cmd +
         cmdSub +
         msgLen +
@@ -231,7 +191,7 @@ class MeshAPI {
         weekday +
         daySecCount;
     //todo add problem response failure situation
-    final Uri uri = Uri.parse("http://192.168.0.15/");
+    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
 
     try {
       final http.Response response =
@@ -246,7 +206,127 @@ class MeshAPI {
 
       return body;
     } catch (e) {
-      print("service = internet problem");
+      print(" service = internet problem");
+      return Null;
+    }
+  }
+
+  Future sendDomainNum(pktHdr) async {
+    //SendDomainNum
+    int domainNum = 0x11;
+    String sDomainNum;
+    if (domainNum < 16) {
+      sDomainNum = '0' + domainNum.toRadixString(16);
+    } else {
+      sDomainNum = domainNum.toRadixString(16);
+    }
+    String comand = '30' + sDomainNum + '06' + '00' + 'FF' + '07';
+    List<String> lint = [];
+
+    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
+    try {
+      final http.Response response =
+          await client.post(uri, headers: headers, body: comand);
+      final body = response.body;
+      var stringList = body.split(' ');
+      stringList.removeLast();
+      for (int i = 0; i < stringList.length; i++) {
+        int _integerData = int.parse(stringList[i]);
+        lint.add(_integerData.toRadixString(16));
+      }
+      print(lint);
+      return body;
+    } catch (e) {
+      print(" service = internet problem");
+      return Null;
+    }
+  }
+
+  Future sendPreDefineNum(pktHdr) async {
+    //sendPreDefineNum
+    int domainNum = 0x11;
+    String sDomainNum;
+    if (domainNum < 16) {
+      sDomainNum = '0' + domainNum.toRadixString(16);
+    } else {
+      sDomainNum = domainNum.toRadixString(16);
+    }
+    String comand = '31' + sDomainNum + '06' + '00' + 'FF' + '09';
+    List<String> lint = [];
+
+    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
+    try {
+      final http.Response response =
+          await client.post(uri, headers: headers, body: comand);
+      final body = response.body;
+      var stringList = body.split(' ');
+      stringList.removeLast();
+      for (int i = 0; i < stringList.length; i++) {
+        int _integerData = int.parse(stringList[i]);
+        lint.add(_integerData.toRadixString(16));
+      }
+      print(lint);
+      return body;
+    } catch (e) {
+      print(" service = internet problem");
+      return Null;
+    }
+  }
+
+  Future sendSetNetId(pktHdr) async {
+    // SendSetNetId
+    String netID = "  ";
+    String sNetId = hexPadding(int.parse(netID));
+    String sDomainNum;
+
+    List<String> lint = [];
+    String command = '33' + '00' + '0A' + '00' + 'FF' + '88' + sNetId;
+    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
+    try {
+      final http.Response response =
+          await client.post(uri, headers: headers, body: command);
+      final body = response.body;
+      var stringList = body.split(' ');
+      stringList.removeLast();
+      for (int i = 0; i < stringList.length; i++) {
+        int _integerData = int.parse(stringList[i]);
+        lint.add(_integerData.toRadixString(16));
+      }
+      print(lint);
+      return body;
+    } catch (e) {
+      print(" service = internet problem");
+      return Null;
+    }
+  }
+
+  Future sendSetNetNum(pktHdr) async {
+    // SendSetNetId
+    List<String> lint = [];
+    String netNum = "  ";
+
+    int sNetNum = int.parse(netNum);
+    if (sNetNum < 16) {
+      netNum = '0' + sNetNum.toRadixString(16);
+    } else {
+      netNum = sNetNum.toRadixString(16);
+    }
+    String command = '34' + netNum + '06' + '00' + 'FF' + '88';
+    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
+    try {
+      final http.Response response =
+          await client.post(uri, headers: headers, body: command);
+      final body = response.body;
+      var stringList = body.split(' ');
+      stringList.removeLast();
+      for (int i = 0; i < stringList.length; i++) {
+        int _integerData = int.parse(stringList[i]);
+        lint.add(_integerData.toRadixString(16));
+      }
+      print(lint);
+      return body;
+    } catch (e) {
+      print(" service = internet problem");
       return Null;
     }
   }

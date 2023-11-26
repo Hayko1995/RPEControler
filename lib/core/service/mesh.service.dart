@@ -12,35 +12,42 @@ import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/models/mesh.model.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:logger/logger.dart';
+
+var logger = Logger(
+  printer: PrettyPrinter(),
+);
 
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
   final DatabaseService _databaseService = DatabaseService();
 
-  await _databaseService.insertLightSensors(LightSensors(
-      name: "name",
-      mac: "0.0.0.0",
-      groups: 1,
-      description: "description",
-      positionX: 0.0,
-      positionY: 0.0));
-  print("write done ");
-  await _databaseService.insertLightSensors(LightSensors(
-      name: "name",
-      groups: 1,
-      mac: "0.0.0.0",
-      description: "description",
-      positionX: 0.0,
-      positionY: 0.0));
-  await _databaseService.insertLightSensors(LightSensors(
-      name: "name",
-      mac: "0.0.0.0",
-      groups: 1,
-      description: "description",
-      positionX: 0.0,
-      positionY: 0.0));
+  await _databaseService.insertCR(CR(
+      id: 0,
+      nodeNumber: 1,
+      nodeType: 1,
+      nodeSubType: 1,
+      location: "kitchen",
+      stackType: 1,
+      numChild: 1,
+      status: 1,
+      parentNodeNum: 1,
+      macAddress: "macAddress"));
+  await _databaseService.insertCR(CR(
+      id: 0,
+      nodeNumber: 1,
+      nodeType: 1,
+      nodeSubType: 1,
+      location: "kitchen",
+      stackType: 1,
+      numChild: 1,
+      status: 1,
+      parentNodeNum: 1,
+      macAddress: "macAddress"));
 
-  final breed = await _databaseService.lightSensor(1);
+  final breed = await _databaseService.getCR(0);
+  print("a////////////////////////");
+  print(breed);
 
   /// OPTIONAL, using custom notification channel id
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -129,7 +136,7 @@ Future<String> initMesh() async {
   final MeshAPI _mashAPI = MeshAPI();
   // _mashAPI.sendToMesh("E3FF060001FA");
   // _mashAPI.meshE1();
-  _mashAPI.meshTime();
+  _mashAPI.meshE1();
 
   // _mashAPI.sendToMesh("E2E2E2E2");
   // _mashAPI.sendToMesh("38001000FF552ce6e811030000ca51");
