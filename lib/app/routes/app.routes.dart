@@ -45,7 +45,7 @@ class AppRouter {
   static const String ipScanRoute = "/ipScan";
   static const String qrScanRoute = "/qrScan";
   static const String dashboardRoute = "/dashboard";
-  static const String meshStatusRoute = "/meshStatus";
+  static const String meshCommandsRoute = "/meshStatus";
   static const String settingsRoute = "/settings";
   static const String esp32Route = "/esp32";
 
@@ -81,10 +81,10 @@ class AppRouter {
             builder: (_) => const AppSettings(),
           );
         }
-      case meshStatusRoute:
+      case meshCommandsRoute:
         {
           return MaterialPageRoute(
-            builder: (_) => const MeshStatus(),
+            builder: (_) => const MeshCommands(),
           );
         }
       case dashboardRoute:

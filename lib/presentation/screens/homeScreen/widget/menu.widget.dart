@@ -57,7 +57,7 @@ Widget buildMenuItems(BuildContext context) => Container(
             title: const Text("info"),
             onTap: () => {
               Navigator.pop(context),
-              Navigator.of(context).pushNamed(AppRouter.meshStatusRoute)
+              Navigator.of(context).pushNamed(AppRouter.meshCommandsRoute)
             },
           ),
         ],

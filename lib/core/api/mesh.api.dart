@@ -20,7 +20,6 @@ class MeshAPI {
         headers: headers,
       );
       final body = response.body;
-      ;
       return body;
     } catch (e) {
       return Null;
@@ -211,7 +210,7 @@ class MeshAPI {
     }
   }
 
-  Future sendDomainNum(pktHdr) async {
+  Future sendDomainNum() async {
     //SendDomainNum
     int domainNum = 0x11;
     String sDomainNum;
@@ -242,7 +241,7 @@ class MeshAPI {
     }
   }
 
-  Future sendPreDefineNum(pktHdr) async {
+  Future sendPreDefineNum() async {
     //sendPreDefineNum
     int domainNum = 0x11;
     String sDomainNum;
@@ -273,7 +272,7 @@ class MeshAPI {
     }
   }
 
-  Future sendSetNetId(pktHdr) async {
+  Future sendSetNetId() async {
     // SendSetNetId
     String netID = "  ";
     String sNetId = hexPadding(int.parse(netID));
@@ -300,7 +299,7 @@ class MeshAPI {
     }
   }
 
-  Future sendSetNetNum(pktHdr) async {
+  Future sendSetNetNum() async {
     // SendSetNetId
     List<String> lint = [];
     String netNum = "  ";
