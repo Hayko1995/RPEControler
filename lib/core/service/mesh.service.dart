@@ -8,9 +8,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rpe_c/core/api/mesh.api.dart';
-import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/models/mesh.model.dart';
-import 'package:rpe_c/core/service/database.service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logger/logger.dart';
 
@@ -20,34 +18,6 @@ var logger = Logger(
 
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
-  final DatabaseService _databaseService = DatabaseService();
-
-  await _databaseService.insertCR(CR(
-      id: 0,
-      nodeNumber: 1,
-      nodeType: 1,
-      nodeSubType: 1,
-      location: 1,
-      stackType: 1,
-      numChild: 1,
-      status: 1,
-      parentNodeNum: 1,
-      macAddress: "macAddress"));
-  await _databaseService.insertCR(CR(
-      id: 0,
-      nodeNumber: 1,
-      nodeType: 1,
-      nodeSubType: 1,
-      location: 1,
-      stackType: 1,
-      numChild: 1,
-      status: 1,
-      parentNodeNum: 1,
-      macAddress: "macAddress"));
-
-  final breed = await _databaseService.getCR(0);
-  print("a////////////////////////");
-  print(breed);
 
   /// OPTIONAL, using custom notification channel id
   const AndroidNotificationChannel channel = AndroidNotificationChannel(

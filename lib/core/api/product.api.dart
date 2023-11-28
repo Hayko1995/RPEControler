@@ -1,7 +1,5 @@
 import 'package:http/http.dart' as http;
 import 'package:rpe_c/app/routes/api.routes.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:convert';
 
 class ProductAPI {
   final client = http.Client();

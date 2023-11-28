@@ -1,19 +1,17 @@
 import 'dart:convert';
 
-class CR {
-  final int? id;
-  final int nodeNumber;
-  final int nodeType;
-  final int nodeSubType;
-  final int location;
-  final int stackType;
-  final int numChild;
-  final int status;
-  final int parentNodeNum;
+class device {
+  final String nodeNumber;
+  final String nodeType;
+  final String nodeSubType;
+  final String location;
+  final String stackType;
+  final String numChild;
+  final String status;
+  final String parentNodeNum;
   final String macAddress;
 
-  CR({
-    this.id,
+  device({
     required this.nodeNumber,
     required this.nodeType,
     required this.nodeSubType,
@@ -29,7 +27,6 @@ class CR {
   // columns in the database.
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'nodeNumber': nodeNumber,
       'nodeType': nodeType,
       'nodeSubType': nodeSubType,
@@ -42,28 +39,27 @@ class CR {
     };
   }
 
-  factory CR.fromMap(Map<String, dynamic> map) {
-    return CR(
-      id: map['id']?.toInt() ?? 0,
-      nodeNumber: map['nodeNumber'] ?? 0,
-      nodeType: map['nodeType'] ?? 0,
-      nodeSubType: map['nodeSubType'] ?? 0,
-      location: map['location'] ?? 0,
-      stackType: map['stackType'] ?? 0,
-      numChild: map['numChild'] ?? 0,
-      status: map['status'] ?? 0,
-      parentNodeNum: map['parentNodeNum'] ?? 0,
-      macAddress: map['macAddress'] ?? 0,
+  factory device.fromMap(Map<String, dynamic> map) {
+    return device(
+      nodeNumber: map['nodeNumber'] ?? "",
+      nodeType: map['nodeType'] ?? "",
+      nodeSubType: map['nodeSubType'] ?? "",
+      location: map['location'] ?? "",
+      stackType: map['stackType'] ?? "",
+      numChild: map['numChild'] ?? "",
+      status: map['status'] ?? "",
+      parentNodeNum: map['parentNodeNum'] ?? "",
+      macAddress: map['macAddress'] ?? "",
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory CR.fromJson(String source) => CR.fromMap(json.decode(source));
+  factory device.fromJson(String source) => device.fromMap(json.decode(source));
 
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
   @override
   String toString() =>
-      'CR(id: $id, nodeNumber: $nodeNumber, groups: $nodeType,  mac: $nodeSubType,  description: $location, positionX $stackType, positionY $numChild, status $status, parentNodeNum $parentNodeNum, macAddress $macAddress )';
+      'Device(nodeNumber: $nodeNumber, groups: $nodeType,  nodeSubType: $nodeSubType,  location: $location, stackType $stackType, numChild $numChild, status $status, parentNodeNum $parentNodeNum, macAddress $macAddress )';
 }

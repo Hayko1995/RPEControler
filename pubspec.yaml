@@ -43,7 +43,6 @@ dependencies:
   hex: ^0.2.0
   intl: ^0.18.1
   logger: ^2.0.2+1
-  path: ^1.8.3
 
 
 dev_dependencies:
@@ -53,7 +52,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#42a5f5"
-  image: "assets/images/logo/logo_big.png"
+  image:  "assets/images/logo/logo_big.png"
   android: true
   ios: true
   web: true

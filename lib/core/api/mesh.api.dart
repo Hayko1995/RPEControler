@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:logger/logger.dart';
+import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/service/database.service.dart';
 
 var logger = Logger(
   printer: PrettyPrinter(),
@@ -9,6 +11,7 @@ var logger = Logger(
 class MeshAPI {
   final client = http.Client();
   final headers = {'Content-Type': 'application/text; charset=utf-8'};
+  final DatabaseService _databaseService = DatabaseService();
 
   Future meshUpdate() async {
     //todo add problem response failure situation
@@ -77,12 +80,12 @@ class MeshAPI {
     //todo add problem response failure situation
     final Uri uri = Uri.parse(ApiRoutes.esp32Url);
     String mac = "";
+    int langht = 0;
 
     try {
       final http.Response response =
           await client.post(uri, headers: headers, body: command);
       final body = response.body;
-      logger.d(body);
       var stringList = body.split(' ');
       stringList.removeLast();
       print(stringList);
@@ -90,27 +93,45 @@ class MeshAPI {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      for (int i = 0; i < 15; i++) {
-        print(lint[i] + " command type E1");
-        print(lint[1] + "  " + lint[2] + " data Langht");
-        print(lint[3] + " number of nodes ");
-        print(lint[4] + lint[5] + lint[6] + lint[7] + " rpe id ");
-        print(lint[8] + " domain type ");
-        print(lint[9] + " preset packege ");
-        print(lint[10] + " network number ");
-        print(lint[11] + lint[12] + lint[13] + lint[14] + " CR reported time");
-        print(lint[15] + " reserved ");
-        break;
+      print(lint);
+
+      print(lint[0] + " command type E1");
+      print(lint[1] + "  " + lint[2] + " data Langht");
+      print(lint[3] + " number of nodes ");
+      print(lint[4] + lint[5] + lint[6] + lint[7] + " rpe net id ");
+      print(lint[8] + " domain type ");
+      print(lint[9] + " preset domain ");
+      print(lint[10] + " network number ");
+      print(lint[11] + lint[12] + lint[13] + lint[14] + " CR reported time");
+      print(lint[15] + " reserved ");
+
+      langht = int.parse("0x" + lint[1] + lint[2]);
+      _databaseService.clearAllDevice();
+
+      for (int i = 16; i <= langht - 1; i = i + 16) {
+        await _databaseService.insertDevice(device(
+            nodeNumber: lint[i],
+            nodeType: lint[i + 1],
+            nodeSubType: lint[i + 2],
+            location: lint[i + 3],
+            stackType: lint[i + 4],
+            numChild: lint[i + 5],
+            status: lint[i + 6],
+            parentNodeNum: lint[i + 7],
+            macAddress: lint[i + 8] +
+                lint[i + 9] +
+                lint[i + 10] +
+                lint[i + 11] +
+                lint[i + 12] +
+                lint[i + 13] +
+                lint[i + 14] +
+                lint[i + 15]));
       }
 
-      print(" Body   CR //////////////////");
-      // chage to for
-      String CR = "";
-      print(int.parse(lint[3]));
-      for (int i = 16; i < 16 + int.parse(lint[3]) * 16; i++) {
-        CR += lint[i];
-      }
-      print(CR);
+      List list = await _databaseService.getAllDevices();
+      print("//////////////////////");
+      list.forEach((row) => print(row));
+      print("//////////////////////");
 
       return body;
     } catch (e) {

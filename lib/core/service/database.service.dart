@@ -33,11 +33,11 @@ class DatabaseService {
       'CREATE TABLE variables (id INTEGER PRIMARY KEY, key TEXT, val INTEGER)',
     );
     await db.execute(
-      'CREATE TABLE crTable (id INTEGER PRIMARY KEY, nodeNumber INTEGER, nodeType INTEGER, nodeSubType INTEGER, Location INTEGER, stackType INTEGER, numChild INTEGER, status INTEGER, parentNodeNum INTEGER, macAddress TEXT )',
+      'CREATE TABLE deviceTable (id INTEGER PRIMARY KEY, nodeNumber TEXT, nodeType TEXT, nodeSubType TEXT, Location TEXT, stackType TEXT, numChild TEXT, status TEXT, parentNodeNum TEXT, macAddress TEXT )',
     );
   }
 
-  Future<void> insertCR(CR breed) async {
+  Future<void> insertDevice(device breed) async {
     final db = await _databaseService.database;
     await db.insert(
       AppConstants.crTable,
@@ -46,32 +46,38 @@ class DatabaseService {
     );
   }
 
-  Future<List<CR>> getAllCRs() async {
+  Future clearAllDevice() async {
+    final db = await _databaseService.database;
+    String tableName = AppConstants.crTable;
+    return await db.rawDelete("DELETE FROM $tableName");
+  }
+
+  Future<List<device>> getAllDevices() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.crTable);
-    return List.generate(maps.length, (index) => CR.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => device.fromMap(maps[index]));
   }
 
-  Future<CR> getCR(int id) async {
-    final db = await _databaseService.database;
-    final List<Map<String, dynamic>> maps =
-        await db.query(AppConstants.crTable, where: 'id = ?', whereArgs: [id]);
-    return CR.fromMap(maps[0]);
-  }
+  // Future<CR> getCR(int id) async {
+  //   final db = await _databaseService.database;
+  //   final List<Map<String, dynamic>> maps =
+  //       await db.query(AppConstants.crTable, where: 'id = ?', whereArgs: [id]);
+  //   return CR.fromMap(maps[0]);
+  // }
 
-  Future<void> updateCR(CR breed) async {
-    final db = await _databaseService.database;
+  // Future<void> updateCR(CR breed) async { TODO
+  //   final db = await _databaseService.database;
+  //
+  //   await db.update(
+  //     AppConstants.crTable,
+  //     breed.toMap(),
+  //     where: 'id = ?',
+  //     whereArgs: [breed.id],
+  //   );
+  // }
 
-    await db.update(
-      AppConstants.crTable,
-      breed.toMap(),
-      where: 'id = ?',
-      whereArgs: [breed.id],
-    );
-  }
-
-  Future<void> deleteCR(int id) async {
+  Future<void> deleteDevice(int id) async {
     final db = await _databaseService.database;
     await db.delete(
       AppConstants.crTable,

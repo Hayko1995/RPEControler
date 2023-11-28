@@ -1,7 +1,7 @@
 class AppConstants {
   static const int requestTimeout = 4;
   static const String light = "lightSensors";
-  static const String crTable = "crTable";
+  static const String crTable = "deviceTable";
   static const String dbName = "RPEControls.db";
   static const Map userData = {
     'light': [
