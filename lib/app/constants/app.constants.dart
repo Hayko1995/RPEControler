@@ -3,6 +3,9 @@ class AppConstants {
   static const String light = "lightSensors";
   static const String crTable = "deviceTable";
   static const String dbName = "RPEControls.db";
+  static const String uploadTable = "uploadTable";
+  static const bool debug = true;
+
   static const Map userData = {
     'light': [
       {"name": "room 1", "value": 20, "group": 1, "warning": true},

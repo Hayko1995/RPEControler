@@ -30,14 +30,26 @@ class DatabaseService {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
+      'PRAGMA foreign_kays=on',
+    );
+    await db.execute(
       'CREATE TABLE variables (id INTEGER PRIMARY KEY, key TEXT, val INTEGER)',
     );
     await db.execute(
-      'CREATE TABLE deviceTable (id INTEGER PRIMARY KEY, nodeNumber TEXT, nodeType TEXT, nodeSubType TEXT, Location TEXT, stackType TEXT, numChild TEXT, status TEXT, parentNodeNum TEXT, macAddress TEXT )',
+      '''CREATE TABLE uploadTable (
+        nodeNumber TEXT  PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
+        nodeStatus TEXT, nodeMessageLen TEXT, timeStamp TEXT, uploadMessageType TEXT, 
+        messageSubType TEXT, sensorType TEXT, sensorValue TEXT)''',
+    );
+    await db.execute(
+      '''CREATE TABLE deviceTable (
+        nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT, 
+        Location TEXT, stackType TEXT, numChild TEXT, status TEXT, 
+        parentNodeNum TEXT, macAddress TEXT )''',
     );
   }
 
-  Future<void> insertDevice(device breed) async {
+  Future<void> insertDevice(Device breed) async {
     final db = await _databaseService.database;
     await db.insert(
       AppConstants.crTable,
@@ -52,11 +64,11 @@ class DatabaseService {
     return await db.rawDelete("DELETE FROM $tableName");
   }
 
-  Future<List<device>> getAllDevices() async {
+  Future<List<Device>> getAllDevices() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.crTable);
-    return List.generate(maps.length, (index) => device.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
   }
 
   // Future<CR> getCR(int id) async {
@@ -81,6 +93,55 @@ class DatabaseService {
     final db = await _databaseService.database;
     await db.delete(
       AppConstants.crTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> insertUpload(Upload breed) async {
+    final db = await _databaseService.database;
+    await db.insert(
+      AppConstants.uploadTable,
+      breed.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future clearAllUploads() async {
+    final db = await _databaseService.database;
+    String tableName = AppConstants.uploadTable;
+    return await db.rawDelete("DELETE FROM $tableName");
+  }
+
+  Future<List<Upload>> getAllUploads() async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps =
+        await db.query(AppConstants.uploadTable);
+    return List.generate(maps.length, (index) => Upload.fromMap(maps[index]));
+  }
+
+  // Future<CR> getCR(int id) async {
+  //   final db = await _databaseService.database;
+  //   final List<Map<String, dynamic>> maps =
+  //       await db.query(AppConstants.crTable, where: 'id = ?', whereArgs: [id]);
+  //   return CR.fromMap(maps[0]);
+  // }
+
+  // Future<void> updateCR(CR breed) async { TODO
+  //   final db = await _databaseService.database;
+  //
+  //   await db.update(
+  //     AppConstants.crTable,
+  //     breed.toMap(),
+  //     where: 'id = ?',
+  //     whereArgs: [breed.id],
+  //   );
+  // }
+
+  Future<void> deleteUpload(int id) async {
+    final db = await _databaseService.database;
+    await db.delete(
+      AppConstants.uploadTable,
       where: 'id = ?',
       whereArgs: [id],
     );

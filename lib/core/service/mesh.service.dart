@@ -105,8 +105,8 @@ Future<String> getData() async {
 Future<String> initMesh() async {
   final MeshAPI _mashAPI = MeshAPI();
   // _mashAPI.sendToMesh("E3FF060001FA");
-  // _mashAPI.meshE1();
-  _mashAPI.meshE1();
+  await _mashAPI.meshE1();
+  await _mashAPI.meshE3();
 
   // _mashAPI.sendToMesh("E2E2E2E2");
   // _mashAPI.sendToMesh("38001000FF552ce6e811030000ca51");

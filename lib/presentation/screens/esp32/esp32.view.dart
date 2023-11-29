@@ -3,15 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
-import 'package:rpe_c/app/constants/app.constants.dart';
-import 'package:rpe_c/app/routes/app.routes.dart';
-import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/api/product.api.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
-import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/screens/sensorsDetailScreen/sensors.detail.screen.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:intl/intl.dart';
 
 class ESP32Screen extends StatefulWidget {
   const ESP32Screen({Key? key}) : super(key: key);

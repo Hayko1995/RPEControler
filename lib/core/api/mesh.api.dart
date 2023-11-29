@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
@@ -79,7 +80,6 @@ class MeshAPI {
     // var command = aa.join(" " );
     //todo add problem response failure situation
     final Uri uri = Uri.parse(ApiRoutes.esp32Url);
-    String mac = "";
     int langht = 0;
 
     try {
@@ -109,7 +109,7 @@ class MeshAPI {
       _databaseService.clearAllDevice();
 
       for (int i = 16; i <= langht - 1; i = i + 16) {
-        await _databaseService.insertDevice(device(
+        await _databaseService.insertDevice(Device(
             nodeNumber: lint[i],
             nodeType: lint[i + 1],
             nodeSubType: lint[i + 2],
@@ -128,16 +128,92 @@ class MeshAPI {
                 lint[i + 15]));
       }
 
-      List list = await _databaseService.getAllDevices();
-      print("//////////////////////");
-      list.forEach((row) => print(row));
-      print("//////////////////////");
+      if (AppConstants.debug) {
+        List list = await _databaseService.getAllDevices();
+        String debugString = '';
+        list.forEach((row) => print(row));
+        // logger.i(debugString);
+      }
 
       return body;
     } catch (e) {
-      print(" service = internet problem");
+      logger.e(e);
       return Null;
     }
+  }
+
+  Future meshE3() async {
+    String command = "E3FF060001FA";
+    List<String> lint = [];
+    // List<String> aa = [];
+
+    // for (var i = 0; i < pktHdr.length; i += 2) {
+    //   result.add(int.parse(pktHdr.substring(i, i + 2), radix: 16));
+    // }
+    // print(result);
+    // for (int i = 0; i < result.length; i++) {
+    //   aa.add(result[i].toRadixString(16));
+    // }
+    // var command = aa.join(" " );
+    //todo add problem response failure situation
+    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
+    int langht = 0;
+
+    // try {
+    final http.Response response =
+        await client.post(uri, headers: headers, body: command);
+    final body = response.body;
+    var stringList = body.split(' ');
+    stringList.removeLast();
+    print(stringList);
+    for (int i = 0; i < stringList.length; i++) {
+      int _integerData = int.parse(stringList[i]);
+      lint.add(_integerData.toRadixString(16));
+    }
+    print(lint);
+
+    print(lint[0] + " command type E3");
+    print(lint[1] + lint[2] + "wifiPacketLen");
+    print(lint[3] +
+        lint[4] +
+        lint[5] +
+        lint[6] +
+        lint[7] +
+        lint[8] +
+        lint[9] +
+        lint[10] +
+        " present nodes");
+    print(lint[11] + lint[12] + lint[13] + lint[14] + " rpe Net id ");
+    print(lint[15] + " rpe net id ");
+
+    langht = int.parse("0x" + lint[1] + lint[2]);
+    print(langht);
+    print(lint.length);
+    // _databaseService.clearAllUploads();
+
+    for (int i = 16; i <= langht - 1; i = i + 14) {
+      await _databaseService.insertUpload(Upload(
+          nodeType: lint[i + 1],
+          nodeSubType: lint[i + 2],
+          nodeNumber: lint[i + 3],
+          nodeStatus: lint[i + 4],
+          nodeMessageLen: lint[i + 5],
+          timeStamp: lint[i + 6],
+          uploadMessageType: lint[i + 7],
+          messageSubType: lint[i + 8],
+          sensorType: lint[i + 9],
+          sensorValue: lint[i + 10]));
+      break; //todo remove
+    }
+
+    List list = await _databaseService.getAllUploads();
+    list.forEach((row) => print(row));
+
+    return body;
+    // } catch (e) {
+    //   print(" service = internet problem");
+    //   return Null;
+    // }
   }
 
   String hexPadding(num) {
