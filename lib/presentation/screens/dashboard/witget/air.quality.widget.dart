@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/presentation/screens/sensorsDetailScreen/sensors.detail.screen.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -18,15 +19,14 @@ class ItemBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String value =
-        "{first_name : fname,last_name : lname,gender : male, location : { state : state, country : country, place : place} }";
-    Map valueMap = json.decode(value);
-    // final sensordata = SensorDetailsArgs();
+    Map<dynamic, dynamic> data1 = AppConstants.userData;
+    final data2 = data1[AppConstants.userData.keys.elementAt(0)];
     return GestureDetector(
         onTap: () => {
-              Navigator.of(context).pushReplacementNamed(
-                  AppRouter.predefinePackageRoute,
-                  arguments: sensordata)
+              Navigator.of(context).pushNamed(
+                AppRouter.sensorDetailsRoute,
+                arguments: SensorDetailsArgs( data: data2),
+              )
             },
         child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
