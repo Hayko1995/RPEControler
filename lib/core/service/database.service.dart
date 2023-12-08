@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 
@@ -30,7 +31,7 @@ class DatabaseService {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-      'PRAGMA foreign_kays=on',
+      'CREATE TABLE location (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
     );
     await db.execute(
       'CREATE TABLE variables (id INTEGER PRIMARY KEY, key TEXT, val INTEGER)',
@@ -47,6 +48,12 @@ class DatabaseService {
         Location TEXT, stackType TEXT, numChild TEXT, status TEXT, 
         parentNodeNum TEXT, macAddress TEXT )''',
     );
+
+    // for (int i = 0; i < 200; i++) {
+    //   String val = i.toRadixString(16);
+    //   db.execute('''INSERT INTO location (name,val)
+    //   VALUES( Null,	$val);''');
+    // }
   }
 
   Future<void> insertDevice(Device breed) async {
@@ -130,7 +137,7 @@ class DatabaseService {
   // Future<void> updateCR(CR breed) async { TODO
   //   final db = await _databaseService.database;
   //
-  //   await db.update(
+  //   await db.update(aaaa
   //     AppConstants.crTable,
   //     breed.toMap(),
   //     where: 'id = ?',

@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 
-class QRViewExample extends StatefulWidget {
+class QRScanScreen extends StatefulWidget {
   // todo change
-  const QRViewExample({Key? key}) : super(key: key);
+  const QRScanScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _QRViewExampleState();
+  State<StatefulWidget> createState() => _QRScanScreenState();
 }
 
-class _QRViewExampleState extends State<QRViewExample> {
+class _QRScanScreenState extends State<QRScanScreen> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -38,7 +38,6 @@ class _QRViewExampleState extends State<QRViewExample> {
       ),
       body: Column(
         children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
           Expanded(
             flex: 1,
             child: FittedBox(
@@ -70,7 +69,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                             )),
                       ),
                       Container(
-                        margin: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(2),
                         child: ElevatedButton(
                             onPressed: () async {
                               await controller?.flipCamera();
@@ -93,7 +92,8 @@ class _QRViewExampleState extends State<QRViewExample> {
                 ],
               ),
             ),
-          )
+          ),
+          Expanded(flex: 8, child: _buildQrView(context)),
         ],
       ),
     );
@@ -128,15 +128,20 @@ class _QRViewExampleState extends State<QRViewExample> {
       // setState(() {
       result = scanData;
       final Map<String, dynamic> data;
-      data = jsonDecode('${result!.code}');
+      Navigator.of(context).pushReplacementNamed(
+          // AppRouter.myHomeRoute
+          AppRouter.networkConfigRouter);
+          
+      //todo change
+      // data = jsonDecode('${result!.code}');
 
-      if (data != Null && data['enter']) {
-        controller.dispose();
-        Navigator.of(context).pushReplacementNamed(
-            // AppRouter.myHomeRoute
-            AppRouter.myHomeRoute);
-      }
-      result = scanData;
+      // if (data != Null && data['enter']) {
+      //   controller.dispose();
+      //   Navigator.of(context).pushReplacementNamed(
+      //       // AppRouter.myHomeRoute
+      //       AppRouter.myHomeRoute);
+      // }
+      // result = scanData;
       // });
     });
   }

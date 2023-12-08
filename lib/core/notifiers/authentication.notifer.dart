@@ -8,7 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/api/authentication.api.dart';
+import 'package:rpe_c/core/api/mesh.api.dart';
+import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/core/utils/snackbar.util.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AuthenticationNotifier with ChangeNotifier {
   final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
@@ -57,7 +61,7 @@ class AuthenticationNotifier with ChangeNotifier {
         WriteCache.setString(key: AppKeys.userData, value: authData)
             .whenComplete(
           () => Navigator.of(context).pushReplacementNamed(
-              AppRouter.myHomeRoute), //todo change to home
+              AppRouter.HomeRoute), //todo change to home
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -80,37 +84,42 @@ class AuthenticationNotifier with ChangeNotifier {
       {required String email,
       required BuildContext context,
       required String password}) async {
-    try {
-      var userData =
-          await _authenticationAPI.userLogin(email: email, password: password);
+    Navigator.of(context).pushReplacementNamed(AppRouter.HomeRoute);
+    //uncomment when use with server
+    // try {
 
-      final Map<String, dynamic> parseData = await jsonDecode(userData);
-      print(parseData);
-      print(parseData['authentication']);
-      bool isAuthenticated = parseData['authentication'] as bool;
-      String authData = parseData['data'];
+    //
+    //   var userData =
+    //       await _authenticationAPI.userLogin(email: email, password: password);
 
-      if (isAuthenticated) {
-        WriteCache.setString(key: AppKeys.userData, value: authData)
-            .whenComplete(
-          () => Navigator.of(context).pushReplacementNamed(
-              // AppRouter.myHomeRoute
-              AppRouter.myHomeRoute), //todo change  to home scene
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackUtil.stylishSnackBar(text: authData, context: context));
-      }
-    } on SocketException catch (_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
-          text: 'Oops No You Need A Good Internet Connection',
-          context: context));
-    } on TimeoutException catch (_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
-          text: 'Houston we have a problem', context: context));
-      // handle timeout
-    } catch (e) {
-      print(e);
-    }
+    //   final Map<String, dynamic> parseData = await jsonDecode(userData);
+    //   print(parseData);
+    //   print(parseData['authentication']);
+    //   bool isAuthenticated = parseData['authentication'] as bool;
+    //   String authData = parseData['data'];
+
+    //   if (isAuthenticated) {
+    //     //todo add uncomment when use with server
+    //     // WriteCache.setString(key: AppKeys.userData, value: authData)
+    //     //     .whenComplete(
+    //     //   () => Navigator.of(context).pushReplacementNamed(
+    //     //       // AppRouter.myHomeRoute
+    //     //       AppRouter.myHomeRoute), //todo change  to home scene
+    //     // );
+    //   } else {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackUtil.stylishSnackBar(text: authData, context: context));
+    //   }
+    // } on SocketException catch (_) {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+    //       text: 'Oops No You Need A Good Internet Connection',
+    //       context: context));
+    // } on TimeoutException catch (_) {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+    //       text: 'Houston we have a problem', context: context));
+    //   // handle timeout
+    // } catch (e) {
+    //   print(e);
+    // }
   }
 }

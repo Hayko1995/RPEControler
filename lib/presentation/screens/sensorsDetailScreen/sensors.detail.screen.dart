@@ -50,5 +50,5 @@ class _SensorsDetailState extends State<SensorsDetail> {
 
 class SensorDetailsArgs {
   final List<Map<String, Object>> data;
-  const SensorDetailsArgs({required this.data});
+  const SensorDetailsArgs(List<Map<String, Object>> list, {required this.data});
 }

@@ -31,11 +31,11 @@ class _SplashScreenState extends State<SplashScreen> {
             valueType: ValueType.StringValue,
             actionIfNull: () {
               Navigator.of(context)
-                  .pushNamed(AppRouter.myHomeRoute); //todo change
+                  .pushNamed(AppRouter.HomeRoute); //todo change
             },
             actionIfNotNull: () {
               Navigator.of(context).pushReplacementNamed(
-                  AppRouter.myHomeRoute); //todo change to home
+                  AppRouter.HomeRoute); //todo change to home
             });
       },
     );

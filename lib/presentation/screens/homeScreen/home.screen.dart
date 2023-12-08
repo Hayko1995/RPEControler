@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:cache_manager/cache_manager.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
 import 'package:rpe_c/presentation/screens/dashboard/dashboard.screen.dart';
 import 'package:rpe_c/presentation/screens/ipScanScreen/ipScan.screen.dart';
@@ -40,21 +44,22 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
   ),
 ];
 
-final screens = [
-  const Dashboard(),
-  const WatcherScreen(),
-  const ControllerScreen(),
-  const ipScanScreen(),
-];
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final DatabaseService _databaseService = DatabaseService();
+  Future _initCRNetwork() async {
+    // enable QR scan if not have network in DB
+    List devices = await _databaseService.getAllDevices();
+    if (devices.length == 0) {
+      return Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
+    }
+  }
+
   @override
   void initState() {
     final userNotifier = Provider.of<UserNotifier>(context, listen: false);
@@ -63,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //     userNotifier.getUserData(context: context, token: token),
     //   },
     // );
+    Timer(const Duration(seconds: 1), _initCRNetwork);
     super.initState();
   }
 
@@ -72,25 +78,14 @@ class _HomeScreenState extends State<HomeScreen> {
     ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
     var themeFlag = _themeNotifier.darkTheme;
     return Scaffold(
-      backgroundColor: themeFlag ? AppColors.mirage : AppColors.creamColor,
-      appBar: AppBar(
-        title: const Text("RPE Controls"),
-        backgroundColor: Colors.blue,
-      ),
-      drawer: const Menu(),
-      body: Column(
-        children: [
-          screens[_currentIndex],
-        ],
-      ),
-      bottomNavigationBar: SalomonBottomBar(
-        selectedItemColor:
-            themeFlag ? AppColors.rawSienna : const Color(0xff4B7191),
-        unselectedItemColor: themeFlag ? Colors.white : const Color(0xff777777),
-        currentIndex: _currentIndex,
-        onTap: (i) => setState(() => _currentIndex = i),
-        items: bottomNavBarIcons,
-      ),
-    );
+        backgroundColor: themeFlag ? AppColors.mirage : AppColors.creamColor,
+        appBar: AppBar(
+          title: const Text("RPE Controls"),
+          backgroundColor: Colors.blue,
+        ),
+        drawer: const Menu(),
+        body: Row(
+          children: [Dashboard()],
+        ));
   }
 }

@@ -7,7 +7,6 @@ import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/notifiers/size.notifier.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'package:rpe_c/core/notifiers/user.notifier.dart';
-import 'package:rpe_c/core/service/payment.service.dart';
 
 class AppProvider {
   static List<SingleChildWidget> providers = [
@@ -18,6 +17,5 @@ class AppProvider {
     ChangeNotifierProvider(create: (_) => MeshNotifier()),
     ChangeNotifierProvider(create: (_) => SizeNotifier()),
     ChangeNotifierProvider(create: (_) => CartNotifier()),
-    ChangeNotifierProvider(create: (_) => PaymentService()),
   ];
 }

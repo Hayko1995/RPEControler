@@ -15,6 +15,7 @@ import 'package:rpe_c/presentation/screens/profileScreens/appSettingsScreen/app.
 import 'package:rpe_c/presentation/screens/profileScreens/changePasswordScreen/change.password.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/editProfileScreen/edit.profile.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/mainProfileScreen/profile.screen.dart';
+import 'package:rpe_c/presentation/screens/qrScan/configureNetwork.dart';
 import 'package:rpe_c/presentation/screens/sensorsDetailScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/settings/settings.screen.dart';
 import 'package:rpe_c/presentation/screens/signUpScreen/signup.screen.dart';
@@ -32,9 +33,8 @@ class AppRouter {
   static const String appSettingsRoute = "/appSettings";
   static const String homeRoute = "/home";
   static const String watcherRoute = "/watcher";
-  static const String myHomeRoute = "/myHome";
+  static const String HomeRoute = "/myHome";
   static const String controllerRoute = "/controller";
-  static const String cartRoute = "/cart";
   static const String searchRoute = "/search";
   static const String profileRoute = "/profile";
   static const String accountInfo = "/accountInfo";
@@ -44,10 +44,12 @@ class AppRouter {
   static const String changePassRoute = "/changePassword";
   static const String ipScanRoute = "/ipScan";
   static const String qrScanRoute = "/qrScan";
+  static const String predefinePackageRoute = "/preDefinePackagePage";
   static const String dashboardRoute = "/dashboard";
   static const String meshCommandsRoute = "/meshStatus";
   static const String settingsRoute = "/settings";
   static const String esp32Route = "/esp32";
+  static const String networkConfigRouter = '/networkConfig';
 
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -96,10 +98,21 @@ class AppRouter {
       case qrScanRoute:
         {
           return MaterialPageRoute(
-            builder: (_) => const QRViewExample(), //todo change
+            builder: (_) => const QRScanScreen(), //todo change
           );
         }
       case sensorDetailsRoute:
+        {
+          return MaterialPageRoute(
+            builder: (context) => SensorsDetail(
+              sensorDetailsArguments: ModalRoute.of(context)!.settings.arguments
+                  as SensorDetailsArgs,
+            ),
+            settings: settings,
+          );
+        }
+
+      case predefinePackageRoute:
         {
           return MaterialPageRoute(
             builder: (context) => SensorsDetail(
@@ -128,7 +141,7 @@ class AppRouter {
             builder: (_) => const WatcherScreen(),
           );
         }
-      case myHomeRoute:
+      case HomeRoute:
         {
           return MaterialPageRoute(
             builder: (_) => const HomeScreen(),
@@ -157,6 +170,12 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => LoginScreen(),
+          );
+        }
+      case networkConfigRouter:
+        {
+          return MaterialPageRoute(
+            builder: (_) => ConfigureNetworkScreen(),
           );
         }
       case signUpRoute:

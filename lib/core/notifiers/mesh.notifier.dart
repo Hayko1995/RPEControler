@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 
 class MeshNotifier with ChangeNotifier {
+  final backgroundService = FlutterBackgroundService();
   int? id = 0;
   int? get getId => id;
 
@@ -25,5 +27,16 @@ class MeshNotifier with ChangeNotifier {
     id = _id;
     temperature = _temperature;
     // notifyListeners();
+  }
+
+  void listenForNotificationData() {
+
+    backgroundService.on('update').listen((event) async {
+      print('received data message in feed: $event');
+    }, onError: (e, s) {
+      print('error listening for updates: $e, $s');
+    }, onDone: () {
+      print('background listen closed');
+    });
   }
 }
