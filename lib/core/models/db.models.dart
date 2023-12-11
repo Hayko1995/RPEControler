@@ -134,3 +134,39 @@ class Upload {
         $uploadMessageType, messageSubType $messageSubType,
         sensorType $sensorType, sensorValue $sensorValue )''';
 }
+
+class Network {
+  final String name;
+  final String val;
+
+  Network({
+    required this.name,
+    required this.val,
+  });
+
+  // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
+  // columns in the database.
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'val': val,
+    };
+  }
+
+  factory Network.fromMap(Map<String, dynamic> map) {
+    return Network(
+      name: map['name'] ?? "",
+      val: map['val'] ?? "",
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Network.fromJson(String source) =>
+      Network.fromMap(json.decode(source));
+
+  // Implement toString to make it easier to see information about
+  // each breed when using the print statement.
+  @override
+  String toString() => '''Network(name: $name, val: $val,''';
+}

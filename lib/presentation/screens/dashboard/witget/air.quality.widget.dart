@@ -25,7 +25,7 @@ class ItemBuilder extends StatelessWidget {
         onTap: () => {
               Navigator.of(context).pushNamed(
                 AppRouter.sensorDetailsRoute,
-                arguments: SensorDetailsArgs( data: data2),
+                arguments: SensorDetailsArgs(data: data2),
               )
             },
         child: Container(
@@ -108,7 +108,7 @@ class ItemBuilder extends StatelessWidget {
                       maximum: 120,
                       radiusFactor: 0.85,
                       canScaleToFit: true,
-                      pointers: <GaugePointer>[
+                      pointers: const <GaugePointer>[
                         MarkerPointer(
                             markerType: MarkerType.text,
                             text: 'Poor',

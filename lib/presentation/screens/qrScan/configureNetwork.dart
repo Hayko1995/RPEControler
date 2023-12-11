@@ -1,3 +1,6 @@
+//TODO fix responsively of page
+//TODO add values to DB
+
 import 'package:cache_manager/core/write_cache_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -110,7 +113,7 @@ class ConfigureNetworkScreen extends StatelessWidget {
                         ),
                         onPressed: () async {
                           //TODO write host to db
-                          
+
                           _userLogin();
                         },
                         color: AppColors.rawSienna,

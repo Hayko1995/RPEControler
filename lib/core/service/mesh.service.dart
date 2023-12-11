@@ -104,10 +104,14 @@ Future<String> getData() async {
 
 Future<String> initMesh() async {
   final MeshAPI _mashAPI = MeshAPI();
-  // _mashAPI.sendToMesh("E3FF060001FA");
-  await _mashAPI.changeWifi();
-  // await _mashAPI.meshE1();
-  // await _mashAPI.meshE3();
+  await _mashAPI.meshE1();
+  return Future.value("");
+}
+
+Future<String> updateMesh() async {
+  final MeshAPI _mashAPI = MeshAPI();
+
+  await _mashAPI.meshE3();
 
   // _mashAPI.sendToMesh("E2E2E2E2");
   // _mashAPI.sendToMesh("38001000FF552ce6e811030000ca51");
@@ -153,6 +157,7 @@ void onStart(ServiceInstance service) async {
   });
 
   // bring to foreground
+  Future<String> data1 = initMesh();
   Timer.periodic(const Duration(seconds: 10), (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
@@ -182,7 +187,7 @@ void onStart(ServiceInstance service) async {
 
     // test using external plugin
 
-    Future<String> data1 = initMesh();
+    Future<String> data1 = updateMesh();
     // Future<String> data = getData();
     // String response = await data;
     // if (response != "") {

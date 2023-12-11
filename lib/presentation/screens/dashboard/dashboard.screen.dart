@@ -1,8 +1,11 @@
+//TODO fix designer responsive when kayboard come out
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/api/mesh.api.dart';
+import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/dashboard/witget/air.quality.widget.dart';
 import 'package:rpe_c/presentation/screens/sensorsDetailScreen/sensors.detail.screen.dart';
@@ -27,6 +30,8 @@ class _DashboardState extends State<Dashboard> {
   Color caughtColor = Colors.grey;
   final DatabaseService _databaseService = DatabaseService();
   List<String> data = [];
+  late List<Device> dataDevices;
+  late List<Upload> dataUpload;
 
   @override
   void initState() {
@@ -45,14 +50,21 @@ class _DashboardState extends State<Dashboard> {
     Timer.periodic(const Duration(seconds: 5), (timer) {
       _updateTables();
     });
-
     super.initState();
   }
 
   void _updateTables() async {
-    List<String> _data = await _databaseService.getAllTableNames();
+    List<Device> _dataDevices = await _databaseService.getAllDevices();
+    print("/////////////////////////////////");
+    logger.w(_dataDevices);
+    print("/////////////////////////////////");
+    List<Upload> _dataUpload = await _databaseService.getAllUploads();
+    logger.w(_dataUpload);
+
+    // TODO write logic for Widget
     setState(() {
-      // data = _data;
+      dataDevices = _dataDevices;
+      dataUpload = _dataUpload;
     });
   }
 

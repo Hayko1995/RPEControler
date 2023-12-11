@@ -186,25 +186,25 @@ class MeshAPI {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      print(lint);
+      // print(lint);
 
-      print(lint[0] + " command type E3");
-      print(lint[1] + lint[2] + "wifiPacketLen");
-      print(lint[3] +
-          lint[4] +
-          lint[5] +
-          lint[6] +
-          lint[7] +
-          lint[8] +
-          lint[9] +
-          lint[10] +
-          " present nodes");
-      print(lint[11] + lint[12] + lint[13] + lint[14] + " rpe Net id ");
-      print(lint[15] + " rpe net id ");
+      // print(lint[0] + " command type E3");
+      // print(lint[1] + lint[2] + "wifiPacketLen");
+      // print(lint[3] +
+      //     lint[4] +
+      //     lint[5] +
+      //     lint[6] +
+      //     lint[7] +
+      //     lint[8] +
+      //     lint[9] +
+      //     lint[10] +
+      //     " present nodes");
+      // print(lint[11] + lint[12] + lint[13] + lint[14] + " rpe Net id ");
+      // print(lint[15] + " rpe net id ");
 
       langht = int.parse("0x" + lint[1] + lint[2]);
-      print(langht);
-      print(lint.length);
+      // print(langht);
+      // print(lint.length);
       // _databaseService.clearAllUploads();
 
       for (int i = 16; i <= langht - 1; i = i + 14) {

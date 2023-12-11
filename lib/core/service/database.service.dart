@@ -31,6 +31,9 @@ class DatabaseService {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
+      'CREATE TABLE network (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
+    );
+    await db.execute(
       'CREATE TABLE location (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
     );
     await db.execute(
