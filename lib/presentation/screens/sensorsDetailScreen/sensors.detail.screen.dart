@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:rpe_c/core/models/db.models.dart';
 
 class SensorsDetail extends StatefulWidget {
   final SensorDetailsArgs sensorDetailsArguments;
@@ -20,7 +21,8 @@ class _SensorsDetailState extends State<SensorsDetail> {
 
     List<Widget> getSensors() {
       List<Widget> sensorList = [];
-      List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
+      // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
+      List<Map<String, Object>> data = [];
       for (var i = 0; i < data.length; i++) {
         sensorList.add(Container(
           width: MediaQuery.sizeOf(context).width,

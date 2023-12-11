@@ -10,6 +10,7 @@ import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/screens/ipScanScreen/ipScan.screen.dart';
 import 'package:rpe_c/presentation/screens/loginScreen/login.view.dart';
 import 'package:rpe_c/presentation/screens/onBoardingScreen/onBoarding.screen.dart';
+import 'package:rpe_c/presentation/screens/predefineDetailScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/accountInformationScreen/account.information.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/appSettingsScreen/app.setting.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/changePasswordScreen/change.password.screen.dart';
@@ -115,9 +116,10 @@ class AppRouter {
       case predefinePackageRoute:
         {
           return MaterialPageRoute(
-            builder: (context) => SensorsDetail(
-              sensorDetailsArguments: ModalRoute.of(context)!.settings.arguments
-                  as SensorDetailsArgs,
+            builder: (context) => PredefineDetail(
+              PredefinePackageArguments: ModalRoute.of(context)!
+                  .settings
+                  .arguments as PredefinePackageArgs,
             ),
             settings: settings,
           );

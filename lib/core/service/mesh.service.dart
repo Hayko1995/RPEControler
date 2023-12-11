@@ -110,7 +110,7 @@ Future<String> initMesh() async {
 
 Future<String> updateMesh() async {
   final MeshAPI _mashAPI = MeshAPI();
-
+  logger.w("aaaaaaaaaaaaaaaaaaa");
   await _mashAPI.meshE3();
 
   // _mashAPI.sendToMesh("E2E2E2E2");

@@ -30,8 +30,6 @@ class _DashboardState extends State<Dashboard> {
   Color caughtColor = Colors.grey;
   final DatabaseService _databaseService = DatabaseService();
   List<String> data = [];
-  late List<Device> dataDevices;
-  late List<Upload> dataUpload;
 
   @override
   void initState() {
@@ -52,6 +50,9 @@ class _DashboardState extends State<Dashboard> {
     });
     super.initState();
   }
+
+  List<Device> dataDevices = <Device>[];
+  List<Upload> dataUpload = <Upload>[];
 
   void _updateTables() async {
     List<Device> _dataDevices = await _databaseService.getAllDevices();
@@ -82,7 +83,12 @@ class _DashboardState extends State<Dashboard> {
                 return SizedBox(
                   child: Row(
                     children: [
-                      Expanded(child: ItemBuilder(items: _items, index: index)),
+                      Expanded(
+                          child: ItemBuilder(
+                        items: _items,
+                        index: index,
+                        devices: dataDevices,
+                      )),
                     ],
                   ),
                 );

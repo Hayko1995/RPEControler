@@ -3,35 +3,36 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/presentation/screens/predefineDetailScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsDetailScreen/sensors.detail.screen.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class ItemBuilder extends StatelessWidget {
   const ItemBuilder({
     Key? key,
-    required List<Item> items,
+    required List<Item> this.items,
+    required List<Device> this.devices,
     required this.index,
-  })  : _items = items,
-        super(key: key);
+  }) : super(key: key);
 
-  final List<Item> _items;
+  final List<Device> devices;
+  final List<Item> items;
   final int index;
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic> data1 = AppConstants.userData;
-    final data2 = data1[AppConstants.userData.keys.elementAt(0)];
     return GestureDetector(
         onTap: () => {
               Navigator.of(context).pushNamed(
-                AppRouter.sensorDetailsRoute,
-                arguments: SensorDetailsArgs(data: data2),
+                AppRouter.predefinePackageRoute,
+                arguments: PredefinePackageArgs(data: this.devices),
               )
             },
         child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             height: 200,
-            color: _items[index].color,
+            color: items[index].color,
             child: SizedBox(
                 width: MediaQuery.sizeOf(context).width,
                 height: MediaQuery.sizeOf(context).height * 0.8,
