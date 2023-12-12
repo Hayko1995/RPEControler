@@ -38,9 +38,6 @@ class DatabaseService {
       'CREATE TABLE location (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
     );
     await db.execute(
-      'CREATE TABLE variables (id INTEGER PRIMARY KEY, key TEXT, val INTEGER)',
-    );
-    await db.execute(
       '''CREATE TABLE uploadTable (
         nodeNumber TEXT  PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
         nodeStatus TEXT, nodeMessageLen TEXT, timeStamp TEXT, uploadMessageType TEXT, 
@@ -50,7 +47,7 @@ class DatabaseService {
       '''CREATE TABLE deviceTable (
         nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT, 
         Location TEXT, stackType TEXT, numChild TEXT, status TEXT, 
-        parentNodeNum TEXT, macAddress TEXT )''',
+        parentNodeNum TEXT, macAddress TEXT, name TEXT )''',
     );
 
     // for (int i = 0; i < 200; i++) {
@@ -69,11 +66,11 @@ class DatabaseService {
     );
   }
 
-  Future<List<Device>> getAllNetworks() async {
+  Future<List<Network>> getAllNetworks() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
     await db.query(AppConstants.networkTable);
-    return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => Network.fromMap(maps[index]));
   }
 
   Future<void> insertDevice(Device breed) async {

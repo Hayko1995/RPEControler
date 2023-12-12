@@ -10,6 +10,7 @@ class Device {
   final String status;
   final String parentNodeNum;
   final String macAddress;
+  final String name;
 
   Device({
     required this.nodeNumber,
@@ -21,6 +22,7 @@ class Device {
     required this.status,
     required this.parentNodeNum,
     required this.macAddress,
+    required this.name
   });
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
@@ -36,6 +38,7 @@ class Device {
       'status': status,
       'parentNodeNum': parentNodeNum,
       'macAddress': macAddress,
+      'name': name
     };
   }
 
@@ -50,6 +53,7 @@ class Device {
       status: map['status'] ?? "",
       parentNodeNum: map['parentNodeNum'] ?? "",
       macAddress: map['macAddress'] ?? "",
+      name: map['name'] ?? ""
     );
   }
 
@@ -61,7 +65,7 @@ class Device {
   // each breed when using the print statement.
   @override
   String toString() =>
-      'Device(nodeNumber: $nodeNumber, groups: $nodeType,  nodeSubType: $nodeSubType,  location: $location, stackType $stackType, numChild $numChild, status $status, parentNodeNum $parentNodeNum, macAddress $macAddress )';
+      'Device(nodeNumber: $nodeNumber, groups: $nodeType,  nodeSubType: $nodeSubType,  location: $location, stackType $stackType, numChild $numChild, status $status, parentNodeNum $parentNodeNum, macAddress $macAddress, name $name )';
 }
 
 class Upload {

@@ -5,6 +5,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
 import 'package:rpe_c/presentation/screens/dashboard/dashboard.screen.dart';
@@ -53,9 +54,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final DatabaseService _databaseService = DatabaseService();
   Future _initCRNetwork() async {
+
+    //TODO remove in production
+    _databaseService.insertNetwork(Network(
+        name: "mac address",
+        ip: "http://172.17.0.42:9000"));
+
     // enable QR scan if not have network in DB
     List devices = await _databaseService.getAllNetworks();
-    if (devices.length == 0) {
+    if (devices.isEmpty) {
       return Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
     }
   }

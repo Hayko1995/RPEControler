@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/api.routes.dart';
@@ -82,6 +83,8 @@ class MeshAPI {
   }
 
   Future meshE1() async {
+    List<Network> networks = await _databaseService.getAllNetworks();
+
     String command = "E1FF060001FA";
     List<String> lint = [];
     // List<String> aa = [];
@@ -95,66 +98,74 @@ class MeshAPI {
     // }
     // var command = aa.join(" " );
     //todo add problem response failure situation
-    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
-    int langht = 0;
+    Network network;
+    for (network in networks) {
 
-    try {
-      final http.Response response =
-          await client.post(uri, headers: headers, body: command);
-      final body = response.body;
-      var stringList = body.split(' ');
-      stringList.removeLast();
-      print(stringList);
-      for (int i = 0; i < stringList.length; i++) {
-        int _integerData = int.parse(stringList[i]);
-        lint.add(_integerData.toRadixString(16));
+      final Uri uri = Uri.parse(network.ip);
+      int length = 0;
+
+      try {
+        final http.Response response =
+            await client.post(uri, headers: headers, body: command);
+        final body = response.body;
+        var stringList = body.split(' ');
+        stringList.removeLast();
+        for (int i = 0; i < stringList.length; i++) {
+          int integerData = int.parse(stringList[i]);
+          lint.add(integerData.toRadixString(16));
+        }
+
+        if (kDebugMode) {
+          print(lint);
+          print("${lint[0]} command type E1");
+          print("${lint[1]}  ${lint[2]} data Langht");
+          print("${lint[3]} number of nodes ");
+          print("${lint[4]}${lint[5]}${lint[6]}${lint[7]} rpe net id ");
+          print("${lint[8]} domain type ");
+          print("${lint[9]} preset domain ");
+          print("${lint[10]} network number ");
+          print(
+              "${lint[11]}${lint[12]}${lint[13]}${lint[14]} CR reported time");
+          print("${lint[15]} reserved ");
+        }
+        length = int.parse("0x${lint[1]}${lint[2]}");
+        _databaseService.clearAllDevice();
+
+        for (int i = 16; i <= length - 1; i = i + 16) {
+          await _databaseService.insertDevice(
+            Device(
+                name: "",
+                nodeNumber: lint[i],
+                nodeType: lint[i + 1],
+                nodeSubType: lint[i + 2],
+                location: lint[i + 3],
+                stackType: lint[i + 4],
+                numChild: lint[i + 5],
+                status: lint[i + 6],
+                parentNodeNum: lint[i + 7],
+                macAddress: lint[i + 8] +
+                    lint[i + 9] +
+                    lint[i + 10] +
+                    lint[i + 11] +
+                    lint[i + 12] +
+                    lint[i + 13] +
+                    lint[i + 14] +
+                    lint[i + 15]),
+          );
+        }
+
+        if (AppConstants.debug) {
+          List list = await _databaseService.getAllDevices();
+          String debugString = '';
+          list.forEach((row) => print(row));
+          // logger.i(debugString);
+        }
+
+        return body;
+      } catch (e) {
+        logger.e(e);
+        return Null;
       }
-      print(lint);
-
-      print(lint[0] + " command type E1");
-      print(lint[1] + "  " + lint[2] + " data Langht");
-      print(lint[3] + " number of nodes ");
-      print(lint[4] + lint[5] + lint[6] + lint[7] + " rpe net id ");
-      print(lint[8] + " domain type ");
-      print(lint[9] + " preset domain ");
-      print(lint[10] + " network number ");
-      print(lint[11] + lint[12] + lint[13] + lint[14] + " CR reported time");
-      print(lint[15] + " reserved ");
-
-      langht = int.parse("0x" + lint[1] + lint[2]);
-      _databaseService.clearAllDevice();
-
-      for (int i = 16; i <= langht - 1; i = i + 16) {
-        await _databaseService.insertDevice(Device(
-            nodeNumber: lint[i],
-            nodeType: lint[i + 1],
-            nodeSubType: lint[i + 2],
-            location: lint[i + 3],
-            stackType: lint[i + 4],
-            numChild: lint[i + 5],
-            status: lint[i + 6],
-            parentNodeNum: lint[i + 7],
-            macAddress: lint[i + 8] +
-                lint[i + 9] +
-                lint[i + 10] +
-                lint[i + 11] +
-                lint[i + 12] +
-                lint[i + 13] +
-                lint[i + 14] +
-                lint[i + 15]));
-      }
-
-      if (AppConstants.debug) {
-        List list = await _databaseService.getAllDevices();
-        String debugString = '';
-        list.forEach((row) => print(row));
-        // logger.i(debugString);
-      }
-
-      return body;
-    } catch (e) {
-      logger.e(e);
-      return Null;
     }
   }
 
@@ -173,7 +184,7 @@ class MeshAPI {
     // var command = aa.join(" " );
     //todo add problem response failure situation
     final Uri uri = Uri.parse(ApiRoutes.esp32Url);
-    int langht = 0;
+    int length = 0;
 
     try {
       final http.Response response =
@@ -202,12 +213,11 @@ class MeshAPI {
       // print(lint[11] + lint[12] + lint[13] + lint[14] + " rpe Net id ");
       // print(lint[15] + " rpe net id ");
 
-      langht = int.parse("0x" + lint[1] + lint[2]);
-      // print(langht);
+      length = int.parse("0x${lint[1]}${lint[2]}");
       // print(lint.length);
       // _databaseService.clearAllUploads();
 
-      for (int i = 16; i <= langht - 1; i = i + 14) {
+      for (int i = 16; i <= length - 1; i = i + 14) {
         await _databaseService.insertUpload(Upload(
             nodeType: lint[i + 1],
             nodeSubType: lint[i + 2],
@@ -227,7 +237,6 @@ class MeshAPI {
 
       return body;
     } catch (e) {
-      print(" service = internet problem");
       logger.e(e);
       return Null;
     }
@@ -265,7 +274,7 @@ class MeshAPI {
         num = num.toRadixString(16);
       }
     }
-    return (num);
+    return num;
   }
 
   Future meshTime() async {
@@ -288,7 +297,7 @@ class MeshAPI {
 
     String sd1t3 = d1t3.toRadixString(16);
 
-    weekday = '0' + (d1.day).toRadixString(16);
+    weekday = '0${(d1.day).toRadixString(16)}';
     int daySecCount1 = (d1.hour * 3600) + (d1.minute * 60) + d1.second;
 
     daySecCount = daySecCount1.toRadixString(16);
@@ -313,8 +322,8 @@ class MeshAPI {
       var stringList = body.split(' ');
       stringList.removeLast();
       for (int i = 0; i < stringList.length; i++) {
-        int _integerData = int.parse(stringList[i]);
-        lint.add(_integerData.toRadixString(16));
+        int integerData = int.parse(stringList[i]);
+        lint.add(integerData.toRadixString(16));
       }
 
       return body;
@@ -329,11 +338,11 @@ class MeshAPI {
     int domainNum = 0x11;
     String sDomainNum;
     if (domainNum < 16) {
-      sDomainNum = '0' + domainNum.toRadixString(16);
+      sDomainNum = '0${domainNum.toRadixString(16)}';
     } else {
       sDomainNum = domainNum.toRadixString(16);
     }
-    String comand = '30' + sDomainNum + '06' + '00' + 'FF' + '07';
+    String comand = '30${sDomainNum}0600FF07';
     List<String> lint = [];
 
     final Uri uri = Uri.parse(ApiRoutes.esp32Url);
@@ -344,8 +353,8 @@ class MeshAPI {
       var stringList = body.split(' ');
       stringList.removeLast();
       for (int i = 0; i < stringList.length; i++) {
-        int _integerData = int.parse(stringList[i]);
-        lint.add(_integerData.toRadixString(16));
+        int integerData = int.parse(stringList[i]);
+        lint.add(integerData.toRadixString(16));
       }
       print(lint);
       return body;
@@ -360,7 +369,7 @@ class MeshAPI {
     int domainNum = 0x11;
     String sDomainNum;
     if (domainNum < 16) {
-      sDomainNum = '0' + domainNum.toRadixString(16);
+      sDomainNum = '0${domainNum.toRadixString(16)}';
     } else {
       sDomainNum = domainNum.toRadixString(16);
     }

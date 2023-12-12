@@ -102,10 +102,9 @@ Future<String> getData() async {
   return Future.value("");
 }
 
-Future<String> initMesh() async {
-  final MeshAPI _mashAPI = MeshAPI();
-  // await _mashAPI.meshE1();
-  return Future.value("");
+Future initMesh() async {
+  final MeshAPI mashAPI = MeshAPI();
+  await mashAPI.meshE1();
 }
 
 Future<String> updateMesh() async {
@@ -157,46 +156,46 @@ void onStart(ServiceInstance service) async {
   });
 
   // bring to foreground
-  Future<String> data1 = initMesh();
-  // Timer.periodic(const Duration(seconds: 10), (timer) async {
-  //   if (service is AndroidServiceInstance) {
-  //     if (await service.isForegroundService()) {
-  //       /// OPTIONAL for use custom notification
-  //       /// the notification id must be equals with AndroidConfiguration when you call configure() method.
-  //       flutterLocalNotificationsPlugin.show(
-  //         888,
-  //         'COOL SERVICE',
-  //         'Awesome ${DateTime.now()}',
-  //         const NotificationDetails(
-  //           android: AndroidNotificationDetails(
-  //             'my_foreground',
-  //             'MY FOREGROUND SERVICE',
-  //             icon: 'ic_bg_service_small',
-  //             ongoing: true,
-  //           ),
-  //         ),
-  //       );
-  //
-  //       // if you don't using custom notification, uncomment this
-  //       service.setForegroundNotificationInfo(
-  //         title: "My App Service",
-  //         content: "Updated at ${DateTime.now()}",
-  //       );
-  //     }
-  //   }
-  //
-  //   // test using external plugin
-  //
-  //   Future<String> data1 = updateMesh();
-  //   // Future<String> data = getData();
-  //   // String response = await data;
-  //   // if (response != "") {
-  //   //   service.invoke(
-  //   //     'update',
-  //   //     {
-  //   //       "data": response,
-  //   //     },
-  //   //   );
-  //   // }
-  // });
+  initMesh();
+  Timer.periodic(const Duration(seconds: 10), (timer) async {
+    if (service is AndroidServiceInstance) {
+      if (await service.isForegroundService()) {
+        /// OPTIONAL for use custom notification
+        /// the notification id must be equals with AndroidConfiguration when you call configure() method.
+        flutterLocalNotificationsPlugin.show(
+          888,
+          'COOL SERVICE',
+          'Awesome ${DateTime.now()}',
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'my_foreground',
+              'MY FOREGROUND SERVICE',
+              icon: 'ic_bg_service_small',
+              ongoing: true,
+            ),
+          ),
+        );
+
+        // if you don't using custom notification, uncomment this
+        service.setForegroundNotificationInfo(
+          title: "My App Service",
+          content: "Updated at ${DateTime.now()}",
+        );
+      }
+    }
+
+    // test using external plugin
+
+    Future<String> data1 = updateMesh();
+    // Future<String> data = getData();
+    // String response = await data;
+    // if (response != "") {
+    //   service.invoke(
+    //     'update',
+    //     {
+    //       "data": response,
+    //     },
+    //   );
+    // }
+  });
 }
