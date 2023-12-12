@@ -1,42 +1,34 @@
 //TODO fix responsively of page
 //TODO add values to DB
+//TODO read mDNS https://pub.dev/documentation/nsd/latest/
 
-import 'package:cache_manager/core/write_cache_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
-import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/widgets/dimensions.widget.dart';
-import 'package:rpe_c/core/notifiers/authentication.notifer.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
 
-class ConfigureNetworkScreen extends StatelessWidget {
-  ConfigureNetworkScreen({Key? key}) : super(key: key);
-  final TextEditingController userEmailController = TextEditingController();
-  final TextEditingController userPassController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+class ConfigureNetworkScreen extends StatefulWidget {
+  const ConfigureNetworkScreen(
+      {super.key, required this.networkConfigArguments});
+  final NetworkConfigArgs networkConfigArguments;
 
   @override
-  Widget build(BuildContext context) {
-    _userLogin() {
-      if (_formKey.currentState!.validate()) {
-        WriteCache.setString(key: AppKeys.userData, value: 'authData')
-            .whenComplete(() => Navigator.of(context).pushReplacementNamed(
-                // AppRouter.myHomeRoute
-                AppRouter.HomeRoute));
-        var authNotifier =
-            Provider.of<AuthenticationNotifier>(context, listen: false);
-        authNotifier.userLogin(
-            context: context,
-            email: userEmailController.text,
-            password: userPassController.text);
-      }
-    }
+  State<ConfigureNetworkScreen> createState() => _ConfigureNetworkState();
+}
 
-    ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
-    var themeFlag = _themeNotifier.darkTheme;
+class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
+  final TextEditingController userEmailController = TextEditingController();
+  final TextEditingController userPassController = TextEditingController();
+  final DatabaseService _databaseService = DatabaseService();
+  @override
+  Widget build(BuildContext context) {
+    ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context);
+    var themeFlag = themeNotifier.darkTheme;
     return SafeArea(
       child: Scaffold(
         backgroundColor: themeFlag ? AppColors.mirage : AppColors.creamColor,
@@ -46,7 +38,7 @@ class ConfigureNetworkScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             vSizedBox2,
-            Container(
+            SizedBox(
               width: MediaQuery.sizeOf(context).width,
               height: MediaQuery.sizeOf(context).height * 0.9,
               child: Column(
@@ -90,10 +82,15 @@ class ConfigureNetworkScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         onPressed: () async {
+                          _databaseService.insertNetwork(Network(
+                              name: widget.networkConfigArguments.mac,
+                              ip: widget.networkConfigArguments.ip));
+
                           Navigator.of(context)
                               .pushReplacementNamed(AppRouter.HomeRoute);
 
                           //TODO write host to db
+                          //TODO need to config ESP32
                         },
                         color: AppColors.rawSienna,
                         child: const Text(
@@ -112,9 +109,9 @@ class ConfigureNetworkScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         onPressed: () async {
-                          //TODO write host to db
-
-                          _userLogin();
+                          _databaseService.insertNetwork(Network(
+                              name: widget.networkConfigArguments.mac,
+                              ip: widget.networkConfigArguments.ip));
                         },
                         color: AppColors.rawSienna,
                         child: const Text(
@@ -136,4 +133,10 @@ class ConfigureNetworkScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class NetworkConfigArgs {
+  final String mac;
+  final String ip;
+  const NetworkConfigArgs({required this.mac, required this.ip});
 }

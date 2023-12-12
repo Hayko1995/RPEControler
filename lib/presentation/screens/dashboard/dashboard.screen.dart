@@ -56,11 +56,11 @@ class _DashboardState extends State<Dashboard> {
 
   void _updateTables() async {
     List<Device> _dataDevices = await _databaseService.getAllDevices();
-    print("/////////////////////////////////");
-    logger.w(_dataDevices);
-    print("/////////////////////////////////");
+    // print("/////////////////////////////////");
+    // logger.w(_dataDevices);
+    // print("/////////////////////////////////");
     List<Upload> _dataUpload = await _databaseService.getAllUploads();
-    logger.w(_dataUpload);
+    // logger.w(_dataUpload);
 
     // TODO write logic for Widget
     setState(() {

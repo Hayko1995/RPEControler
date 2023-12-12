@@ -4,7 +4,7 @@ import 'package:rpe_c/app/constants/app.colors.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/presentation/screens/signUpScreen/widget/welcome.signup.widget.dart';
 import 'package:rpe_c/presentation/widgets/dimensions.widget.dart';
-import 'package:rpe_c/core/notifiers/authentication.notifer.dart';
+import 'package:rpe_c/core/notifiers/authentication.notifier.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'package:rpe_c/presentation/widgets/custom.animated.container.dart';
 import 'package:rpe_c/presentation/widgets/custom.text.field.dart';

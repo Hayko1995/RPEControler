@@ -1,6 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:rpe_c/core/notifiers/authentication.notifer.dart';
+import 'package:rpe_c/core/notifiers/authentication.notifier.dart';
 import 'package:rpe_c/core/notifiers/cart.notifier.dart';
 import 'package:rpe_c/core/notifiers/product.notifier.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';

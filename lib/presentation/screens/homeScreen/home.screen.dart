@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final DatabaseService _databaseService = DatabaseService();
   Future _initCRNetwork() async {
     // enable QR scan if not have network in DB
-    List devices = await _databaseService.getAllDevices();
+    List devices = await _databaseService.getAllNetworks();
     if (devices.length == 0) {
       return Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
     }

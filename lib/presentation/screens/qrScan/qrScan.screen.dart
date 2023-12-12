@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/api/mesh.api.dart';
+import 'package:rpe_c/presentation/screens/qrScan/configureNetwork.dart';
+import 'package:wifi_iot/wifi_iot.dart';
 
 class QRScanScreen extends StatefulWidget {
   // todo change
-  const QRScanScreen({Key? key}) : super(key: key);
+  const QRScanScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _QRScanScreenState();
@@ -80,7 +82,7 @@ class _QRScanScreenState extends State<QRScanScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.data != null) {
                                   return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
+                                      'Camera facing ${snapshot.data!}');
                                 } else {
                                   return const Text('loading');
                                 }
@@ -127,23 +129,26 @@ class _QRScanScreenState extends State<QRScanScreen> {
     controller.scannedDataStream.listen((scanData) {
       // setState(() {
       result = scanData;
-      final Map<String, dynamic> data;
+      String data = '${result!.code}';
+      List<String> qrCodeSplit = data.split(';');
+      String password = qrCodeSplit[2].split(':')[1];
+      String ssid = qrCodeSplit[1].split(':')[1];
+
+      //TODO change https://pub.dev/packages/wifi_iot/example use this exmple
+      logger.w(data);
+      logger.w(ssid);
+      logger.w(password);
+      WiFiForIoTPlugin.connect(ssid,
+          password: password, joinOnce: false, security: NetworkSecurity.WPA);
+
+      controller.dispose();
       Navigator.of(context).pushReplacementNamed(
           // AppRouter.myHomeRoute
-          AppRouter.networkConfigRouter);
-          
-      //todo change
-      // data = jsonDecode('${result!.code}');
-
-      // if (data != Null && data['enter']) {
-      //   controller.dispose();
-      //   Navigator.of(context).pushReplacementNamed(
-      //       // AppRouter.myHomeRoute
-      //       AppRouter.myHomeRoute);
-      // }
-      // result = scanData;
-      // });
+          AppRouter.networkConfigRouter,
+          arguments: NetworkConfigArgs(mac: ssid, ip: "192.168.4.1"));
     });
+    this.controller!.pauseCamera();
+    this.controller!.resumeCamera();
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {

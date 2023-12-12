@@ -137,11 +137,11 @@ class Upload {
 
 class Network {
   final String name;
-  final String val;
+  final String ip;
 
   Network({
     required this.name,
-    required this.val,
+    required this.ip,
   });
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
@@ -149,14 +149,14 @@ class Network {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'val': val,
+      'val': ip,
     };
   }
 
   factory Network.fromMap(Map<String, dynamic> map) {
     return Network(
       name: map['name'] ?? "",
-      val: map['val'] ?? "",
+      ip: map['val'] ?? "",
     );
   }
 
@@ -168,5 +168,5 @@ class Network {
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
   @override
-  String toString() => '''Network(name: $name, val: $val,''';
+  String toString() => '''Network(name: $name, val: $ip,''';
 }

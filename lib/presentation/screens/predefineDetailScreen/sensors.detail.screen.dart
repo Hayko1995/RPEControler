@@ -1,14 +1,12 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 
 class PredefineDetail extends StatefulWidget {
-  final PredefinePackageArgs PredefinePackageArguments;
+  final PredefinePackageArgs predefinePackageArguments;
   const PredefineDetail({
-    Key? key,
-    required this.PredefinePackageArguments,
-  }) : super(key: key);
+    super.key,
+    required this.predefinePackageArguments,
+  });
 
   @override
   State<PredefineDetail> createState() => _PredefineDetailState();
@@ -51,7 +49,7 @@ class _PredefineDetailState extends State<PredefineDetail> {
     List<Widget> getSensors() {
       List<Widget> sensorList = [];
       // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
-      List<Device> data = widget.PredefinePackageArguments.data;
+      List<Device> data = widget.predefinePackageArguments.data;
       for (var i = 0; i < data.length; i++) {
         sensorList.add(itemDashboard(data.elementAt(i).nodeNumber.toString()));
         // logger.e(data.elementAt(i).nodeNumber);

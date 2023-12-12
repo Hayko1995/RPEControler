@@ -6,7 +6,7 @@ import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/presentation/screens/loginScreen/widget/welcome.login.widget.dart';
 import 'package:rpe_c/presentation/widgets/dimensions.widget.dart';
-import 'package:rpe_c/core/notifiers/authentication.notifer.dart';
+import 'package:rpe_c/core/notifiers/authentication.notifier.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
 

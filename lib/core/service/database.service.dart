@@ -20,6 +20,7 @@ class DatabaseService {
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, AppConstants.dbName);
+    print("db path =" + path);
 
     return await openDatabase(
       path,
@@ -31,7 +32,7 @@ class DatabaseService {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE network (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
+      'CREATE TABLE networkTable (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
     );
     await db.execute(
       'CREATE TABLE location (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
@@ -57,6 +58,22 @@ class DatabaseService {
     //   db.execute('''INSERT INTO location (name,val)
     //   VALUES( Null,	$val);''');
     // }
+  }
+
+  Future<void> insertNetwork(Network breed) async {
+    final db = await _databaseService.database;
+    await db.insert(
+      AppConstants.networkTable,
+      breed.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Device>> getAllNetworks() async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps =
+    await db.query(AppConstants.networkTable);
+    return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
   }
 
   Future<void> insertDevice(Device breed) async {

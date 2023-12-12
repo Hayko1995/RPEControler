@@ -117,7 +117,7 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => PredefineDetail(
-              PredefinePackageArguments: ModalRoute.of(context)!
+              predefinePackageArguments: ModalRoute.of(context)!
                   .settings
                   .arguments as PredefinePackageArgs,
             ),
@@ -177,7 +177,11 @@ class AppRouter {
       case networkConfigRouter:
         {
           return MaterialPageRoute(
-            builder: (_) => ConfigureNetworkScreen(),
+            builder: (context) => ConfigureNetworkScreen(
+              networkConfigArguments: ModalRoute.of(context)!.settings.arguments
+                  as NetworkConfigArgs,
+            ),
+            settings: settings,
           );
         }
       case signUpRoute:
