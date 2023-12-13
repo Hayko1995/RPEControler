@@ -134,6 +134,7 @@ class MeshAPI {
         for (int i = 16; i <= length - 1; i = i + 16) {
           await _databaseService.insertDevice(
             Device(
+                networkTableMAC: network.mac,
                 name: "",
                 nodeNumber: lint[i],
                 nodeType: lint[i + 1],

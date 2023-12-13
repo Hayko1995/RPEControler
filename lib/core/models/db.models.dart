@@ -11,19 +11,20 @@ class Device {
   final String parentNodeNum;
   final String macAddress;
   final String name;
+  final String networkTableMAC;
 
-  Device({
-    required this.nodeNumber,
-    required this.nodeType,
-    required this.nodeSubType,
-    required this.location,
-    required this.stackType,
-    required this.numChild,
-    required this.status,
-    required this.parentNodeNum,
-    required this.macAddress,
-    required this.name
-  });
+  Device(
+      {required this.nodeNumber,
+      required this.nodeType,
+      required this.nodeSubType,
+      required this.location,
+      required this.stackType,
+      required this.numChild,
+      required this.status,
+      required this.parentNodeNum,
+      required this.macAddress,
+      required this.name,
+      required this.networkTableMAC});
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
   // columns in the database.
@@ -38,23 +39,24 @@ class Device {
       'status': status,
       'parentNodeNum': parentNodeNum,
       'macAddress': macAddress,
-      'name': name
+      'name': name,
+      'networkTableMAC': networkTableMAC
     };
   }
 
   factory Device.fromMap(Map<String, dynamic> map) {
     return Device(
-      nodeNumber: map['nodeNumber'] ?? "",
-      nodeType: map['nodeType'] ?? "",
-      nodeSubType: map['nodeSubType'] ?? "",
-      location: map['location'] ?? "",
-      stackType: map['stackType'] ?? "",
-      numChild: map['numChild'] ?? "",
-      status: map['status'] ?? "",
-      parentNodeNum: map['parentNodeNum'] ?? "",
-      macAddress: map['macAddress'] ?? "",
-      name: map['name'] ?? ""
-    );
+        nodeNumber: map['nodeNumber'] ?? "",
+        nodeType: map['nodeType'] ?? "",
+        nodeSubType: map['nodeSubType'] ?? "",
+        location: map['location'] ?? "",
+        stackType: map['stackType'] ?? "",
+        numChild: map['numChild'] ?? "",
+        status: map['status'] ?? "",
+        parentNodeNum: map['parentNodeNum'] ?? "",
+        macAddress: map['macAddress'] ?? "",
+        name: map['name'] ?? "",
+        networkTableMAC: map['networkTableMAC'] ?? 0);
   }
 
   String toJson() => json.encode(toMap());
@@ -64,8 +66,11 @@ class Device {
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
   @override
-  String toString() =>
-      'Device(nodeNumber: $nodeNumber, groups: $nodeType,  nodeSubType: $nodeSubType,  location: $location, stackType $stackType, numChild $numChild, status $status, parentNodeNum $parentNodeNum, macAddress $macAddress, name $name )';
+  String toString() => '''Device(nodeNumber: $nodeNumber, groups: $nodeType,  
+         nodeSubType: $nodeSubType,  location: $location,
+         stackType $stackType, numChild $numChild,
+         status $status, parentNodeNum $parentNodeNum, macAddress $macAddress,
+         name $name, networkTableMAC $networkTableMAC )''';
 }
 
 class Upload {
@@ -140,11 +145,11 @@ class Upload {
 }
 
 class Network {
-  final String name;
+  final String mac;
   final String ip;
 
   Network({
-    required this.name,
+    required this.mac,
     required this.ip,
   });
 
@@ -152,14 +157,14 @@ class Network {
   // columns in the database.
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
+      'mac': mac,
       'val': ip,
     };
   }
 
   factory Network.fromMap(Map<String, dynamic> map) {
     return Network(
-      name: map['name'] ?? "",
+      mac: map['mac'] ?? "",
       ip: map['val'] ?? "",
     );
   }
@@ -172,5 +177,5 @@ class Network {
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
   @override
-  String toString() => '''Network(name: $name, val: $ip,''';
+  String toString() => '''Network(name: $mac, val: $ip,''';
 }

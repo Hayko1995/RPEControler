@@ -22,11 +22,15 @@ class ItemBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("/////////////////");
+    print("/////////////////aaaaaaaaaaaa");
+    print(devices[index].networkTableMAC);
     return GestureDetector(
         onTap: () => {
               Navigator.of(context).pushNamed(
                 AppRouter.predefinePackageRoute,
-                arguments: PredefinePackageArgs(data: this.devices),
+                arguments:
+                    PredefinePackageArgs(mac: devices[index].networkTableMAC),
               )
             },
         child: Container(

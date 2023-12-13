@@ -15,6 +15,7 @@ import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
 class ConfigureNetworkScreen extends StatefulWidget {
   const ConfigureNetworkScreen(
       {super.key, required this.networkConfigArguments});
+
   final NetworkConfigArgs networkConfigArguments;
 
   @override
@@ -25,6 +26,7 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
   final TextEditingController userEmailController = TextEditingController();
   final TextEditingController userPassController = TextEditingController();
   final DatabaseService _databaseService = DatabaseService();
+
   @override
   Widget build(BuildContext context) {
     ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context);
@@ -83,7 +85,7 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                         ),
                         onPressed: () async {
                           _databaseService.insertNetwork(Network(
-                              name: widget.networkConfigArguments.mac,
+                              mac: widget.networkConfigArguments.mac,
                               ip: widget.networkConfigArguments.ip));
 
                           Navigator.of(context)
@@ -110,7 +112,7 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                         ),
                         onPressed: () async {
                           _databaseService.insertNetwork(Network(
-                              name: widget.networkConfigArguments.mac,
+                              mac: widget.networkConfigArguments.mac,
                               ip: widget.networkConfigArguments.ip));
                         },
                         color: AppColors.rawSienna,
@@ -138,5 +140,6 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
 class NetworkConfigArgs {
   final String mac;
   final String ip;
+
   const NetworkConfigArgs({required this.mac, required this.ip});
 }

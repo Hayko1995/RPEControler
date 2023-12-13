@@ -13,7 +13,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  const Dashboard({super.key});
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -56,9 +56,6 @@ class _DashboardState extends State<Dashboard> {
 
   void _updateTables() async {
     List<Device> _dataDevices = await _databaseService.getAllDevices();
-    // print("/////////////////////////////////");
-    // logger.w(_dataDevices);
-    // print("/////////////////////////////////");
     List<Upload> _dataUpload = await _databaseService.getAllUploads();
     // logger.w(_dataUpload);
 
@@ -83,12 +80,13 @@ class _DashboardState extends State<Dashboard> {
                 return SizedBox(
                   child: Row(
                     children: [
+                      if (dataDevices.length > 0)...[
                       Expanded(
                           child: ItemBuilder(
                         items: _items,
                         index: index,
-                        devices: dataDevices,
-                      )),
+                        devices: dataDevices
+                      ))],
                     ],
                   ),
                 );

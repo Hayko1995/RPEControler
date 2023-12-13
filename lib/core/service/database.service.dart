@@ -6,10 +6,13 @@ import 'package:rpe_c/core/models/db.models.dart';
 
 class DatabaseService {
   static final DatabaseService _databaseService = DatabaseService._internal();
+
   factory DatabaseService() => _databaseService;
+
   DatabaseService._internal();
 
   static Database? _database;
+
   Future<Database> get database async {
     if (_database != null) return _database!;
     // Initialize the DB first time it is accessed
@@ -32,7 +35,7 @@ class DatabaseService {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE networkTable (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
+      'CREATE TABLE networkTable (id INTEGER PRIMARY KEY, mac TEXT, val INTEGER)',
     );
     await db.execute(
       'CREATE TABLE location (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
@@ -45,9 +48,10 @@ class DatabaseService {
     );
     await db.execute(
       '''CREATE TABLE deviceTable (
-        nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT, 
-        Location TEXT, stackType TEXT, numChild TEXT, status TEXT, 
-        parentNodeNum TEXT, macAddress TEXT, name TEXT )''',
+        nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
+        Location TEXT, stackType TEXT, numChild TEXT, status TEXT,
+        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT,
+        FOREIGN KEY (networkTableMAC) REFERENCES networkTable (mac) ON DELETE NO ACTION ON UPDATE NO ACTION)''',
     );
 
     // for (int i = 0; i < 200; i++) {
@@ -69,14 +73,14 @@ class DatabaseService {
   Future<List<Network>> getAllNetworks() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
-    await db.query(AppConstants.networkTable);
+        await db.query(AppConstants.networkTable);
     return List.generate(maps.length, (index) => Network.fromMap(maps[index]));
   }
 
   Future<void> insertDevice(Device breed) async {
     final db = await _databaseService.database;
     await db.insert(
-      AppConstants.crTable,
+      AppConstants.deviceTable,
       breed.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -84,15 +88,21 @@ class DatabaseService {
 
   Future clearAllDevice() async {
     final db = await _databaseService.database;
-    String tableName = AppConstants.crTable;
+    String tableName = AppConstants.deviceTable;
     return await db.rawDelete("DELETE FROM $tableName");
   }
 
   Future<List<Device>> getAllDevices() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
-        await db.query(AppConstants.crTable);
+        await db.query(AppConstants.deviceTable);
     return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
+  }
+  Future<List<Device>> getDevices(String mac) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps =
+        await db.query(AppConstants.deviceTable, where: 'networkTableMAC = ?', whereArgs: [mac]);
+    return  List.generate(maps.length, (index) => Device.fromMap(maps[index]));
   }
 
   // Future<CR> getCR(int id) async {
@@ -116,7 +126,7 @@ class DatabaseService {
   Future<void> deleteDevice(int id) async {
     final db = await _databaseService.database;
     await db.delete(
-      AppConstants.crTable,
+      AppConstants.deviceTable,
       where: 'id = ?',
       whereArgs: [id],
     );

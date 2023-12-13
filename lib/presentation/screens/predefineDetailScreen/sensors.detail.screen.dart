@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/service/database.service.dart';
 
 class PredefineDetail extends StatefulWidget {
   final PredefinePackageArgs predefinePackageArguments;
@@ -13,8 +16,32 @@ class PredefineDetail extends StatefulWidget {
 }
 
 class _PredefineDetailState extends State<PredefineDetail> {
+  final DatabaseService _databaseService = DatabaseService();
+  List<Device> dataDevices = <Device>[];
+
+  void _updateData() async {
+    List<Device> devices = await _databaseService.getDevices(widget.predefinePackageArguments.mac);
+    // logger.w(_dataUpload);
+
+
+    // TODO write logic for Widget
+    setState(() {
+      dataDevices = devices;
+    });
+  }
+
+  @override
+  void initState() {
+
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      _updateData();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // _updateData();
     // ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
     // var themeFlag = _themeNotifier.darkTheme;
 
@@ -49,7 +76,9 @@ class _PredefineDetailState extends State<PredefineDetail> {
     List<Widget> getSensors() {
       List<Widget> sensorList = [];
       // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
-      List<Device> data = widget.predefinePackageArguments.data;
+      List<Device> data = dataDevices;
+      print("object/////////////////////////////");
+      print(dataDevices);
       for (var i = 0; i < data.length; i++) {
         sensorList.add(itemDashboard(data.elementAt(i).nodeNumber.toString()));
         // logger.e(data.elementAt(i).nodeNumber);
@@ -88,6 +117,6 @@ class _PredefineDetailState extends State<PredefineDetail> {
 }
 
 class PredefinePackageArgs {
-  final List<Device> data;
-  const PredefinePackageArgs({required this.data});
+  final String mac;
+  const PredefinePackageArgs({required this.mac});
 }
