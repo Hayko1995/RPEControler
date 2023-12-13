@@ -55,6 +55,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Timer _timer;
   final DatabaseService _databaseService = DatabaseService();
 
   Future _initCRNetwork() async {
@@ -78,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //     userNotifier.getUserData(context: context, token: token),
     //   },
     // );
-    Timer(const Duration(seconds: 1), _initCRNetwork);
+    _timer = Timer(const Duration(seconds: 5), _initCRNetwork);
     super.initState();
   }
 
@@ -98,5 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Row(
           children: [Dashboard()],
         ));
+  }
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 }

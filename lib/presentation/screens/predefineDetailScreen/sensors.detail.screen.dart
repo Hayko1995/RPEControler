@@ -6,6 +6,8 @@ import 'package:rpe_c/core/service/database.service.dart';
 
 class PredefineDetail extends StatefulWidget {
   final PredefinePackageArgs predefinePackageArguments;
+
+
   const PredefineDetail({
     super.key,
     required this.predefinePackageArguments,
@@ -17,23 +19,26 @@ class PredefineDetail extends StatefulWidget {
 
 class _PredefineDetailState extends State<PredefineDetail> {
   final DatabaseService _databaseService = DatabaseService();
+  late Timer _timer;
   List<Device> dataDevices = <Device>[];
 
   void _updateData() async {
-    List<Device> devices = await _databaseService.getDevices(widget.predefinePackageArguments.mac);
+    List<Device> devices =
+        await _databaseService.getDevices(widget.predefinePackageArguments.mac);
     // logger.w(_dataUpload);
 
-
     // TODO write logic for Widget
-    setState(() {
-      dataDevices = devices;
-    });
+    if (mounted) {
+      setState(() {
+        dataDevices = devices;
+      });
+    }
   }
 
   @override
   void initState() {
-
-    Timer.periodic(const Duration(seconds: 5), (timer) {
+    _updateData();
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       _updateData();
     });
     super.initState();
@@ -41,7 +46,6 @@ class _PredefineDetailState extends State<PredefineDetail> {
 
   @override
   Widget build(BuildContext context) {
-    // _updateData();
     // ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
     // var themeFlag = _themeNotifier.darkTheme;
 
@@ -77,7 +81,6 @@ class _PredefineDetailState extends State<PredefineDetail> {
       List<Widget> sensorList = [];
       // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
       List<Device> data = dataDevices;
-      print("object/////////////////////////////");
       print(dataDevices);
       for (var i = 0; i < data.length; i++) {
         sensorList.add(itemDashboard(data.elementAt(i).nodeNumber.toString()));
@@ -114,9 +117,16 @@ class _PredefineDetailState extends State<PredefineDetail> {
                   children: getSensors())),
         ));
   }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 }
 
 class PredefinePackageArgs {
   final String mac;
+
   const PredefinePackageArgs({required this.mac});
 }

@@ -45,6 +45,7 @@ class _DashboardState extends State<Dashboard> {
     //     userNotifier.getUserData(context: context, token: token),
     //   },
     // );
+    _updateTables();
     Timer.periodic(const Duration(seconds: 5), (timer) {
       _updateTables();
     });

@@ -50,15 +50,8 @@ class DatabaseService {
       '''CREATE TABLE deviceTable (
         nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
         Location TEXT, stackType TEXT, numChild TEXT, status TEXT,
-        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT,
-        FOREIGN KEY (networkTableMAC) REFERENCES networkTable (mac) ON DELETE NO ACTION ON UPDATE NO ACTION)''',
+        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT)''',
     );
-
-    // for (int i = 0; i < 200; i++) {
-    //   String val = i.toRadixString(16);
-    //   db.execute('''INSERT INTO location (name,val)
-    //   VALUES( Null,	$val);''');
-    // }
   }
 
   Future<void> insertNetwork(Network breed) async {
