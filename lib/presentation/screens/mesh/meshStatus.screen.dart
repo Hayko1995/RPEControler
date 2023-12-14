@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rpe_c/core/api/mesh.api.dart';
+// import 'package:rpe_c/core/api/mesh.api.dart';
+import 'package:rpe_c/core/api/mesh.api.test.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 
@@ -23,37 +24,37 @@ class MeshCommands extends StatelessWidget {
               children: [
                 FilledButton(
                   onPressed: () {
-                    _mashAPI.meshE1();
+                    _mashAPI.testMeshE1();
                   },
                   child: const Text('Send E1'),
                 ),
                 FilledButton(
                   onPressed: () {
-                    _mashAPI.meshTime();
+                    _mashAPI.testMeshTime();
                   },
                   child: const Text('SetTime'),
                 ),
                 FilledButton(
                   onPressed: () {
-                    _mashAPI.sendDomainNum();
+                    _mashAPI.testSendDomainNum();
                   },
                   child: const Text('sendDomainNum'),
                 ),
                 FilledButton(
                   onPressed: () {
-                    _mashAPI.sendSetNetId();
+                    _mashAPI.testSendSetNetId();
                   },
                   child: const Text('sendSetNetId'),
                 ),
                 FilledButton(
                   onPressed: () {
-                    _mashAPI.sendPreDefineNum();
+                    _mashAPI.testSendPreDefineNum();
                   },
                   child: const Text('sendPreDefineNum'),
                 ),
                 FilledButton(
                   onPressed: () {
-                    _mashAPI.sendSetNetNum();
+                    _mashAPI.testSendSetNetNum();
                   },
                   child: const Text('sendSetNetNum'),
                 ),

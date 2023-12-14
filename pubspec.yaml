@@ -45,6 +45,7 @@ dependencies:
   logger: ^2.0.2+1
   syncfusion_flutter_gauges: ^23.2.7
   wifi_iot: ^0.3.18+1
+  getwidget: ^4.0.0
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -70,6 +71,7 @@ flutter:
     - assets/images/shoes/
     - assets/images/misc/
     - assets/images/logo/
+    - assets/images/icons/
 
   fonts:
     - family: Contax

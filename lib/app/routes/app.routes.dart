@@ -10,14 +10,14 @@ import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/screens/ipScanScreen/ipScan.screen.dart';
 import 'package:rpe_c/presentation/screens/loginScreen/login.view.dart';
 import 'package:rpe_c/presentation/screens/onBoardingScreen/onBoarding.screen.dart';
-import 'package:rpe_c/presentation/screens/predefineDetailScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/accountInformationScreen/account.information.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/appSettingsScreen/app.setting.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/changePasswordScreen/change.password.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/editProfileScreen/edit.profile.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/mainProfileScreen/profile.screen.dart';
 import 'package:rpe_c/presentation/screens/qrScan/configureNetwork.dart';
-import 'package:rpe_c/presentation/screens/sensorsDetailScreen/sensors.detail.screen.dart';
+import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
+import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 import 'package:rpe_c/presentation/screens/settings/settings.screen.dart';
 import 'package:rpe_c/presentation/screens/signUpScreen/signup.screen.dart';
 import 'package:rpe_c/presentation/screens/splashScreen/splash.screen.dart';
@@ -34,18 +34,17 @@ class AppRouter {
   static const String appSettingsRoute = "/appSettings";
   static const String homeRoute = "/home";
   static const String watcherRoute = "/watcher";
-  static const String HomeRoute = "/myHome";
   static const String controllerRoute = "/controller";
   static const String searchRoute = "/search";
   static const String profileRoute = "/profile";
   static const String accountInfo = "/accountInfo";
   static const String categoryRoute = "/category";
-  static const String sensorDetailsRoute = "/productDetail";
+  static const String sensorDetailsRoute = "/sensorDetails";
+  static const String sensorsRoute = "/sensor";
   static const String editProfileRoute = "/editProfile";
   static const String changePassRoute = "/changePassword";
   static const String ipScanRoute = "/ipScan";
   static const String qrScanRoute = "/qrScan";
-  static const String predefinePackageRoute = "/preDefinePackagePage";
   static const String dashboardRoute = "/dashboard";
   static const String meshCommandsRoute = "/meshStatus";
   static const String settingsRoute = "/settings";
@@ -58,6 +57,16 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => EditProfileScreen(),
+          );
+        }
+      case sensorDetailsRoute:
+        {
+          return MaterialPageRoute(
+            builder: (context) => sensorDetailsScreen(
+              sensorDetailsArguments: ModalRoute.of(context)!.settings.arguments
+                  as SensorDetailsArgs,
+            ),
+            settings: settings,
           );
         }
       case settingsRoute:
@@ -102,24 +111,12 @@ class AppRouter {
             builder: (_) => const QRScanScreen(), //todo change
           );
         }
-      case sensorDetailsRoute:
+      case sensorsRoute:
         {
           return MaterialPageRoute(
-            builder: (context) => SensorsDetail(
-              sensorDetailsArguments: ModalRoute.of(context)!.settings.arguments
-                  as SensorDetailsArgs,
-            ),
-            settings: settings,
-          );
-        }
-
-      case predefinePackageRoute:
-        {
-          return MaterialPageRoute(
-            builder: (context) => PredefineDetail(
-              predefinePackageArguments: ModalRoute.of(context)!
-                  .settings
-                  .arguments as PredefinePackageArgs,
+            builder: (context) => Sensors(
+              sensorsArguments:
+                  ModalRoute.of(context)!.settings.arguments as SensorArgs,
             ),
             settings: settings,
           );
@@ -141,12 +138,6 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => const WatcherScreen(),
-          );
-        }
-      case HomeRoute:
-        {
-          return MaterialPageRoute(
-            builder: (_) => const HomeScreen(),
           );
         }
       case controllerRoute:

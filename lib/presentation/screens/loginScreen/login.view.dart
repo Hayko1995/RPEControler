@@ -23,7 +23,7 @@ class LoginScreen extends StatelessWidget {
         WriteCache.setString(key: AppKeys.userData, value: 'authData')
             .whenComplete(() => Navigator.of(context).pushReplacementNamed(
                 // AppRouter.myHomeRoute
-                AppRouter.HomeRoute));
+                AppRouter.homeRoute));
         var authNotifier =
             Provider.of<AuthenticationNotifier>(context, listen: false);
         authNotifier.userLogin(

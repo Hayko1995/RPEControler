@@ -89,7 +89,7 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                               ip: widget.networkConfigArguments.ip));
 
                           Navigator.of(context)
-                              .pushReplacementNamed(AppRouter.HomeRoute);
+                              .pushReplacementNamed(AppRouter.homeRoute);
 
                           //TODO write host to db
                           //TODO need to config ESP32

@@ -91,11 +91,14 @@ class DatabaseService {
         await db.query(AppConstants.deviceTable);
     return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
   }
-  Future<List<Device>> getDevices(String mac) async {
+
+  Future<List<Device>> getDevices(List<String> mac) async {
     final db = await _databaseService.database;
-    final List<Map<String, dynamic>> maps =
-        await db.query(AppConstants.deviceTable, where: 'networkTableMAC = ?', whereArgs: [mac]);
-    return  List.generate(maps.length, (index) => Device.fromMap(maps[index]));
+    final List<Map<String, dynamic>> maps = await db.query(
+        AppConstants.deviceTable,
+        where: 'networkTableMAC = ?',
+        whereArgs: mac);
+    return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
   }
 
   // Future<CR> getCR(int id) async {

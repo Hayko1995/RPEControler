@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
-import 'package:rpe_c/presentation/screens/predefineDetailScreen/sensors.detail.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorsDetailScreen/sensors.detail.screen.dart';
+import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class ItemBuilder extends StatelessWidget {
@@ -26,9 +25,9 @@ class ItemBuilder extends StatelessWidget {
     return GestureDetector(
         onTap: () => {
               Navigator.of(context).pushNamed(
-                AppRouter.predefinePackageRoute,
+                AppRouter.sensorsRoute,
                 arguments:
-                    PredefinePackageArgs(mac: devices[index].networkTableMAC),
+                  SensorArgs(mac: [devices[index].networkTableMAC]),
               )
             },
         child: Container(

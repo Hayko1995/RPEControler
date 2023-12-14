@@ -7,8 +7,8 @@ import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/screens/dashboard/witget/air.quality.widget.dart';
-import 'package:rpe_c/presentation/screens/sensorsDetailScreen/sensors.detail.screen.dart';
+import 'package:rpe_c/presentation/screens/dashboard/widget/air.quality.widget.dart';
+import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 

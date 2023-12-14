@@ -58,7 +58,7 @@ class AuthenticationNotifier with ChangeNotifier {
         WriteCache.setString(key: AppKeys.userData, value: authData)
             .whenComplete(
           () => Navigator.of(context).pushReplacementNamed(
-              AppRouter.HomeRoute), //todo change to home
+              AppRouter.homeRoute), //todo change to home
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -81,7 +81,7 @@ class AuthenticationNotifier with ChangeNotifier {
       {required String email,
       required BuildContext context,
       required String password}) async {
-    Navigator.of(context).pushReplacementNamed(AppRouter.HomeRoute);
+    Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
     //uncomment when use with server
     // try {
 

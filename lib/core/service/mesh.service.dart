@@ -184,9 +184,8 @@ void onStart(ServiceInstance service) async {
     }
 
     // test using external plugin
-    initMesh();
-    // Future<String> data1 = updateMesh();
-    // Future<String> data = getData();
+    Future<String> data1 = updateMesh();
+    Future<String> data = getData();
     // String response = await data;
     // if (response != "") {
     //   service.invoke(

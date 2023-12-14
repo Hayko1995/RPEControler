@@ -37,6 +37,7 @@ class _QRScanScreenState extends State<QRScanScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Device'),
+        backgroundColor: Colors.blue,
       ),
       body: Column(
         children: <Widget>[
