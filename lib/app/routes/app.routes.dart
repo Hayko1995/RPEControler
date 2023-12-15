@@ -10,6 +10,7 @@ import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/screens/ipScanScreen/ipScan.screen.dart';
 import 'package:rpe_c/presentation/screens/loginScreen/login.view.dart';
 import 'package:rpe_c/presentation/screens/onBoardingScreen/onBoarding.screen.dart';
+import 'package:rpe_c/presentation/screens/preDefinesScreen/preDefines.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/accountInformationScreen/account.information.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/appSettingsScreen/app.setting.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/changePasswordScreen/change.password.screen.dart';
@@ -40,6 +41,7 @@ class AppRouter {
   static const String accountInfo = "/accountInfo";
   static const String categoryRoute = "/category";
   static const String sensorDetailsRoute = "/sensorDetails";
+  static const String preDefinesRoute = "/preDefine";
   static const String sensorsRoute = "/sensor";
   static const String editProfileRoute = "/editProfile";
   static const String changePassRoute = "/changePassword";
@@ -65,6 +67,16 @@ class AppRouter {
             builder: (context) => sensorDetailsScreen(
               sensorDetailsArguments: ModalRoute.of(context)!.settings.arguments
                   as SensorDetailsArgs,
+            ),
+            settings: settings,
+          );
+        }
+      case preDefinesRoute:
+        {
+          return MaterialPageRoute(
+            builder: (context) => PredefineScreen(
+              predefineArguments: ModalRoute.of(context)!.settings.arguments
+              as PreDefineArgs,
             ),
             settings: settings,
           );

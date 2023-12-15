@@ -8,6 +8,7 @@ import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/dashboard/widget/air.quality.widget.dart';
+import 'package:rpe_c/presentation/widgets/predefine.widgets.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -20,9 +21,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final List<Item> _items = [
-    Item('air quality', Colors.white),
-  ];
   final PageController _pageController =
       PageController(viewportFraction: 0.8, initialPage: 0);
   double _page = 0;
@@ -52,67 +50,74 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
   }
 
-  List<Device> dataDevices = <Device>[];
-  List<Upload> dataUpload = <Upload>[];
+  List<Network> dataNetworks = <Network>[];
+  List<String> list = <String>['Network', 'Clusters', 'Widgets'];
 
   void _updateTables() async {
-    List<Device> _dataDevices = await _databaseService.getAllDevices();
-    List<Upload> _dataUpload = await _databaseService.getAllUploads();
+    List<Network> _dataDevices = await _databaseService.getAllNetworks();
+
     // logger.w(_dataUpload);
 
     // TODO write logic for Widget
     setState(() {
-      dataDevices = _dataDevices;
-      dataUpload = _dataUpload;
+      dataNetworks = _dataDevices;
     });
+  }
+
+  List<Widget> getSensors() {
+    List<Widget> sensorList = [];
+    // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
+    List<Network> data = dataNetworks;
+    int airQualityNumber = 0;
+    for (var i = 0; i < data.length; i++) {
+      if (data.elementAt(i).type == "AirQuality") {
+        airQualityNumber++;
+      }
+      // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
+    }
+    if (airQualityNumber > 0) {
+      sensorList.add(airQualityWidget(context, data.elementAt(0), 0,
+          "dashboard", airQualityNumber, GlobalKey()));
+    }
+    setState(() {});
+    return sensorList;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.8,
-          child: PageView.builder(
-              controller: _pageController,
-              itemCount: _items.length,
-              itemBuilder: (context, index) {
-                return SizedBox(
-                  child: Row(
-                    children: [
-                      if (dataDevices.length > 0)...[
-                      Expanded(
-                          child: ItemBuilder(
-                        items: _items,
-                        index: index,
-                        devices: dataDevices
-                      ))],
-                    ],
-                  ),
-                );
-              }),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            for (int i = 0; i < _items.length; i++)
-              Container(
-                margin: const EdgeInsets.all(2),
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.grey, width: 1.5),
-                    color: _page - i > 1 || _page - i < -1
-                        ? Colors.transparent
-                        : _page - i > 0
-                            ? Colors.grey.withOpacity(1 - (_page - i))
-                            : Colors.grey.withOpacity(1 - (i - _page))),
-              )
-          ],
-        )
-      ],
+    String dropdownValue = list.first;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          DropdownMenu<String>(
+            initialSelection: list.first,
+            onSelected: (String? value) {
+              // This is called when the user selects an item.
+              setState(() {
+                dropdownValue = value!;
+              });
+            },
+            dropdownMenuEntries:
+                list.map<DropdownMenuEntry<String>>((String value) {
+              return DropdownMenuEntry<String>(value: value, label: value);
+            }).toList(),
+          ),
+          Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: GridView.count(
+                  shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  children: getSensors()))
+        ],
+      ),
     );
   }
 }

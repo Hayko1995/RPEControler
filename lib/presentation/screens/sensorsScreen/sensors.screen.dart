@@ -53,15 +53,14 @@ class _SensorsState extends State<Sensors> {
       List<Device> data = dataDevices;
       print(dataDevices);
       for (var i = 0; i < data.length; i++) {
-        sensorList.add(
-            sensorWidget(context, data.elementAt(i),  GlobalKey()));
+        sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
       }
       return sensorList;
     }
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Predefine Package'),
+          title: const Text('Sensors Package'),
           backgroundColor: Colors.blue,
         ),
         body: SizedBox(

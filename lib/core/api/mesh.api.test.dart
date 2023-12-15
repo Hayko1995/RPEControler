@@ -5,10 +5,9 @@ import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
+import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 
-var logger = Logger(
-  printer: PrettyPrinter(),
-);
+
 
 class MeshAPI {
   final client = http.Client();

@@ -41,8 +41,12 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
           children: [
             vSizedBox2,
             SizedBox(
-              width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height * 0.9,
+              width: MediaQuery
+                  .sizeOf(context)
+                  .width,
+              height: MediaQuery
+                  .sizeOf(context)
+                  .height * 0.9,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +56,7 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                       children: [
                         Padding(
                           padding:
-                              const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
+                          const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
                           child: CustomTextField.customTextField(
                             textEditingController: userEmailController,
                             hintText: 'Enter SSID',
@@ -61,12 +65,12 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                         vSizedBox1,
                         Padding(
                           padding:
-                              const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
+                          const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
                           child: CustomTextField.customTextField(
                             textEditingController: userPassController,
                             hintText: 'Enter a password',
                             validator: (val) =>
-                                val!.isEmpty ? 'Enter a password' : null,
+                            val!.isEmpty ? 'Enter a password' : null,
                           ),
                         )
                       ],
@@ -78,15 +82,22 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       MaterialButton(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                        minWidth: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height * 0.05,
+                        minWidth: MediaQuery
+                            .of(context)
+                            .size
+                            .width * 0.4,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                         onPressed: () async {
                           _databaseService.insertNetwork(Network(
                               mac: widget.networkConfigArguments.mac,
-                              ip: widget.networkConfigArguments.ip));
+                              ip: widget.networkConfigArguments.ip,
+                              type: widget.networkConfigArguments.type));
 
                           Navigator.of(context)
                               .pushReplacementNamed(AppRouter.homeRoute);
@@ -105,15 +116,22 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                         ),
                       ),
                       MaterialButton(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                        minWidth: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height * 0.05,
+                        minWidth: MediaQuery
+                            .of(context)
+                            .size
+                            .width * 0.4,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                         onPressed: () async {
                           _databaseService.insertNetwork(Network(
                               mac: widget.networkConfigArguments.mac,
-                              ip: widget.networkConfigArguments.ip));
+                              ip: widget.networkConfigArguments.ip,
+                              type: widget.networkConfigArguments.type));
                         },
                         color: AppColors.rawSienna,
                         child: const Text(
@@ -140,6 +158,8 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
 class NetworkConfigArgs {
   final String mac;
   final String ip;
+  final String type;
 
-  const NetworkConfigArgs({required this.mac, required this.ip});
+  const NetworkConfigArgs(
+      {required this.mac, required this.ip, required this.type});
 }

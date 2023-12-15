@@ -58,9 +58,9 @@ class _sensorDetailsScreenState extends State<sensorDetailsScreen> {
   @override
   void initState() {
     // _updateData();
-    // _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-    //   _updateData();
-    // });
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      //   _updateData();
+    });
     super.initState();
   }
 

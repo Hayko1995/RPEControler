@@ -155,7 +155,7 @@ void onStart(ServiceInstance service) async {
   });
 
   // bring to foreground
-  initMesh();
+
   Timer.periodic(const Duration(seconds: 10), (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
@@ -184,8 +184,9 @@ void onStart(ServiceInstance service) async {
     }
 
     // test using external plugin
-    Future<String> data1 = updateMesh();
-    Future<String> data = getData();
+    // initMesh();
+    // Future<String> data1 = updateMesh();
+    // Future<String> data = getData();
     // String response = await data;
     // if (response != "") {
     //   service.invoke(

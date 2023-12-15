@@ -5,10 +5,7 @@ import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-
-var logger = Logger(
-  printer: PrettyPrinter(),
-);
+import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 
 class MeshAPI {
   final client = http.Client();
@@ -187,8 +184,8 @@ class MeshAPI {
       int length = 0;
 
       try {
-        final http.Response response =
-            await client.post(Uri.parse(network.ip), headers: headers, body: command);
+        final http.Response response = await client.post(Uri.parse(network.ip),
+            headers: headers, body: command);
         final body = response.body;
         var stringList = body.split(' ');
         stringList.removeLast();

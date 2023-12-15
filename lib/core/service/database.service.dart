@@ -35,7 +35,7 @@ class DatabaseService {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE networkTable (id INTEGER PRIMARY KEY, mac TEXT, val INTEGER)',
+      'CREATE TABLE networkTable (id INTEGER PRIMARY KEY, mac TEXT, ip TEXT, type TEXT)',
     );
     await db.execute(
       'CREATE TABLE location (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
@@ -77,6 +77,20 @@ class DatabaseService {
       breed.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  Future<List<Network>> getNetworksByType(List<String> types) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db
+        .query(AppConstants.networkTable, where: 'type = ?', whereArgs: types);
+    return List.generate(maps.length, (index) => Network.fromMap(maps[index]));
+  }
+
+  Future<List<Network>> getNetworksById(List<String> ids) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db
+        .query(AppConstants.networkTable, where: 'id = ?', whereArgs: ids);
+    return List.generate(maps.length, (index) => Network.fromMap(maps[index]));
   }
 
   Future clearAllDevice() async {
