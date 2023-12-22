@@ -228,6 +228,7 @@ class MeshAPI {
               messageSubType: lint[i + 8],
               sensorType: lint[i + 9],
               sensorValue: lint[i + 10]));
+
           break; //todo remove
         }
 
