@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 class Device {
   final String nodeNumber;
@@ -73,113 +74,350 @@ class Device {
          name $name, networkTableMAC $networkTableMAC )''';
 }
 
-class Upload {
-  final String nodeType;
-  final String nodeSubType;
-  final String nodeNumber;
-  final String nodeStatus;
-  final String nodeMessageLen;
-  final String timeStamp;
-  final String uploadMessageType;
-  final String messageSubType;
-  final String sensorType;
-  final String sensorValue;
+class RpeUpload {
+  final String dName;
+  final int dNetNum;
+  final int dNum;
+  final int dType;
+  final int dSubType;
+  final int dStackType;
+  final int dLocation;
+  final int dParNum; // Parent Node Num
+  final int dNumChild;
+  final int dAssociation;
+  final String dMacAddr;
+  final Int dStatus;
+  final Int dDim;
+  final Int nAct;
+  final String actStatus; // actuation status
+  final Int numOfSen; // num of sensors
+  final Int numOfAssocSen;
+  final String sensorVal;
+  final String
+      clTbl; // table which holds if a given device is part of a cluster (0-9)
+  final String aITbl; // assoc Initiator table
+  final String aLTbl;
+  final String timI; //timerInd: 0,
+  final String thI; //threshInd: 0,
+  final String thP1;
+  final String thP2;
+  final String thTY; // threshold type
+  final String thSN; // threshold sensor
+  final String thAT; // Action Type
+  final String thSA;
+  final String thST; // Start Time
+  final String thET; // End Time
+  final String thWK; // Weekday
+  final String thEM;
+  final String thSM;
+  final String ST; // start time
+  final String ET; // end time
+  final String TT; // timer type
+  final String WK; // Weekday
+  final String AT; // action type
+  final String SA; // status
+  final String EM;
+  final String SM;
+  final String senD;
 
-  Upload(
-      {required this.nodeType,
-      required this.nodeSubType,
-      required this.nodeNumber,
-      required this.nodeStatus,
-      required this.nodeMessageLen,
-      required this.timeStamp,
-      required this.uploadMessageType,
-      required this.messageSubType,
-      required this.sensorType,
-      required this.sensorValue});
+  RpeUpload(
+      {required this.dName,
+      required this.dNetNum,
+      required this.dNum,
+      required this.dType,
+      required this.dSubType,
+      required this.dStackType,
+      required this.dLocation,
+      required this.dParNum, // Parent Node Num
+      required this.dNumChild,
+      required this.dAssociation,
+      required this.dMacAddr,
+      required this.dStatus,
+      required this.dDim,
+      required this.nAct,
+      required this.actStatus, // actuation status
+      required this.numOfSen, // num of sensors
+      required this.numOfAssocSen,
+      required this.sensorVal,
+      required this.clTbl,
+      required this.aITbl, // assoc Initiator table
+      required this.aLTbl,
+      required this.timI, //timerInd: 0,
+      required this.thI, //threshInd: 0,
+      required this.thP1,
+      required this.thP2,
+      required this.thTY, // threshold type
+      required this.thSN, // threshold sensor
+      required this.thAT, // Action Type
+      required this.thSA,
+      required this.thST, // Start Time
+      required this.thET, // End Time
+      required this.thWK, // Weekday
+      required this.thEM,
+      required this.thSM,
+      required this.ST, // start time
+      required this.ET, // end time
+      required this.TT, // timer type
+      required this.WK, // Weekday
+      required this.AT, // action type
+      required this.SA, // status
+      required this.EM,
+      required this.SM,
+      required this.senD});
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
   // columns in the database.
   Map<String, dynamic> toMap() {
     return {
-      'nodeType': nodeType,
-      'nodeSubType': nodeSubType,
-      'nodeNumber': nodeNumber,
-      'nodeStatus': nodeStatus,
-      'nodeMessageLen': nodeMessageLen,
-      'timeStamp': timeStamp,
-      'uploadMessageType': uploadMessageType,
-      'messageSubType': messageSubType,
-      'sensorType': sensorType,
-      'sensorValue': sensorValue,
+      'dName': dName,
+      'dNetNum': dNetNum,
+      'dNum': dNum,
+      'dType': dType,
+      'dSubType': dSubType,
+      'dStackType': dStackType,
+      'dLocation': dLocation,
+      'dParNum': dParNum,
+      'dNumChild': dNumChild,
+      'dAssociation': dAssociation,
+      'dMacAddr': dMacAddr,
+      'dStatus': dStatus,
+      'dDim': dDim,
+      'nAct': nAct,
+      'actStatus': actStatus, // actuation status
+      'numOfSen': numOfSen, // num of sensors
+      'numOfAssocSen': numOfAssocSen,
+      'sensorVal': sensorVal,
+      'clTbl': clTbl,
+      'aITbl': aITbl, // assoc Initiator table
+      'aLTbl': aLTbl,
+      'timI': timI, //timerInd: 0,
+      'thI': thI, //threshInd: 0,
+      'thP1': thP1,
+      'thP2': thP2,
+      'thTY': thTY, // threshold type
+      'thSN': thSN, // threshold sensor
+      'thAT': thAT, // Action Type
+      'thSA': thSA,
+      'thST': thST, // Start Time
+      'thET': thET, // End Time
+      'thWK': thWK, // Weekday
+      'thEM': thEM,
+      'thSM': thSM,
+      'ST': ST, // start time
+      'ET': ET, // end time
+      'TT': TT, // timer type
+      'WK': WK, // Weekday
+      'AT': AT, // action type
+      'SA': SA, // status
+      'EM': EM,
+      'SM': SM,
+      'senD': senD
     };
   }
 
-  factory Upload.fromMap(Map<String, dynamic> map) {
-    return Upload(
-      nodeType: map['nodeType'] ?? "",
-      nodeSubType: map['nodeSubType'] ?? "",
-      nodeNumber: map['nodeNumber'] ?? "",
-      nodeStatus: map['nodeStatus'] ?? "",
-      nodeMessageLen: map['nodeMessageLen'] ?? "",
-      timeStamp: map['timeStamp'] ?? "",
-      uploadMessageType: map['uploadMessageType'] ?? "",
-      messageSubType: map['messageSubType'] ?? "",
-      sensorType: map['sensorType'] ?? "",
-      sensorValue: map['sensorValue'] ?? "",
-    );
+  factory RpeUpload.fromMap(Map<String, dynamic> map) {
+    return RpeUpload(
+        dName: map['dName'] ?? "",
+        dNetNum: map['dNetNum'] ?? "",
+        dNum: map['dNum'] ?? "",
+        dType: map['dType'] ?? "",
+        dSubType: map['dSubType'] ?? "",
+        dStackType: map['dStackType'] ?? "",
+        dLocation: map['dLocation'] ?? "",
+        dParNum: map['dParNum'] ?? "",
+        dNumChild: map['dNumChild'] ?? "",
+        dAssociation: map['dAssociation'] ?? "",
+        dMacAddr: map['dMacAddr'] ?? "",
+        dStatus: map['dStatus'] ?? "",
+        dDim: map['dDim'] ?? "",
+        nAct: map['nAct'] ?? "",
+        actStatus: map['actStatus'] ?? "",
+        numOfSen: map['numOfSen'] ?? "",
+        numOfAssocSen: map['numOfAssocSen'] ?? "",
+        sensorVal: map['sensorVal'] ?? "",
+        clTbl: map['clTbl'] ?? "",
+        aITbl: map['aITbl'] ?? "",
+        aLTbl: map['aLTbl'] ?? "",
+        timI: map['timI'] ?? "",
+        thI: map['thI'] ?? "",
+        thP1: map['thP1'] ?? "",
+        thP2: map['thP2'] ?? "",
+        thTY: map['thTY'] ?? "",
+        thSN: map['thSN'] ?? "",
+        thAT: map['thAT'] ?? "",
+        thSA: map['thSA'] ?? "",
+        thST: map['thST'] ?? "",
+        thET: map['thET'] ?? "",
+        thWK: map['thWK'] ?? "",
+        thEM: map['thEM'] ?? "",
+        thSM: map['thSM'] ?? "",
+        ST: map['ST'] ?? "",
+        ET: map['ET'] ?? "",
+        TT: map['TT'] ?? "",
+        WK: map['WK'] ?? "",
+        AT: map['AT'] ?? "",
+        SA: map['SA'] ?? "",
+        EM: map['EM'] ?? "",
+        SM: map['SM'] ?? "",
+        senD: map['senD'] ?? "");
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Upload.fromJson(String source) => Upload.fromMap(json.decode(source));
+  factory RpeUpload.fromJson(String source) =>
+      RpeUpload.fromMap(json.decode(source));
 
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
+  // TODO add fileds
   @override
-  String toString() =>
-      '''Update(nodeNumber: $nodeType, nodeSubType: $nodeSubType, 
-        nodeNumber: $nodeNumber,  nodeMessageLen: $nodeStatus, nodeMessageLen 
-        $nodeMessageLen, timeStamp $timeStamp, uploadMessageType 
-        $uploadMessageType, messageSubType $messageSubType,
-        sensorType $sensorType, sensorValue $sensorValue )''';
+  String toString() => '''Update(nodeNumber:)''';
 }
 
-class Network {
-  final String mac;
-  final String ip;
-  final String type;
+class RpeNetwork {
+  final String name;
+  final int num;
+  final int domain;
+  final int reDef;
+  final String macAddr;
+  final String ipAddr;
+  final String port;
+  final String ssid;
+  final String key;
+  final String rSSID; // router SSID
+  final String rKey; // router pass key
+  final String rLIP; // router local IP
+  final String rEIP; // router External IP
+  final String rPort; // router port
+  final int maxNodes;
+  final int numOfNodes;
+  final int nRT; // num of RTs in networks
+  final int nRTCh; // num of children per RT (max 10 RT)
+  final int nEDs; // num of EDs in network
+  final int netT; // network type
+  final int netId; // network Id
+  final int netPId;
+  final int netPT;
+  final int nTim; // total of timers defined in a network
+  final int nThr; // total of thresholds defined in a network
+  final int nCl; // number of clusters
+  final int nMCl;
+  final int nAso; // number of associations
+  final int nMAso; // number of multi network associations
+  final int date;
 
-  Network({
-    required this.mac,
-    required this.ip,
-    required this.type,
-  });
+  RpeNetwork(
+      {required this.name,
+      required this.num,
+      required this.domain,
+      required this.reDef,
+      required this.macAddr,
+      required this.ipAddr,
+      required this.port,
+      required this.ssid,
+      required this.key,
+      required this.rSSID,
+      required this.rKey,
+      required this.rLIP,
+      required this.rEIP,
+      required this.rPort,
+      required this.maxNodes,
+      required this.numOfNodes,
+      required this.nRT,
+      required this.nRTCh,
+      required this.nEDs,
+      required this.netT,
+      required this.netId,
+      required this.netPId,
+      required this.netPT,
+      required this.nTim,
+      required this.nThr,
+      required this.nCl,
+      required this.nMCl,
+      required this.nAso,
+      required this.nMAso,
+      required this.date});
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
   // columns in the database.
   Map<String, dynamic> toMap() {
     return {
-      'mac': mac,
-      'ip': ip,
-      'type': type,
+      'mac': name,
+      'ip': num,
+      'type': domain,
+      'reDef': reDef,
+      'macAddr': macAddr,
+      'ipAddr': ipAddr,
+      'port': port,
+      'ssid': ssid,
+      'key': key,
+      'rSSID': rSSID,
+      'rKey': rKey,
+      'rLIP': rLIP,
+      'rEIP': rEIP,
+      'rPort': rPort,
+      'maxNodes': maxNodes,
+      'numOfNodes': numOfNodes,
+      'nRT': nRT,
+      'nRTCh': nRTCh,
+      'nEDs': nEDs,
+      'netT': netT,
+      'netId': netId,
+      'netPId': netPId,
+      'netPT': netPT,
+      'nTim': nTim,
+      'nThr': nThr,
+      'nCl': nCl,
+      'nMCl': nMCl,
+      'nAso': nAso,
+      'nMAso': nMAso,
+      'date': date,
     };
   }
 
-  factory Network.fromMap(Map<String, dynamic> map) {
-    return Network(
-      mac: map['mac'] ?? "",
-      ip: map['ip'] ?? "",
-      type: map['type'] ?? "",
+  factory RpeNetwork.fromMap(Map<String, dynamic> map) {
+    return RpeNetwork(
+      name: map['mac'] ?? "",
+      num: map['ip'] ?? "",
+      domain: map['type'] ?? "",
+      reDef: map['reDef'] ?? "",
+      macAddr: map['macAddr'] ?? "",
+      ipAddr: map['ipAddr'] ?? "",
+      port: map['port'] ?? "",
+      ssid: map['ssid'] ?? "",
+      key: map['key'] ?? "",
+      rSSID: map['rSSID'] ?? "",
+      rKey: map['rKey'] ?? "",
+      rLIP: map['rLIP'] ?? "",
+      rEIP: map['rEIP'] ?? "",
+      rPort: map['rPort'] ?? "",
+      maxNodes: map['maxNodes'] ?? "",
+      numOfNodes: map['numOfNodes'] ?? "",
+      nRT: map['nRT?? ""'] ?? "",
+      nRTCh: map['nRTCh'] ?? "",
+      nEDs: map['nEDs'] ?? "",
+      netT: map['netT'] ?? "",
+      netId: map['netId'] ?? "",
+      netPId: map['netPId'] ?? "",
+      netPT: map['netPT'] ?? "",
+      nTim: map['nTim'] ?? "",
+      nThr: map['nThr'] ?? "",
+      nCl: map['nCl'] ?? "",
+      nMCl: map['nMCl'] ?? "",
+      nAso: map['nAso'] ?? "",
+      nMAso: map['nMAso'] ?? "",
+      date: map['date'] ?? "",
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Network.fromJson(String source) =>
-      Network.fromMap(json.decode(source));
+  factory RpeNetwork.fromJson(String source) =>
+      RpeNetwork.fromMap(json.decode(source));
 
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
+  //TODO add fields
   @override
-  String toString() => '''Network(name: $mac, ip: $ip, type: $type,''';
+  String toString() => '''RPEDevice(name: $name, ip: $num, type: $domain''';
 }

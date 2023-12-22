@@ -81,7 +81,7 @@ class MeshAPI {
   }
 
   Future testMeshE1() async {
-    List<Network> networks = await _databaseService.getAllNetworks();
+    List<RpeNetwork> networks = await _databaseService.getAllNetworks();
 
     String command = "E1FF060001FA";
     List<String> lint = [];

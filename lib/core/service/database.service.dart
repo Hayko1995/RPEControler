@@ -23,7 +23,6 @@ class DatabaseService {
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, AppConstants.dbName);
-    print("db path =" + path);
 
     return await openDatabase(
       path,
@@ -34,27 +33,103 @@ class DatabaseService {
   }
 
   Future<void> _onCreate(Database db, int version) async {
+    String networkTable = AppConstants.networkTable;
+    String deviceTable = AppConstants.deviceTable;
+    String uploadTable = AppConstants.uploadTable;
     await db.execute(
-      'CREATE TABLE networkTable (id INTEGER PRIMARY KEY, mac TEXT, ip TEXT, type TEXT)',
+      'CREATE TABLE $networkTable ('
+      'id INTEGER PRIMARY KEY, '
+      'name TEXT, '
+      'num INTEGER, '
+      'domain INTEGER,'
+      'preDef INTEGER,'
+      'macAddr TEXT,'
+      'ipAddr TEXT,'
+      'port TEXT,'
+      'ssid TEXT,'
+      'key TEXT,'
+      'rSSID TEXT,' // router SSID
+      'rKey TEXT' // router pass key
+      'rLIP TEXT,' // router local IP
+      'rEIP TEXT,' // router External IP
+      'rPort TEXT,' // router port
+      'maxNodes INTEGER,'
+      'numOfNodes INTEGER,'
+      'nRT INTEGER,' // num of RTs in networks
+      'nRTCh TEXT,' // num of children per RT (max 10 RT)
+      'nEDs INTEGER,' // num of EDs in network
+      'netT INTEGER,' // network type
+      'netId INTEGER,' // network Id
+      'netPId INTEGER,'
+      'netPT INTEGER,'
+      'nTim INTEGER,' // total of timers defined in a network
+      'nThr INTEGER,' // total of thresholds defined in a network
+      'nCl INTEGER,' // number of clusters
+      'nMCl INTEGER,'
+      'nAso INTEGER,' // number of associations
+      'nMAso INTEGER,' // number of multi network associations
+      'date INTEGER,'
+      ')',
     );
     await db.execute(
-      'CREATE TABLE location (id INTEGER PRIMARY KEY, name TEXT, val INTEGER)',
+      'CREATE TABLE $uploadTable ('
+      'id INTEGER PRIMARY KEY, '
+      'dName  TEXT,'
+      'dNetNum INTEGER,'
+      'dNum INTEGER,'
+      'dType INTEGER,'
+      'dSubType INTEGER,'
+      'dStackType INTEGER,'
+      'dLocation TEXT,'
+      'dParNum INTEGER,' // Parent Node Num
+      'dNumChild INTEGER,'
+      'dAssociation INTEGER,'
+      'dMacAddr TEXT ,'
+      'dStatus INTEGER,'
+      'dDim INTEGER,'
+      'nAct INTEGER,'
+      'actStatus TEXT,' // actuation status
+      'numOfSen INTEGER,' // num of sensors
+      'numOfAssocSen INTEGER,'
+      'sensorVal TEXT,'
+      'clTbl TEXT,  ' // table which holds if a given device is part of a cluster (0-9)
+      'aITbl TEXT,  ' // assoc Initiator table
+      'aLTbl TEXT,'
+      'timI INTEGER,  ' //timerInd: 0,
+      'thI INTEGER,    ' //threshInd: 0,
+
+      'thP1 TEXT,'
+      'thP2 TEXT,'
+      'thTY TEXT, ' // threshold type
+      'thSN TEXT,  ' // threshold sensor
+      'thAT TEXT,  ' // Action Type
+      'thSA TEXT, ' // Status
+      'thST TEXT,  ' // Start Time
+      'thET TEXT, ' // End Time
+      'thWK TEXT,  ' // Weekday
+      'thEM TEXT,'
+      'thSM TEXT,'
+      'ST TEXT,  ' // start time
+      'ET TEXT,  ' // end time
+      'TT TEXT,  ' // timer type
+      'WK TEXT,  ' // Weekday
+      'AT TEXT,  ' // action type
+      'SA TEXT,  ' // status
+      'EM TEXT,'
+      'SM TEXT,'
+      'senD TEXT,'
+      ')',
     );
     await db.execute(
-      '''CREATE TABLE uploadTable (
-        nodeNumber TEXT  PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
-        nodeStatus TEXT, nodeMessageLen TEXT, timeStamp TEXT, uploadMessageType TEXT, 
-        messageSubType TEXT, sensorType TEXT, sensorValue TEXT)''',
-    );
-    await db.execute(
-      '''CREATE TABLE deviceTable (
+      '''CREATE TABLE $deviceTable(
         nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
         Location TEXT, stackType TEXT, numChild TEXT, status TEXT,
-        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT)''',
+        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT)
+    ''',
     );
   }
 
-  Future<void> insertNetwork(Network breed) async {
+  Future<void> insertNetwork(RpeNetwork breed) async {
     final db = await _databaseService.database;
     await db.insert(
       AppConstants.networkTable,
@@ -63,11 +138,11 @@ class DatabaseService {
     );
   }
 
-  Future<List<Network>> getAllNetworks() async {
+  Future<List<RpeNetwork>> getAllNetworks() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.networkTable);
-    return List.generate(maps.length, (index) => Network.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
 
   Future<void> insertDevice(Device breed) async {
@@ -79,18 +154,18 @@ class DatabaseService {
     );
   }
 
-  Future<List<Network>> getNetworksByType(List<String> types) async {
+  Future<List<RpeNetwork>> getNetworksByType(List<String> types) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db
         .query(AppConstants.networkTable, where: 'type = ?', whereArgs: types);
-    return List.generate(maps.length, (index) => Network.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
 
-  Future<List<Network>> getNetworksById(List<String> ids) async {
+  Future<List<RpeNetwork>> getNetworksById(List<String> ids) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db
         .query(AppConstants.networkTable, where: 'id = ?', whereArgs: ids);
-    return List.generate(maps.length, (index) => Network.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
 
   Future clearAllDevice() async {
@@ -142,7 +217,7 @@ class DatabaseService {
     );
   }
 
-  Future<void> insertUpload(Upload breed) async {
+  Future<void> insertUpload(RpeUpload breed) async {
     final db = await _databaseService.database;
     await db.insert(
       AppConstants.uploadTable,
@@ -157,11 +232,11 @@ class DatabaseService {
     return await db.rawDelete("DELETE FROM $tableName");
   }
 
-  Future<List<Upload>> getAllUploads() async {
+  Future<List<RpeUpload>> getAllUploads() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.uploadTable);
-    return List.generate(maps.length, (index) => Upload.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => RpeUpload.fromMap(maps[index]));
   }
 
   // Future<CR> getCR(int id) async {

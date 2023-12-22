@@ -33,7 +33,7 @@ Widget airQualityWidget(context, device, index, place, count, widgetKey) {
       } else {
         Navigator.of(context).pushNamed(
           AppRouter.sensorsRoute,
-          arguments: SensorArgs(mac: [device.mac]),
+          arguments: SensorArgs(mac: [device.name]),
         );
       }
     },

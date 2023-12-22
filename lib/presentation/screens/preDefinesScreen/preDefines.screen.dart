@@ -22,11 +22,11 @@ class PredefineScreen extends StatefulWidget {
 class _PredefineScreenState extends State<PredefineScreen> {
   final DatabaseService _databaseService = DatabaseService();
   late Timer _timer;
-  List<Network> dataDevices = <Network>[];
-  List<Network> data = <Network>[];
+  List<RpeNetwork> dataDevices = <RpeNetwork>[];
+  List<RpeNetwork> data = <RpeNetwork>[];
 
   void _updateData() async {
-    List<Network> predefines = await _databaseService
+    List<RpeNetwork> predefines = await _databaseService
         .getNetworksByType([widget.predefineArguments.type]);
     logger.w(predefines);
 
@@ -70,7 +70,7 @@ class _PredefineScreenState extends State<PredefineScreen> {
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   children: List.generate(dataDevices.length, (index) {
-                    if (dataDevices[index].type == "AirQuality") {}
+                    if (dataDevices[index].domain == "AirQuality") {}
                     return airQualityWidget(context, dataDevices[index], index,
                         "predefine", 0, GlobalKey());
                   }),

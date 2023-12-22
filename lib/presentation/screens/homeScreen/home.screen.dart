@@ -39,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future _initCRNetwork() async {
     //TODO remove in production
     // if (kDebugMode) {
-    _databaseService.insertNetwork(Network(
-        mac: "mac address", ip: "http://172.17.0.42:9000", type: "AirQuality"));
+    _databaseService.insertNetwork(RpeNetwork(
+        name: "mac address", num: "http://172.17.0.42:9000", domain: "AirQuality"));
     // }
     // enable QR scan if not have network in DB
     List devices = await _databaseService.getAllNetworks();

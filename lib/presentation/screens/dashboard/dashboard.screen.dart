@@ -50,11 +50,11 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
   }
 
-  List<Network> dataNetworks = <Network>[];
+  List<RpeNetwork> dataNetworks = <RpeNetwork>[];
   List<String> list = <String>['Network', 'Clusters', 'Widgets'];
 
   void _updateTables() async {
-    List<Network> _dataDevices = await _databaseService.getAllNetworks();
+    List<RpeNetwork> _dataDevices = await _databaseService.getAllNetworks();
 
     // logger.w(_dataUpload);
 
@@ -67,10 +67,10 @@ class _DashboardState extends State<Dashboard> {
   List<Widget> getSensors() {
     List<Widget> sensorList = [];
     // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
-    List<Network> data = dataNetworks;
+    List<RpeNetwork> data = dataNetworks;
     int airQualityNumber = 0;
     for (var i = 0; i < data.length; i++) {
-      if (data.elementAt(i).type == "AirQuality") {
+      if (data.elementAt(i).domain == "AirQuality") {
         airQualityNumber++;
       }
       // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));

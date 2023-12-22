@@ -80,7 +80,7 @@ class MeshAPI {
   }
 
   Future meshE1() async {
-    List<Network> networks = await _databaseService.getAllNetworks();
+    List<RpeNetwork> networks = await _databaseService.getAllNetworks();
 
     String command = "E1FF060001FA";
     List<String> lint = [];
@@ -95,9 +95,9 @@ class MeshAPI {
     // }
     // var command = aa.join(" " );
     //todo add problem response failure situation
-    Network network;
+    RpeNetwork network;
     for (network in networks) {
-      final Uri uri = Uri.parse(network.ip);
+      final Uri uri = Uri.parse(network.ipAddr + network.port);
       int length = 0;
 
       try {
@@ -130,7 +130,7 @@ class MeshAPI {
         for (int i = 16; i <= length - 1; i = i + 16) {
           await _databaseService.insertDevice(
             Device(
-                networkTableMAC: network.mac,
+                networkTableMAC: network.name,
                 name: "",
                 nodeNumber: lint[i],
                 nodeType: lint[i + 1],
@@ -165,7 +165,7 @@ class MeshAPI {
   }
 
   Future meshE3() async {
-    List<Network> networks = await _databaseService.getAllNetworks();
+    List<RpeNetwork> networks = await _databaseService.getAllNetworks();
     String command = "E3FF060001FA";
     List<String> lint = [];
     // List<String> aa = [];
@@ -179,13 +179,15 @@ class MeshAPI {
     // }
     // var command = aa.join(" " );
     //todo add problem response failure situation
-    Network network;
+    RpeNetwork network;
     for (network in networks) {
       int length = 0;
 
       try {
-        final http.Response response = await client.post(Uri.parse(network.ip),
-            headers: headers, body: command);
+        final http.Response response = await client.post(
+            Uri.parse(network.ipAddr + network.port),
+            headers: headers,
+            body: command);
         final body = response.body;
         var stringList = body.split(' ');
         stringList.removeLast();
@@ -215,9 +217,9 @@ class MeshAPI {
         // _databaseService.clearAllUploads();
 
         for (int i = 16; i <= length - 1; i = i + 14) {
-          await _databaseService.insertUpload(Upload(
-              nodeType: lint[i + 1],
-              nodeSubType: lint[i + 2],
+          await _databaseService.insertUpload(RpeUpload(
+              dType: int.parse(lint[i + 1]),
+              dSubType: int.parse(lint[i + 2]),
               nodeNumber: lint[i + 3],
               nodeStatus: lint[i + 4],
               nodeMessageLen: lint[i + 5],

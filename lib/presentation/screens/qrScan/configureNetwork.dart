@@ -94,10 +94,10 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         onPressed: () async {
-                          _databaseService.insertNetwork(Network(
-                              mac: widget.networkConfigArguments.mac,
-                              ip: widget.networkConfigArguments.ip,
-                              type: widget.networkConfigArguments.type));
+                          _databaseService.insertNetwork(RpeNetwork(
+                              name: widget.networkConfigArguments.mac,
+                              num: widget.networkConfigArguments.ip,
+                              domain: widget.networkConfigArguments.type));
 
                           Navigator.of(context)
                               .pushReplacementNamed(AppRouter.homeRoute);
@@ -128,10 +128,10 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         onPressed: () async {
-                          _databaseService.insertNetwork(Network(
-                              mac: widget.networkConfigArguments.mac,
-                              ip: widget.networkConfigArguments.ip,
-                              type: widget.networkConfigArguments.type));
+                          _databaseService.insertNetwork(RpeNetwork(
+                              name: widget.networkConfigArguments.mac,
+                              num: widget.networkConfigArguments.ip,
+                              domain: widget.networkConfigArguments.type));
                         },
                         color: AppColors.rawSienna,
                         child: const Text(
