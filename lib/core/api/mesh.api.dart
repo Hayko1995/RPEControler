@@ -99,33 +99,35 @@ class MeshAPI {
     for (network in networks) {
       final Uri uri = Uri.parse(network.ipAddr + network.port);
       int length = 0;
-
+      var stringList;
       try {
         final http.Response response =
             await client.post(uri, headers: headers, body: command);
         final body = response.body;
-        var stringList = body.split(' ');
-        stringList.removeLast();
-        for (int i = 0; i < stringList.length; i++) {
-          int integerData = int.parse(stringList[i]);
-          lint.add(integerData.toRadixString(16));
-        }
+        stringList = body.split(' ');
+      } catch (e) {
+        continue;
+      }
+      stringList.removeLast();
+      for (int i = 0; i < stringList.length; i++) {
+        int integerData = int.parse(stringList[i]);
+        lint.add(integerData.toRadixString(16));
+      }
 
-        if (kDebugMode) {
-          print(lint);
-          print("${lint[0]} command type E1");
-          print("${lint[1]}  ${lint[2]} data Langht");
-          print("${lint[3]} number of nodes ");
-          print("${lint[4]}${lint[5]}${lint[6]}${lint[7]} rpe net id ");
-          print("${lint[8]} domain type ");
-          print("${lint[9]} preset domain ");
-          print("${lint[10]} network number ");
-          print(
-              "${lint[11]}${lint[12]}${lint[13]}${lint[14]} CR reported time");
-          print("${lint[15]} reserved ");
-        }
-        length = int.parse("0x${lint[1]}${lint[2]}");
-        _databaseService.clearAllDevice();
+      if (kDebugMode) {
+        print(lint);
+        print("${lint[0]} command type E1");
+        print("${lint[1]}  ${lint[2]} data Langht");
+        print("${lint[3]} number of nodes ");
+        print("${lint[4]}${lint[5]}${lint[6]}${lint[7]} rpe net id ");
+        print("${lint[8]} domain type ");
+        print("${lint[9]} preset domain ");
+        print("${lint[10]} network number ");
+        print("${lint[11]}${lint[12]}${lint[13]}${lint[14]} CR reported time");
+        print("${lint[15]} reserved ");
+      }
+      length = int.parse("0x${lint[1]}${lint[2]}");
+      _databaseService.clearAllDevice();
 
         for (int i = 16; i <= length - 1; i = i + 16) {
           await _databaseService.insertDevice(
@@ -151,15 +153,11 @@ class MeshAPI {
           );
         }
 
-        if (AppConstants.debug) {
-          List list = await _databaseService.getAllDevices();
-          String debugString = '';
-          list.forEach((row) => print(row));
-          // logger.i(debugString);
-        }
-      } catch (e) {
-        logger.e(e);
-        return Null;
+      if (AppConstants.debug) {
+        List list = await _databaseService.getAllDevices();
+        String debugString = '';
+        list.forEach((row) => print(row));
+        // logger.i(debugString);
       }
     }
   }

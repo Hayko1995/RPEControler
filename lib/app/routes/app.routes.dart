@@ -9,6 +9,8 @@ import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.da
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/screens/ipScanScreen/ipScan.screen.dart';
 import 'package:rpe_c/presentation/screens/loginScreen/login.view.dart';
+import 'package:rpe_c/presentation/screens/notificationsScreen/notifications.screen.dart';
+
 import 'package:rpe_c/presentation/screens/onBoardingScreen/onBoarding.screen.dart';
 import 'package:rpe_c/presentation/screens/preDefinesScreen/preDefines.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/accountInformationScreen/account.information.screen.dart';
@@ -47,6 +49,7 @@ class AppRouter {
   static const String changePassRoute = "/changePassword";
   static const String ipScanRoute = "/ipScan";
   static const String qrScanRoute = "/qrScan";
+  static const String notifications = "/notifications";
   static const String dashboardRoute = "/dashboard";
   static const String meshCommandsRoute = "/meshStatus";
   static const String settingsRoute = "/settings";
@@ -75,8 +78,8 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => PredefineScreen(
-              predefineArguments: ModalRoute.of(context)!.settings.arguments
-              as PreDefineArgs,
+              predefineArguments:
+                  ModalRoute.of(context)!.settings.arguments as PreDefineArgs,
             ),
             settings: settings,
           );
@@ -85,6 +88,12 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => const SettingsScreen(),
+          );
+        }
+      case notifications:
+        {
+          return MaterialPageRoute(
+            builder: (_) => const NotificationsScreen(),
           );
         }
       case esp32Route:

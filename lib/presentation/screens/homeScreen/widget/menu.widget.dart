@@ -31,6 +31,14 @@ Widget buildMenuItems(BuildContext context) => Container(
             },
           ),
           ListTile(
+            leading: const Icon(Icons.notification_important),
+            title: const Text("Notifications"),
+            onTap: () => {
+              Navigator.pop(context),
+              Navigator.of(context).pushNamed(AppRouter.notifications)
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.add_to_photos_rounded),
             title: const Text("IP scanner"),
             onTap: () => {
