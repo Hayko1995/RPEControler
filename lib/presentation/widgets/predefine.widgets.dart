@@ -28,7 +28,7 @@ Widget airQualityWidget(context, device, index, place, count, widgetKey) {
       if (place == "dashboard") {
         Navigator.of(context).pushNamed(
           AppRouter.preDefinesRoute,
-          arguments: PreDefineArgs(domain: 1),
+          arguments: const PreDefineArgs(preDef: 1),
         );
       } else {
         Navigator.of(context).pushNamed(
@@ -78,7 +78,6 @@ Widget airQualityWidget(context, device, index, place, count, widgetKey) {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,
-
         children: [
           Icon(
             Icons.trip_origin,

@@ -143,13 +143,12 @@ class MeshAPI {
       if (sec < 10) _sec = '0$sec';
 
       RpeNetwork(
-        numOfNodes: lint[3] as int,
-        domain: lint[8] as int,
+        numOfNodes: int.parse(lint[3]),
+        domain: int.parse(lint[8]),
         netId: (int.parse(lint[12]) * 65536) +
             (int.parse(lint[13]) * 256) +
             int.parse(lint[14]),
         ipAddr: network.url,
-        macAddr: '',
       );
 
       _databaseService.clearAllDevice();

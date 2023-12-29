@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //TODO remove in production
     // if (kDebugMode) {
     _databaseService
-        .insertNetwork(RpeNetwork(url: "http://172.17.0.42:9000", domain: 1));
+        .insertNetwork(RpeNetwork(url: "http://192.168.18.51:9000", preDef: 1));
     // }
     // enable QR scan if not have network in DB
     List devices = await _databaseService.getAllNetworks();

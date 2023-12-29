@@ -28,7 +28,7 @@ class _PredefineScreenState extends State<PredefineScreen> {
 
   void _updateData() async {
     List<RpeNetwork> predefines = await _databaseService
-        .getNetworksByDomain([widget.predefineArguments.domain]);
+        .getNetworksByPreDef([widget.predefineArguments.preDef]);
     logger.w(predefines);
 
     // TODO write logic for Widget
@@ -71,7 +71,7 @@ class _PredefineScreenState extends State<PredefineScreen> {
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   children: List.generate(dataDevices.length, (index) {
-                    if (dataDevices[index].domain == AppConstants.airQuality) {}
+                    if (dataDevices[index].preDef == AppConstants.airQuality) {}
                     return airQualityWidget(context, dataDevices[index], index,
                         "predefine", 0, GlobalKey());
                   }),
@@ -86,7 +86,7 @@ class _PredefineScreenState extends State<PredefineScreen> {
 }
 
 class PreDefineArgs {
-  final int domain;
+  final int preDef;
 
-  const PreDefineArgs({required this.domain});
+  const PreDefineArgs({required this.preDef});
 }

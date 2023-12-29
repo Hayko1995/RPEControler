@@ -4,6 +4,7 @@ import 'package:concentric_transition/concentric_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:lan_scanner/lan_scanner.dart';
 import 'package:rpe_c/presentation/screens/esp32/esp32.view.dart';
+import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
 import 'package:rpe_c/presentation/screens/mesh/meshStatus.screen.dart';
 import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
@@ -44,6 +45,7 @@ class AppRouter {
   static const String categoryRoute = "/category";
   static const String sensorDetailsRoute = "/sensorDetails";
   static const String preDefinesRoute = "/preDefine";
+  static const String manipulationsRoute = "/manipulation";
   static const String sensorsRoute = "/sensor";
   static const String editProfileRoute = "/editProfile";
   static const String changePassRoute = "/changePassword";
@@ -80,6 +82,16 @@ class AppRouter {
             builder: (context) => PredefineScreen(
               predefineArguments:
                   ModalRoute.of(context)!.settings.arguments as PreDefineArgs,
+            ),
+            settings: settings,
+          );
+        }
+      case manipulationsRoute:
+        {
+          return MaterialPageRoute(
+            builder: (context) => ManipulationScreen(
+              manipulationsArgs: ModalRoute.of(context)!.settings.arguments
+                  as ManipulationsArgs,
             ),
             settings: settings,
           );

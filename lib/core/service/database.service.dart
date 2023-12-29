@@ -147,10 +147,10 @@ class DatabaseService {
     );
   }
 
-  Future<List<RpeNetwork>> getNetworksByDomain(List<int> types) async {
+  Future<List<RpeNetwork>> getNetworksByPreDef(List<int> types) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db
-        .query(AppConstants.networkTable, where: 'domain = ?', whereArgs: types);
+        .query(AppConstants.networkTable, where: 'preDef = ?', whereArgs: types);
     return List.generate(
         maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }

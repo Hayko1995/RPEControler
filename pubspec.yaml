@@ -47,6 +47,7 @@ dependencies:
   wifi_iot: ^0.3.18+1
   getwidget: ^4.0.0
   double_back_to_close_app: ^2.1.0
+  flutter_slidable: ^3.0.1
 
 dev_dependencies:
   flutter_lints: ^3.0.0
