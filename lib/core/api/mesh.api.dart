@@ -97,7 +97,7 @@ class MeshAPI {
     //todo add problem response failure situation
     RpeNetwork network;
     for (network in networks) {
-      final Uri uri = Uri.parse(network.ipAddr + network.port);
+      final Uri uri = Uri.parse(network.url);
       int length = 0;
       var stringList;
       try {
@@ -127,31 +127,56 @@ class MeshAPI {
         print("${lint[15]} reserved ");
       }
       length = int.parse("0x${lint[1]}${lint[2]}");
+
+      int CR_Reported_Time = (int.parse(lint[12]) * 65536) +
+          (int.parse(lint[13]) * 256) +
+          int.parse(lint[14]);
+      int hr = CR_Reported_Time ~/ 3600;
+      int a = (CR_Reported_Time - (hr * 3600)) ~/ 60;
+      int min = (CR_Reported_Time - (hr * 3600)) ~/ 60;
+      int sec = CR_Reported_Time - (hr * 3600) - (min * 60);
+      String _hr;
+      String _min;
+      String _sec;
+      if (hr < 10) _hr = '0$hr';
+      if (min < 10) _min = '0$min';
+      if (sec < 10) _sec = '0$sec';
+
+      RpeNetwork(
+        numOfNodes: lint[3] as int,
+        domain: lint[8] as int,
+        netId: (int.parse(lint[12]) * 65536) +
+            (int.parse(lint[13]) * 256) +
+            int.parse(lint[14]),
+        ipAddr: network.url,
+        macAddr: '',
+      );
+
       _databaseService.clearAllDevice();
 
-        for (int i = 16; i <= length - 1; i = i + 16) {
-          await _databaseService.insertDevice(
-            Device(
-                networkTableMAC: network.name,
-                name: "",
-                nodeNumber: lint[i],
-                nodeType: lint[i + 1],
-                nodeSubType: lint[i + 2],
-                location: lint[i + 3],
-                stackType: lint[i + 4],
-                numChild: lint[i + 5],
-                status: lint[i + 6],
-                parentNodeNum: lint[i + 7],
-                macAddress: lint[i + 8] +
-                    lint[i + 9] +
-                    lint[i + 10] +
-                    lint[i + 11] +
-                    lint[i + 12] +
-                    lint[i + 13] +
-                    lint[i + 14] +
-                    lint[i + 15]),
-          );
-        }
+      for (int i = 16; i <= length - 1; i = i + 16) {
+        await _databaseService.insertDevice(
+          Device(
+              networkTableMAC: network.name,
+              name: "",
+              nodeNumber: lint[i],
+              nodeType: lint[i + 1],
+              nodeSubType: lint[i + 2],
+              location: lint[i + 3],
+              stackType: lint[i + 4],
+              numChild: lint[i + 5],
+              status: lint[i + 6],
+              parentNodeNum: lint[i + 7],
+              macAddress: lint[i + 8] +
+                  lint[i + 9] +
+                  lint[i + 10] +
+                  lint[i + 11] +
+                  lint[i + 12] +
+                  lint[i + 13] +
+                  lint[i + 14] +
+                  lint[i + 15]),
+        );
+      }
 
       if (AppConstants.debug) {
         List list = await _databaseService.getAllDevices();
@@ -182,10 +207,8 @@ class MeshAPI {
       int length = 0;
 
       try {
-        final http.Response response = await client.post(
-            Uri.parse(network.ipAddr + network.port),
-            headers: headers,
-            body: command);
+        final http.Response response = await client.post(Uri.parse(network.url),
+            headers: headers, body: command);
         final body = response.body;
         var stringList = body.split(' ');
         stringList.removeLast();
@@ -215,19 +238,19 @@ class MeshAPI {
         // _databaseService.clearAllUploads();
 
         for (int i = 16; i <= length - 1; i = i + 14) {
-          await _databaseService.insertUpload(RpeUpload(
-              dType: int.parse(lint[i + 1]),
-              dSubType: int.parse(lint[i + 2]),
-              nodeNumber: lint[i + 3],
-              nodeStatus: lint[i + 4],
-              nodeMessageLen: lint[i + 5],
-              timeStamp: lint[i + 6],
-              uploadMessageType: lint[i + 7],
-              messageSubType: lint[i + 8],
-              sensorType: lint[i + 9],
-              sensorValue: lint[i + 10]));
-
-          break; //todo remove
+          // await _databaseService.insertUpload(RpeUpload(
+          //     dType: int.parse(lint[i + 1]),
+          //     dSubType: int.parse(lint[i + 2]),
+          //     dNum: lint[i + 3] as int,
+          //     dStatus: lint[i + 4] as int,
+          //     nodeMessageLen: lint[i + 5],
+          //     timeStamp: lint[i + 6],
+          //     uploadMessageType: lint[i + 7],
+          //     messageSubType: lint[i + 8],
+          //     sensorType: lint[i + 9],
+          //     sensorValue: lint[i + 10]));
+          //
+          // break; //todo remove
         }
 
         List list = await _databaseService.getAllUploads();

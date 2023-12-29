@@ -96,7 +96,7 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                         onPressed: () async {
                           _databaseService.insertNetwork(RpeNetwork(
                               name: widget.networkConfigArguments.mac,
-                              num: widget.networkConfigArguments.ip,
+                              url: widget.networkConfigArguments.url,
                               domain: widget.networkConfigArguments.type));
 
                           Navigator.of(context)
@@ -130,7 +130,7 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                         onPressed: () async {
                           _databaseService.insertNetwork(RpeNetwork(
                               name: widget.networkConfigArguments.mac,
-                              num: widget.networkConfigArguments.ip,
+                              url: widget.networkConfigArguments.url,
                               domain: widget.networkConfigArguments.type));
                         },
                         color: AppColors.rawSienna,
@@ -157,9 +157,9 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
 
 class NetworkConfigArgs {
   final String mac;
-  final String ip;
-  final String type;
+  final String url;
+  final int type;
 
   const NetworkConfigArgs(
-      {required this.mac, required this.ip, required this.type});
+      {required this.mac, required this.url, required this.type});
 }

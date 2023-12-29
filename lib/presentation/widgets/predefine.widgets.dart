@@ -28,7 +28,7 @@ Widget airQualityWidget(context, device, index, place, count, widgetKey) {
       if (place == "dashboard") {
         Navigator.of(context).pushNamed(
           AppRouter.preDefinesRoute,
-          arguments: PreDefineArgs(type: "AirQuality"),
+          arguments: PreDefineArgs(domain: 1),
         );
       } else {
         Navigator.of(context).pushNamed(
@@ -85,7 +85,7 @@ Widget airQualityWidget(context, device, index, place, count, widgetKey) {
             color: Colors.green,
             size: 30,
           ),
-          const SizedBox(height: 90),
+          const SizedBox(height: 70),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

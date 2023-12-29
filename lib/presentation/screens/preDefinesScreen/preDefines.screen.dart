@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/api/mesh.api.test.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
@@ -27,7 +28,7 @@ class _PredefineScreenState extends State<PredefineScreen> {
 
   void _updateData() async {
     List<RpeNetwork> predefines = await _databaseService
-        .getNetworksByType([widget.predefineArguments.type]);
+        .getNetworksByDomain([widget.predefineArguments.domain]);
     logger.w(predefines);
 
     // TODO write logic for Widget
@@ -70,7 +71,7 @@ class _PredefineScreenState extends State<PredefineScreen> {
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   children: List.generate(dataDevices.length, (index) {
-                    if (dataDevices[index].domain == "AirQuality") {}
+                    if (dataDevices[index].domain == AppConstants.airQuality) {}
                     return airQualityWidget(context, dataDevices[index], index,
                         "predefine", 0, GlobalKey());
                   }),
@@ -85,7 +86,7 @@ class _PredefineScreenState extends State<PredefineScreen> {
 }
 
 class PreDefineArgs {
-  final String type;
+  final int domain;
 
-  const PreDefineArgs({required this.type});
+  const PreDefineArgs({required this.domain});
 }

@@ -141,7 +141,7 @@ class _QRScanScreenState extends State<QRScanScreen> {
 
       String ssid = qrData['SSID'];
       String password = qrData['Pass'];
-      String networkType = qrData['type'];
+      int networkType = qrData['type'];
 
       //TODO change https://pub.dev/packages/wifi_iot/example use this exmple
       logger.w(data);
@@ -155,7 +155,7 @@ class _QRScanScreenState extends State<QRScanScreen> {
           // AppRouter.myHomeRoute
           AppRouter.networkConfigRouter,
           arguments: NetworkConfigArgs(
-              mac: ssid, ip: "http://192.168.4.1", type: networkType));
+              mac: ssid, url: "http://192.168.4.1", type: networkType));
     });
     this.controller!.pauseCamera();
     this.controller!.resumeCamera();

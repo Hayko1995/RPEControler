@@ -70,7 +70,7 @@ class _DashboardState extends State<Dashboard> {
     List<RpeNetwork> data = dataNetworks;
     int airQualityNumber = 0;
     for (var i = 0; i < data.length; i++) {
-      if (data.elementAt(i).domain == "AirQuality") {
+      if (data.elementAt(i).domain == AppConstants.airQuality) {
         airQualityNumber++;
       }
       // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));

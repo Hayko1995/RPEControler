@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
       key: AppKeys.onBoardDone,
       valueType: ValueType.StringValue,
       actionIfNull: () {
-        Navigator.of(context).pushNamed(AppRouter.onBoardRoute).whenComplete(
+        Navigator.of(context).pushReplacementNamed(AppRouter.onBoardRoute).whenComplete(
             () => WriteCache.setString(
                 key: AppKeys.onBoardDone, value: 'Something'));
       },
@@ -31,11 +31,11 @@ class _SplashScreenState extends State<SplashScreen> {
             valueType: ValueType.StringValue,
             actionIfNull: () {
               Navigator.of(context)
-                  .pushNamed(AppRouter.homeRoute); //todo change
+                  .pushReplacementNamed(AppRouter.homeRoute); //todo change
             },
             actionIfNotNull: () {
               Navigator.of(context).pushReplacementNamed(
-                  AppRouter.homeRoute); //todo change to home
+                  AppRouter.homeRoute);
             });
       },
     );

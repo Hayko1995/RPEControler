@@ -20,6 +20,7 @@ import 'package:rpe_c/app/constants/app.colors.dart';
 import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'package:rpe_c/core/notifiers/user.notifier.dart';
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 var logger = Logger(
   printer: PrettyPrinter(),
@@ -39,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future _initCRNetwork() async {
     //TODO remove in production
     // if (kDebugMode) {
-    _databaseService.insertNetwork(RpeNetwork(
-        name: "mac address", num: "http://172.17.0.42:9000", domain: "AirQuality"));
+    _databaseService
+        .insertNetwork(RpeNetwork(url: "http://172.17.0.42:9000", domain: 1));
     // }
     // enable QR scan if not have network in DB
     List devices = await _databaseService.getAllNetworks();
@@ -74,9 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.blue,
         ),
         drawer: const Menu(),
-        body: Row(
-          children: [Dashboard()],
-        ));
+        body: const DoubleBackToCloseApp(
+            snackBar: SnackBar(content: Text('Tap back again to leave')),
+            child: Row(
+              children: [Dashboard()],
+            )));
   }
 
   @override

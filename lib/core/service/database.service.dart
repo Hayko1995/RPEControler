@@ -38,25 +38,17 @@ class DatabaseService {
     String uploadTable = AppConstants.uploadTable;
     await db.execute(
       'CREATE TABLE $networkTable ('
-      'id INTEGER PRIMARY KEY, '
+      'url TEXT NOT NULL UNIQUE PRIMARY KEY,'
+      'macAddr TEXT ,'
       'name TEXT, '
       'num INTEGER, '
       'domain INTEGER,'
       'preDef INTEGER,'
-      'macAddr TEXT,'
       'ipAddr TEXT,'
-      'port TEXT,'
-      'ssid TEXT,'
       'key TEXT,'
-      'rSSID TEXT,' // router SSID
-      'rKey TEXT' // router pass key
-      'rLIP TEXT,' // router local IP
-      'rEIP TEXT,' // router External IP
-      'rPort TEXT,' // router port
-      'maxNodes INTEGER,'
       'numOfNodes INTEGER,'
       'nRT INTEGER,' // num of RTs in networks
-      'nRTCh TEXT,' // num of children per RT (max 10 RT)
+      'nRTCh INTEGER,' // num of children per RT (max 10 RT)
       'nEDs INTEGER,' // num of EDs in network
       'netT INTEGER,' // network type
       'netId INTEGER,' // network Id
@@ -68,7 +60,7 @@ class DatabaseService {
       'nMCl INTEGER,'
       'nAso INTEGER,' // number of associations
       'nMAso INTEGER,' // number of multi network associations
-      'date INTEGER,'
+      'date INTEGER'
       ')',
     );
     await db.execute(
@@ -117,7 +109,7 @@ class DatabaseService {
       'SA TEXT,  ' // status
       'EM TEXT,'
       'SM TEXT,'
-      'senD TEXT,'
+      'senD TEXT'
       ')',
     );
     await db.execute(
@@ -142,7 +134,8 @@ class DatabaseService {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.networkTable);
-    return List.generate(maps.length, (index) => RpeNetwork.fromMap(maps[index]));
+    return List.generate(
+        maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
 
   Future<void> insertDevice(Device breed) async {
@@ -154,18 +147,20 @@ class DatabaseService {
     );
   }
 
-  Future<List<RpeNetwork>> getNetworksByType(List<String> types) async {
+  Future<List<RpeNetwork>> getNetworksByDomain(List<int> types) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db
-        .query(AppConstants.networkTable, where: 'type = ?', whereArgs: types);
-    return List.generate(maps.length, (index) => RpeNetwork.fromMap(maps[index]));
+        .query(AppConstants.networkTable, where: 'domain = ?', whereArgs: types);
+    return List.generate(
+        maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
 
   Future<List<RpeNetwork>> getNetworksById(List<String> ids) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db
         .query(AppConstants.networkTable, where: 'id = ?', whereArgs: ids);
-    return List.generate(maps.length, (index) => RpeNetwork.fromMap(maps[index]));
+    return List.generate(
+        maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
 
   Future clearAllDevice() async {
@@ -236,7 +231,8 @@ class DatabaseService {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.uploadTable);
-    return List.generate(maps.length, (index) => RpeUpload.fromMap(maps[index]));
+    return List.generate(
+        maps.length, (index) => RpeUpload.fromMap(maps[index]));
   }
 
   // Future<CR> getCR(int id) async {
