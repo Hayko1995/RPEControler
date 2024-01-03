@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/db.models.dart';
@@ -41,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //TODO remove in production
     // if (kDebugMode) {
     _databaseService
-        .insertNetwork(RpeNetwork(url: "http://192.168.18.51:9000", preDef: 1));
+        .insertNetwork(RpeNetwork(url: ApiRoutes.esp32Url, preDef: 1));
     // }
     // enable QR scan if not have network in DB
     List devices = await _databaseService.getAllNetworks();

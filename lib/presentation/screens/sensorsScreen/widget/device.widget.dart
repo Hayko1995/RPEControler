@@ -63,7 +63,7 @@ Widget sensorWidget(context, data, widgetKey) {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 3),
-            Text(data.nodeNumber.toString().toUpperCase(),
+            Text(data.name.toString().toUpperCase(),
                 style: Theme.of(context).textTheme.titleMedium)
           ],
         ),

@@ -143,7 +143,7 @@ class DatabaseService {
     await db.insert(
       AppConstants.deviceTable,
       breed.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 

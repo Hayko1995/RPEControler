@@ -5,8 +5,6 @@ import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
-import 'package:rpe_c/presentation/screens/preDefinesScreen/preDefines.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/widget/device.widget.dart';
 
 class Sensors extends StatefulWidget {
@@ -94,7 +92,7 @@ class _SensorsState extends State<Sensors> {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: GridView.count(
                       shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                      physics: const AlwaysScrollableScrollPhysics(),
                       crossAxisCount: 2,
                       crossAxisSpacing: 20,
                       mainAxisSpacing: 20,

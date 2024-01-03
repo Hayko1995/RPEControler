@@ -152,12 +152,13 @@ class MeshAPI {
       );
 
       _databaseService.clearAllDevice();
-
+      int number ;
       for (int i = 16; i <= length - 1; i = i + 16) {
+        number = (i/16).round();
         await _databaseService.insertDevice(
           Device(
               networkTableMAC: network.name,
-              name: "",
+              name: "device $number",
               nodeNumber: lint[i],
               nodeType: lint[i + 1],
               nodeSubType: lint[i + 2],
