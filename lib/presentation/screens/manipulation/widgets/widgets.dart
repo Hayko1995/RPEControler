@@ -137,7 +137,6 @@ class DeviceListItem extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
-                  const SizedBox(height: 10),
                 ],
               ),
             ),
@@ -180,4 +179,5 @@ class DraggingListItem extends StatelessWidget {
     );
   }
 }
+
 

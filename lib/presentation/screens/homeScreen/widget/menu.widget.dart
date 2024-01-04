@@ -60,14 +60,6 @@ Widget buildMenuItems(BuildContext context) => Container(
               Navigator.of(context).pushNamed(AppRouter.settingsRoute)
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.info),
-            title: const Text("info"),
-            onTap: () => {
-              Navigator.pop(context),
-              Navigator.of(context).pushNamed(AppRouter.meshCommandsRoute)
-            },
-          ),
         ],
       ),
     );

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:lan_scanner/lan_scanner.dart';
 import 'package:rpe_c/presentation/screens/esp32/esp32.view.dart';
 import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
-import 'package:rpe_c/presentation/screens/mesh/meshStatus.screen.dart';
 import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/screens/ipScanScreen/ipScan.screen.dart';
@@ -53,7 +52,6 @@ class AppRouter {
   static const String qrScanRoute = "/qrScan";
   static const String notifications = "/notifications";
   static const String dashboardRoute = "/dashboard";
-  static const String meshCommandsRoute = "/meshStatus";
   static const String settingsRoute = "/settings";
   static const String esp32Route = "/esp32";
   static const String networkConfigRouter = '/networkConfig';
@@ -124,12 +122,6 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => const AppSettings(),
-          );
-        }
-      case meshCommandsRoute:
-        {
-          return MaterialPageRoute(
-            builder: (_) => const MeshCommands(),
           );
         }
       case dashboardRoute:

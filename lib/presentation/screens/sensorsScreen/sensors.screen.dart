@@ -52,7 +52,6 @@ class _SensorsState extends State<Sensors> {
       List<Widget> sensorList = [];
       // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
       List<Device> data = dataDevices;
-      print(dataDevices);
       for (var i = 0; i < data.length; i++) {
         sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
       }
@@ -73,7 +72,7 @@ class _SensorsState extends State<Sensors> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     FilledButton(
-                      onPressed: ()  {
+                      onPressed: () {
                         Navigator.of(context).pushNamed(
                           AppRouter.manipulationsRoute,
                           arguments: const ManipulationsArgs(preDef: 1),
@@ -89,7 +88,8 @@ class _SensorsState extends State<Sensors> {
               width: MediaQuery.sizeOf(context).width,
               height: MediaQuery.sizeOf(context).height * 0.7,
               child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: GridView.count(
                       shrinkWrap: true,
                       physics: const AlwaysScrollableScrollPhysics(),

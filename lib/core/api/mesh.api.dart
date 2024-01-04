@@ -71,7 +71,7 @@ class MeshAPI {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      print(lint);
+      // print(lint);
       return body;
     } catch (e) {
       print(" service = internet problem");
@@ -114,18 +114,18 @@ class MeshAPI {
         lint.add(integerData.toRadixString(16));
       }
 
-      if (kDebugMode) {
-        print(lint);
-        print("${lint[0]} command type E1");
-        print("${lint[1]}  ${lint[2]} data Langht");
-        print("${lint[3]} number of nodes ");
-        print("${lint[4]}${lint[5]}${lint[6]}${lint[7]} rpe net id ");
-        print("${lint[8]} domain type ");
-        print("${lint[9]} preset domain ");
-        print("${lint[10]} network number ");
-        print("${lint[11]}${lint[12]}${lint[13]}${lint[14]} CR reported time");
-        print("${lint[15]} reserved ");
-      }
+      // if (kDebugMode) {
+      //   print(lint);
+      //   print("${lint[0]} command type E1");
+      //   print("${lint[1]}  ${lint[2]} data Langht");
+      //   print("${lint[3]} number of nodes ");
+      //   print("${lint[4]}${lint[5]}${lint[6]}${lint[7]} rpe net id ");
+      //   print("${lint[8]} domain type ");
+      //   print("${lint[9]} preset domain ");
+      //   print("${lint[10]} network number ");
+      //   print("${lint[11]}${lint[12]}${lint[13]}${lint[14]} CR reported time");
+      //   print("${lint[15]} reserved ");
+      // }
       length = int.parse("0x${lint[1]}${lint[2]}");
 
       int CR_Reported_Time = (int.parse(lint[12]) * 65536) +
@@ -152,9 +152,9 @@ class MeshAPI {
       );
 
       _databaseService.clearAllDevice();
-      int number ;
+      int number;
       for (int i = 16; i <= length - 1; i = i + 16) {
-        number = (i/16).round();
+        number = (i / 16).round();
         await _databaseService.insertDevice(
           Device(
               networkTableMAC: network.name,
@@ -176,14 +176,13 @@ class MeshAPI {
                   lint[i + 13] +
                   lint[i + 14] +
                   lint[i + 15]),
-
         );
       }
 
       if (AppConstants.debug) {
         List list = await _databaseService.getAllDevices();
         String debugString = '';
-        list.forEach((row) => print(row));
+        // list.forEach((row) => print(row));
         // logger.i(debugString);
       }
     }
@@ -214,7 +213,7 @@ class MeshAPI {
         final body = response.body;
         var stringList = body.split(' ');
         stringList.removeLast();
-        print(stringList);
+        // print(stringList);
         for (int i = 0; i < stringList.length; i++) {
           int _integerData = int.parse(stringList[i]);
           lint.add(_integerData.toRadixString(16));
@@ -255,8 +254,8 @@ class MeshAPI {
           // break; //todo remove
         }
 
-        List list = await _databaseService.getAllUploads();
-        list.forEach((row) => print(row));
+        // List list = await _databaseService.getAllUploads();
+        // list.forEach((row) => print(row));
       } catch (e) {
         logger.e(e);
         return Null;
@@ -378,7 +377,7 @@ class MeshAPI {
         int integerData = int.parse(stringList[i]);
         lint.add(integerData.toRadixString(16));
       }
-      print(lint);
+      // print(lint);
       return body;
     } catch (e) {
       print(" service = internet problem");
@@ -409,7 +408,7 @@ class MeshAPI {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      print(lint);
+      // print(lint);
       return body;
     } catch (e) {
       print(" service = internet problem");
@@ -436,7 +435,7 @@ class MeshAPI {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      print(lint);
+      // print(lint);
       return body;
     } catch (e) {
       print(" service = internet problem");
@@ -467,7 +466,7 @@ class MeshAPI {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      print(lint);
+      // print(lint);
       return body;
     } catch (e) {
       print(" service = internet problem");

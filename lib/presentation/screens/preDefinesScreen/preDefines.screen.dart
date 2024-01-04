@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
-import 'package:rpe_c/core/api/mesh.api.test.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
@@ -29,7 +28,6 @@ class _PredefineScreenState extends State<PredefineScreen> {
   void _updateData() async {
     List<RpeNetwork> predefines = await _databaseService
         .getNetworksByPreDef([widget.predefineArguments.preDef]);
-    logger.w(predefines);
 
     // TODO write logic for Widget
     if (mounted) {

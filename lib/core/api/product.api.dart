@@ -70,14 +70,14 @@ class ProductAPI {
       // print(body);
 
       var stringList = body.split(' ');
-      print(stringList);
+      // print(stringList);
       stringList.removeLast();
 
       for (int i = 0; i < stringList.length; i++) {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      print(lint);
+      // print(lint);
       return body;
     } catch (e) {
       print("service = internet problem");
