@@ -167,6 +167,7 @@ class MeshAPI {
               numChild: lint[i + 5],
               status: lint[i + 6],
               parentNodeNum: lint[i + 7],
+              image: 'assets/images/icons/air-quality-sensor.png',
               macAddress: lint[i + 8] +
                   lint[i + 9] +
                   lint[i + 10] +
@@ -175,6 +176,7 @@ class MeshAPI {
                   lint[i + 13] +
                   lint[i + 14] +
                   lint[i + 15]),
+
         );
       }
 

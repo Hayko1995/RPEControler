@@ -116,7 +116,7 @@ class DatabaseService {
       '''CREATE TABLE $deviceTable(
         nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
         Location TEXT, stackType TEXT, numChild TEXT, status TEXT,
-        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT)
+        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT)
     ''',
     );
   }
@@ -149,8 +149,10 @@ class DatabaseService {
 
   Future<List<RpeNetwork>> getNetworksByPreDef(List<int> types) async {
     final db = await _databaseService.database;
-    final List<Map<String, dynamic>> maps = await db
-        .query(AppConstants.networkTable, where: 'preDef = ?', whereArgs: types);
+    final List<Map<String, dynamic>> maps = await db.query(
+        AppConstants.networkTable,
+        where: 'preDef = ?',
+        whereArgs: types);
     return List.generate(
         maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }

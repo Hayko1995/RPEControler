@@ -13,18 +13,21 @@ class Device {
   final String macAddress;
   final String name;
   final String networkTableMAC;
+  final String image;
 
-  Device({required this.nodeNumber,
-    required this.nodeType,
-    required this.nodeSubType,
-    required this.location,
-    required this.stackType,
-    required this.numChild,
-    required this.status,
-    required this.parentNodeNum,
-    required this.macAddress,
-    required this.name,
-    required this.networkTableMAC});
+  Device(
+      {required this.nodeNumber,
+      required this.nodeType,
+      required this.nodeSubType,
+      required this.location,
+      required this.stackType,
+      required this.numChild,
+      required this.status,
+      required this.parentNodeNum,
+      required this.macAddress,
+      required this.name,
+      required this.networkTableMAC,
+      this.image = ''});
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
   // columns in the database.
@@ -40,7 +43,8 @@ class Device {
       'parentNodeNum': parentNodeNum,
       'macAddress': macAddress,
       'name': name,
-      'networkTableMAC': networkTableMAC
+      'networkTableMAC': networkTableMAC,
+      'image': image
     };
   }
 
@@ -56,7 +60,8 @@ class Device {
         parentNodeNum: map['parentNodeNum'] ?? "",
         macAddress: map['macAddress'] ?? "",
         name: map['name'] ?? "",
-        networkTableMAC: map['networkTableMAC'] ?? 0);
+        networkTableMAC: map['networkTableMAC'] ?? 0,
+        image: map['image'] ?? "");
   }
 
   String toJson() => json.encode(toMap());
@@ -70,7 +75,7 @@ class Device {
          nodeSubType: $nodeSubType,  location: $location,
          stackType $stackType, numChild $numChild,
          status $status, parentNodeNum $parentNodeNum, macAddress $macAddress,
-         name $name, networkTableMAC $networkTableMAC )''';
+         name $name, networkTableMAC $networkTableMAC, image $image )''';
 }
 
 class RpeUpload {
@@ -93,7 +98,7 @@ class RpeUpload {
   final int numOfAssocSen;
   final String sensorVal;
   final String
-  clTbl; // table which holds if a given device is part of a cluster (0-9)
+      clTbl; // table which holds if a given device is part of a cluster (0-9)
   final String aITbl; // assoc Initiator table
   final String aLTbl;
   final String timI; //timerInd: 0,
@@ -119,49 +124,50 @@ class RpeUpload {
   final String SM;
   final String senD;
 
-  RpeUpload({required this.dName,
-    required this.dNetNum,
-    required this.dNum,
-    required this.dType,
-    required this.dSubType,
-    required this.dStackType,
-    required this.dLocation,
-    required this.dParNum, // Parent Node Num
-    required this.dNumChild,
-    required this.dAssociation,
-    required this.dMacAddr,
-    required this.dStatus,
-    required this.dDim,
-    required this.nAct,
-    required this.actStatus, // actuation status
-    required this.numOfSen, // num of sensors
-    required this.numOfAssocSen,
-    required this.sensorVal,
-    required this.clTbl,
-    required this.aITbl, // assoc Initiator table
-    required this.aLTbl,
-    required this.timI, //timerInd: 0,
-    required this.thI, //threshInd: 0,
-    required this.thP1,
-    required this.thP2,
-    required this.thTY, // threshold type
-    required this.thSN, // threshold sensor
-    required this.thAT, // Action Type
-    required this.thSA,
-    required this.thST, // Start Time
-    required this.thET, // End Time
-    required this.thWK, // Weekday
-    required this.thEM,
-    required this.thSM,
-    required this.ST, // start time
-    required this.ET, // end time
-    required this.TT, // timer type
-    required this.WK, // Weekday
-    required this.AT, // action type
-    required this.SA, // status
-    required this.EM,
-    required this.SM,
-    required this.senD});
+  RpeUpload(
+      {required this.dName,
+      required this.dNetNum,
+      required this.dNum,
+      required this.dType,
+      required this.dSubType,
+      required this.dStackType,
+      required this.dLocation,
+      required this.dParNum, // Parent Node Num
+      required this.dNumChild,
+      required this.dAssociation,
+      required this.dMacAddr,
+      required this.dStatus,
+      required this.dDim,
+      required this.nAct,
+      required this.actStatus, // actuation status
+      required this.numOfSen, // num of sensors
+      required this.numOfAssocSen,
+      required this.sensorVal,
+      required this.clTbl,
+      required this.aITbl, // assoc Initiator table
+      required this.aLTbl,
+      required this.timI, //timerInd: 0,
+      required this.thI, //threshInd: 0,
+      required this.thP1,
+      required this.thP2,
+      required this.thTY, // threshold type
+      required this.thSN, // threshold sensor
+      required this.thAT, // Action Type
+      required this.thSA,
+      required this.thST, // Start Time
+      required this.thET, // End Time
+      required this.thWK, // Weekday
+      required this.thEM,
+      required this.thSM,
+      required this.ST, // start time
+      required this.ET, // end time
+      required this.TT, // timer type
+      required this.WK, // Weekday
+      required this.AT, // action type
+      required this.SA, // status
+      required this.EM,
+      required this.SM,
+      required this.senD});
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
   // columns in the database.
@@ -297,29 +303,30 @@ class RpeNetwork {
   final int nMAso; // number of multi network associations
   final int date;
 
-  RpeNetwork({this.name = "",
-    this.num = 0,
-    this.domain = 0,
-    this.preDef = 0,
-    this.macAddr = "",
-    this.ipAddr = "",
-    this.url = "",
-    this.key = '',
-    this.numOfNodes = 0,
-    this.nRT = 0,
-    this.nRTCh = 0,
-    this.nEDs = 0,
-    this.netT = 0,
-    this.netId = 0,
-    this.netPId = 0,
-    this.netPT = 0,
-    this.nTim = 0,
-    this.nThr = 0,
-    this.nCl = 0,
-    this.nMCl = 0,
-    this.nAso = 0,
-    this.nMAso = 0,
-    this.date = 0});
+  RpeNetwork(
+      {this.name = "",
+      this.num = 0,
+      this.domain = 0,
+      this.preDef = 0,
+      this.macAddr = "",
+      this.ipAddr = "",
+      this.url = "",
+      this.key = '',
+      this.numOfNodes = 0,
+      this.nRT = 0,
+      this.nRTCh = 0,
+      this.nEDs = 0,
+      this.netT = 0,
+      this.netId = 0,
+      this.netPId = 0,
+      this.netPT = 0,
+      this.nTim = 0,
+      this.nThr = 0,
+      this.nCl = 0,
+      this.nMCl = 0,
+      this.nAso = 0,
+      this.nMAso = 0,
+      this.date = 0});
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
   // columns in the database.
@@ -363,16 +370,16 @@ class RpeNetwork {
       key: map['key'] ?? "",
       numOfNodes: map['numOfNodes'] ?? "",
       nRT: map['nRT'],
-      nRTCh: map['nRTCh'] ,
+      nRTCh: map['nRTCh'],
       nEDs: map['nEDs'],
       netT: map['netT'],
-      netId: map['netId'] ,
+      netId: map['netId'],
       netPId: map['netPId'],
-      netPT: map['netPT'] ,
-      nTim: map['nTim'] ,
-      nThr: map['nThr'] ,
-      nCl: map['nCl'] ,
-      nMCl: map['nMCl'] ,
+      netPT: map['netPT'],
+      nTim: map['nTim'],
+      nThr: map['nThr'],
+      nCl: map['nCl'],
+      nMCl: map['nMCl'],
       nAso: map['nAso'],
       nMAso: map['nMAso'],
       date: map['date'],

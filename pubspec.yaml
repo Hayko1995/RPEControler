@@ -70,8 +70,6 @@ flutter:
   generate: true
   uses-material-design: true
   assets:
-    - assets/images/shoes/
-    - assets/images/misc/
     - assets/images/logo/
     - assets/images/icons/
 
