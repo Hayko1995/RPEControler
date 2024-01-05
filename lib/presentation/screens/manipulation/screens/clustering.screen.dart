@@ -31,6 +31,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
 
   List<String> manipulatngType = <String>['Clustering', 'Associations'];
   List<String> sensorsType = <String>['All', 'Light', 'Buzzers'];
+  List<String> clusters = <String>['New'];
   List dataDevices = [];
   List _items = [];
   List items = [];
@@ -58,7 +59,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  _buildContent();
+    return _buildContent();
   }
 
   Widget _buildContent() {
@@ -151,13 +152,31 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
   }
 
   Widget _buildManipulationListRow() {
+    String dropdownValue = clusters.first;
+    List<Widget> manipulationWidgets = [];
+    manipulationWidgets.add(
+      DropdownMenu<String>(
+        initialSelection: clusters.first,
+        onSelected: (String? value) {
+          // This is called when the user selects an item.
+          setState(() {
+            dropdownValue = value!;
+          });
+        },
+        dropdownMenuEntries:
+            clusters.map<DropdownMenuEntry<String>>((String value) {
+          return DropdownMenuEntry<String>(value: value, label: value);
+        }).toList(),
+      ),
+    );
+    manipulationWidgets.addAll(_people.map(_buildPersonWithDropZone).toList());
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
         vertical: 20,
       ),
       child: Column(
-        children: _people.map(_buildPersonWithDropZone).toList(),
+        children: manipulationWidgets,
       ),
     );
   }
