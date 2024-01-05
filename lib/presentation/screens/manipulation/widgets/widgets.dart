@@ -3,8 +3,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
 
 
-class ManipulationList extends StatefulWidget {
-  const ManipulationList({
+class ManipulationCluster extends StatefulWidget {
+  const ManipulationCluster({
     super.key,
     required this.customer,
     this.highlighted = false,
@@ -17,10 +17,10 @@ class ManipulationList extends StatefulWidget {
   final bool hasItems;
 
   @override
-  State<ManipulationList> createState() => _ManipulationListState();
+  State<ManipulationCluster> createState() => _ManipulationAssociations();
 }
 
-class _ManipulationListState extends State<ManipulationList> {
+class _ManipulationClusterState extends State<ManipulationCluster> {
   Widget addSlidableWidget(name, index) {
     return Slidable(
       key: ValueKey(index + 1),
@@ -82,6 +82,81 @@ class _ManipulationListState extends State<ManipulationList> {
   }
 }
 
+class _ManipulationAssociations extends State<ManipulationCluster> {
+  Widget addSlidableWidget(name, index) {
+    return Column(
+      children: [
+        Slidable(
+          key: ValueKey(index + 1),
+          endActionPane: ActionPane(
+            motion: const ScrollMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (BuildContext context) {
+                  setState(() {
+                    widget.customer.items.removeAt(index);
+                  });
+
+                },
+                backgroundColor: const Color(0xFFFE4A49),
+                foregroundColor: Colors.white,
+                icon: Icons.delete,
+                label: 'Delete',
+              ),
+            ],
+          ),
+
+          // The child of the Slidable is what the user sees when the
+          // component is not dragged.
+          child: ListTile(title: Text(name)),
+        ),
+        Slider(
+          value: 0.5, // The initial value of the slider
+          min: 0, // The minimum value of the slider
+          max: 1, // The maximum value of the slider
+          divisions: 10, // The number of divisions on the slider
+          onChanged: (double value) {
+            // This callback is called whenever the slider value changes
+            // Use the value parameter to update your application state
+          },
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textColor = widget.highlighted ? Colors.white : Colors.black;
+
+    return Transform.scale(
+      scale: widget.highlighted ? 1.075 : 1.0,
+      child: Material(
+        elevation: widget.highlighted ? 8 : 4,
+        borderRadius: BorderRadius.circular(22),
+        color: widget.highlighted ? const Color(0xFFF64209) : Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 12,
+          ),
+          child: SingleChildScrollView(
+
+            child: SizedBox(
+              height:  MediaQuery.sizeOf(context).height* 0.7,
+              width: MediaQuery.sizeOf(context).width * 0.3,
+              child: ListView.builder(
+                itemCount: widget.customer.items.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return addSlidableWidget(widget.customer.items[index].name, index);
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class DeviceListItem extends StatelessWidget {
   const DeviceListItem({
@@ -180,4 +255,6 @@ class DraggingListItem extends StatelessWidget {
   }
 }
 
-
+Widget sliderWidget(){
+  return Text("aaaa");
+}

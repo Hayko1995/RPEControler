@@ -199,7 +199,7 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
         ),
         child: DragTarget<Item>(
           builder: (context, candidateItems, rejectedItems) {
-            return ManipulationList(
+            return ManipulationCluster(
               hasItems: customer.items.isNotEmpty,
               highlighted: candidateItems.isNotEmpty,
               customer: customer,
