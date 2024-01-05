@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
@@ -5,6 +7,7 @@ import 'package:rpe_c/presentation/screens/manipulation/screens/assosiation.scre
 import 'package:rpe_c/presentation/screens/manipulation/screens/clustering.screen.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/widgets.dart';
+import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
 
 class ManipulationScreen extends StatefulWidget {
   final ManipulationsArgs manipulationsArgs;
@@ -35,12 +38,15 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
     });
   }
 
+  TextEditingController textController = TextEditingController();
+  String displayText = "";
+
   List<String> manipulationType = <String>['Clustering', 'Associations'];
   List<String> sensorsType = <String>['All', 'Light', 'Buzzers'];
   List dataDevices = [];
   List _items = [];
   List items = [];
-  String dropdownValue = "";
+  String dropdownValue = "Clustering";
 
   void _updateData() async {
     List<Device> devices = await _databaseService.getAllDevices();
@@ -76,14 +82,14 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
   }
 
   Widget _buildContent() {
-
-    return Stack(
-      children: [
-        SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -93,7 +99,6 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
                         // This is called when the user selects an item.
                         setState(() {
                           dropdownValue = value!;
-
                         });
                       },
                       dropdownMenuEntries: manipulationType
@@ -102,21 +107,41 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
                             value: value, label: value);
                       }).toList(),
                     ),
-                    FilledButton(
-                      onPressed: () {},
-                      child: const Text("Save"),
+                  ],
+                ),
+                Row(mainAxisSize: MainAxisSize.max, children: [
+                  // SizedBox(
+                  //     child: CustomTextField.customTextField(
+                  //   textEditingController: oldPassController,
+                  //   hintText: 'Enter Old Password',
+                  //   validator: (val) =>
+                  //       val!.isEmpty ? 'Enter Old Password' : null,
+                  // )),
+                  Expanded(
+
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter a search term',
+                      ),
                     ),
-                  ]),
-              SizedBox(
-                  width: MediaQuery.sizeOf(context).width,
-                  height: MediaQuery.sizeOf(context).height * 0.8,
-                  child: (dropdownValue == "Clustering")
-                      ? ClusteringScreen()
-                      : AssosiationScreen()),
-            ],
+                  ),
+                  FilledButton(
+                    onPressed: () {},
+                    child: const Text("Save"),
+                  ),
+                ]),
+                SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    height: MediaQuery.sizeOf(context).height * 0.7,
+                    child: (dropdownValue == "Clustering")
+                        ? ClusteringScreen()
+                        : AssosiationScreen()),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

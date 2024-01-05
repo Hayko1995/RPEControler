@@ -63,28 +63,30 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
 
   Widget _buildContent() {
     String dropdownValue = manipulatngType.first;
-    return Stack(
-      children: [
-        SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: MediaQuery.sizeOf(context).width,
-                height: MediaQuery.sizeOf(context).height * 0.8,
-                child: Row(
-                  children: [
-                    _buildManipulationListRow(),
-                    Expanded(
-                      child: _buildDeviceList(),
-                    ),
-                  ],
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height * 0.7,
+                  child: Row(
+                    children: [
+                      _buildManipulationListRow(),
+                      Expanded(
+                        child: _buildDeviceList(),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
