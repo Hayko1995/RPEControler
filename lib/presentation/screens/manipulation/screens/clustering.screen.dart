@@ -12,15 +12,15 @@ class ClusteringScreen extends StatefulWidget {
 class _ClusteringScreenState extends State<ClusteringScreen> {
   final DatabaseService _databaseService = DatabaseService();
 
-  final List<Customer> _people = [
-    Customer(),
+  final List<ActiveArea> _people = [
+    ActiveArea(),
   ];
   final GlobalKey _draggableKey = GlobalKey();
   List<Widget> slideble = [];
 
   void _itemDroppedOnCustomerCart({
     required Item item,
-    required Customer customer,
+    required ActiveArea customer,
   }) {
     setState(() {
       if (!customer.items.contains(item)) {
@@ -181,7 +181,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
     );
   }
 
-  Widget _buildPersonWithDropZone(Customer customer) {
+  Widget _buildPersonWithDropZone(ActiveArea customer) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(

@@ -11,8 +11,8 @@ class Item {
   final ImageProvider imageProvider;
 }
 
-class Customer {
-  Customer({
+class ActiveArea {
+  ActiveArea({
     List<Item>? items,
   }) : items = items ?? [];
 

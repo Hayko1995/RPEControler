@@ -12,7 +12,7 @@ class ManipulationList extends StatefulWidget {
   });
 
 
-  final Customer customer;
+  final ActiveArea customer;
   final bool highlighted;
   final bool hasItems;
 

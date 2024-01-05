@@ -12,25 +12,30 @@ class AssosiationScreen extends StatefulWidget {
 class _AssosiationScreenState extends State<AssosiationScreen> {
   final DatabaseService _databaseService = DatabaseService();
 
-  final List<Customer> _people = [
-    Customer(),
+  final List<ActiveArea> activeAreas = [
+    ActiveArea(),
+    ActiveArea(),
   ];
   final GlobalKey _draggableKey = GlobalKey();
   List<Widget> slideble = [];
 
   void _itemDroppedOnCustomerCart({
     required Item item,
-    required Customer customer,
+    required ActiveArea customer,
   }) {
+    print("item");
+    print(customer);
     setState(() {
       if (!customer.items.contains(item)) {
         customer.items.add(item);
       }
+      print(customer.items.length);
     });
   }
 
   List<String> manipulatngType = <String>['Clustering', 'Associations'];
   List<String> sensorsType = <String>['All', 'Light', 'Buzzers'];
+  List<String> clusters = <String>['New'];
   List dataDevices = [];
   List _items = [];
   List items = [];
@@ -151,18 +156,42 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
   }
 
   Widget _buildManipulationListRow() {
+    String dropdownValue = clusters.first;
+    List<Widget> manipulationWidgets = [];
+    // manipulationWidgets.add();
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
         vertical: 20,
       ),
       child: Column(
-        children: _people.map(_buildPersonWithDropZone).toList(),
+        children: [
+          DropdownMenu<String>(
+            initialSelection: clusters.first,
+            onSelected: (String? value) {
+              // This is called when the user selects an item.
+              setState(() {
+                dropdownValue = value!;
+              });
+            },
+            dropdownMenuEntries:
+            clusters.map<DropdownMenuEntry<String>>((String value) {
+              return DropdownMenuEntry<String>(value: value, label: value);
+            }).toList(),
+          ),
+          Text("From"),
+          _buildPersonWithDropZone(activeAreas[0]),
+          const SizedBox(
+            height: 20,
+          ),
+          Text("TO"),
+          _buildPersonWithDropZone(activeAreas[1])
+        ],
       ),
     );
   }
 
-  Widget _buildPersonWithDropZone(Customer customer) {
+  Widget _buildPersonWithDropZone(ActiveArea customer) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(

@@ -21,15 +21,15 @@ class ManipulationScreen extends StatefulWidget {
 class _ManipulationScreenState extends State<ManipulationScreen> {
   final DatabaseService _databaseService = DatabaseService();
 
-  final List<Customer> _people = [
-    Customer(),
+  final List<ActiveArea> _people = [
+    ActiveArea(),
   ];
   final GlobalKey _draggableKey = GlobalKey();
   List<Widget> slideble = [];
 
   void _itemDroppedOnCustomerCart({
     required Item item,
-    required Customer customer,
+    required ActiveArea customer,
   }) {
     setState(() {
       if (!customer.items.contains(item)) {
@@ -74,9 +74,11 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: AppBar(
-          title: const Text(
-        'Manipulation Page',
-      )),
+        title: const Text(
+          'Manipulation Page',
+        ),
+        backgroundColor: Colors.blue,
+      ),
       body: _buildContent(),
     );
   }
@@ -118,7 +120,6 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
                   //       val!.isEmpty ? 'Enter Old Password' : null,
                   // )),
                   Expanded(
-
                     child: TextField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
