@@ -24,16 +24,6 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
 
   @override
   void initState() {
-    // final userNotifier = Provider.of<UserNotifier>(context, listen: false);
-    // ReadCache.getString(key: AppKeys.userData).then(
-    //   (token) => {
-    //     userNotifier.getUserData(context: context, token: token),
-    //   },
-    // );
-    // Timer.periodic(const Duration(seconds: 5), (timer) {
-    //   _updateTables();
-    // });
-
     super.initState();
   }
 

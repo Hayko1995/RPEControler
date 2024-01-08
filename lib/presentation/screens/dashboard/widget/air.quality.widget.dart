@@ -26,7 +26,7 @@ class ItemBuilder extends StatelessWidget {
         onTap: () => {
               Navigator.of(context).pushNamed(
                 AppRouter.sensorsRoute,
-                arguments: SensorArgs(mac: [devices[index].networkTableMAC]),
+                arguments: SensorArgs(mac: [devices[index].networkTableMAC]), //todo change
               )
             },
         child: Container(

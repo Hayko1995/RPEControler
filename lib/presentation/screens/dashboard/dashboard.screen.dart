@@ -2,10 +2,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/dashboard/widget/air.quality.widget.dart';
 import 'package:rpe_c/presentation/widgets/predefine.widgets.dart';
@@ -26,14 +28,16 @@ class _DashboardState extends State<Dashboard> {
   double _page = 0;
 
   Color caughtColor = Colors.grey;
-  final DatabaseService _databaseService = DatabaseService();
+
   List<String> data = [];
 
   @override
   void initState() {
+
     _pageController.addListener(() {
       if (_pageController.page != null) {
         _page = _pageController.page!;
+
         setState(() {});
       }
     });
@@ -43,31 +47,17 @@ class _DashboardState extends State<Dashboard> {
     //     userNotifier.getUserData(context: context, token: token),
     //   },
     // );
-    _updateTables();
-    Timer.periodic(const Duration(seconds: 5), (timer) {
-      _updateTables();
-    });
     super.initState();
   }
 
-  List<RpeNetwork> dataNetworks = <RpeNetwork>[];
+
   List<String> list = <String>['Network', 'Clusters', 'Widgets'];
 
-  void _updateTables() async {
-    List<RpeNetwork> _dataDevices = await _databaseService.getAllNetworks();
-
-    // logger.w(_dataUpload);
-
-    // TODO write logic for Widget
-    setState(() {
-      dataNetworks = _dataDevices;
-    });
-  }
 
   List<Widget> getSensors() {
     List<Widget> sensorList = [];
-    // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
-    List<RpeNetwork> data = dataNetworks;
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
+    List<RpeNetwork> data = meshNotifier.networks!;
     int airQualityNumber = 0;
     for (var i = 0; i < data.length; i++) {
       if (data.elementAt(i).preDef == AppConstants.airQuality) {

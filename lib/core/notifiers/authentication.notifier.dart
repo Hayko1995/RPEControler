@@ -48,7 +48,7 @@ class AuthenticationNotifier with ChangeNotifier {
     try {
       var userData = await _authenticationAPI.createAccount(
           useremail: useremail, username: username, userpassword: userpassword);
-      print(userData);
+
 
       final Map<String, dynamic> parseData = await jsonDecode(userData);
       bool isAuthenticated = parseData['authentication'];

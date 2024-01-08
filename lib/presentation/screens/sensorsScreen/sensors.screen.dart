@@ -1,16 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/widget/device.widget.dart';
 
 class Sensors extends StatefulWidget {
-  final SensorArgs sensorsArguments;
+  final SensorArgs predefineSensorsArguments;
 
-  const Sensors({super.key, required this.sensorsArguments});
+  const Sensors({super.key, required this.predefineSensorsArguments});
 
   @override
   State<Sensors> createState() => _SensorsState();
@@ -21,26 +23,18 @@ class _SensorsState extends State<Sensors> {
   late Timer _timer;
   List<Device> dataDevices = <Device>[];
 
-  void _updateData() async {
-    List<Device> devices =
-        await _databaseService.getDevices(widget.sensorsArguments.mac);
-    // logger.w(_dataUpload);
 
-    // TODO write logic for Widget
-    if (mounted) {
-      setState(() {
-        dataDevices = devices;
-      });
-    }
-  }
 
   @override
   void initState() {
-    _updateData();
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      _updateData();
-    });
     super.initState();
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+    meshNotifier.getDevicesByMac(widget.predefineSensorsArguments.mac);
+
+    Future.delayed(const Duration(seconds: 1), () {
+      dataDevices = meshNotifier.getDevices!; //todo change
+      setState(() {});
+    });
   }
 
   @override
@@ -104,7 +98,6 @@ class _SensorsState extends State<Sensors> {
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
 }

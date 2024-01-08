@@ -140,7 +140,7 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => Sensors(
-              sensorsArguments:
+              predefineSensorsArguments:
                   ModalRoute.of(context)!.settings.arguments as SensorArgs,
             ),
             settings: settings,

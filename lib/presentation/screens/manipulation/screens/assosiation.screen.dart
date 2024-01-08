@@ -24,13 +24,11 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
     required ActiveArea customer,
   }) {
     print("item");
-    print(customer);
+
     setState(() {
-      print(3);
       if (!customer.items.contains(item)) {
         customer.items.add(item);
         customer.size = customer.items.length * 150;
-        print(customer.size);
       }
     });
   }
@@ -163,41 +161,37 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
     List<Widget> manipulationWidgets = [];
     // manipulationWidgets.add();
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height*0.8,
-      child: Flexible(
-
-        child: SingleChildScrollView(
-
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownMenu<String>(
-                initialSelection: clusters.first,
-                onSelected: (String? value) {
-                  // This is called when the user selects an item.
-                  setState(() {
-                    dropdownValue = value!;
-                  });
-                },
-                dropdownMenuEntries:
-                    clusters.map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry<String>(value: value, label: value);
-                }).toList(),
-              ),
-              Text("From"),
-              SizedBox(
-                  height: (activeAreas[0].size / 1),
-                  child: _buildPersonWithDropZone(activeAreas[0])),
-              const SizedBox(
-                height: 20,
-              ),
-              Text("TO"),
-              SizedBox(
-                  height: (activeAreas[1].size / 1),
-                  child: _buildPersonWithDropZone(activeAreas[1]))
-            ],
-          ),
+      height: MediaQuery.sizeOf(context).height * 0.8,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropdownMenu<String>(
+              initialSelection: clusters.first,
+              onSelected: (String? value) {
+                // This is called when the user selects an item.
+                setState(() {
+                  dropdownValue = value!;
+                });
+              },
+              dropdownMenuEntries:
+                  clusters.map<DropdownMenuEntry<String>>((String value) {
+                return DropdownMenuEntry<String>(value: value, label: value);
+              }).toList(),
+            ),
+            Text("From"),
+            SizedBox(
+                height: (activeAreas[0].size / 1),
+                child: _buildPersonWithDropZone(activeAreas[0])),
+            const SizedBox(
+              height: 20,
+            ),
+            Text("TO"),
+            SizedBox(
+                height: (activeAreas[1].size / 1),
+                child: _buildPersonWithDropZone(activeAreas[1]))
+          ],
         ),
       ),
     );

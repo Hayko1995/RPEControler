@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/widget/device.widget.dart';
@@ -24,26 +27,19 @@ class _PredefineScreenState extends State<PredefineScreen> {
   late Timer _timer;
   List<RpeNetwork> dataDevices = <RpeNetwork>[];
   List<RpeNetwork> data = <RpeNetwork>[];
-
-  void _updateData() async {
-    List<RpeNetwork> predefines = await _databaseService
-        .getNetworksByPreDef([widget.predefineArguments.preDef]);
-
-    // TODO write logic for Widget
-    if (mounted) {
-      setState(() {
-        dataDevices = predefines;
-      });
-    }
-  }
+  // var meshNotifier;
 
   @override
   void initState() {
-    _updateData();
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      _updateData();
-    });
     super.initState();
+    print("initState");
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+    meshNotifier.predefines(widget.predefineArguments.preDef);
+    Future.delayed(const Duration(seconds: 1), () {
+      dataDevices = meshNotifier.getPredefines!;
+      setState(() {
+      });
+    });
   }
 
   @override

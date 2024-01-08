@@ -110,7 +110,6 @@ class _ManipulationAssociations extends State<ManipulationAssociations> {
               SlidableAction(
                 onPressed: (BuildContext context) {
                   setState(() {
-                    print(widget.customer.size);
                     widget.customer.items.removeAt(index);
                     if (widget.customer.items.length * 150 < 150) {
                       widget.customer.size = 150;
