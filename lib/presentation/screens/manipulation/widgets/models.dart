@@ -16,5 +16,7 @@ class ActiveArea {
     List<Item>? items,
   }) : items = items ?? [];
 
+
   final List<Item> items;
+  late int size = 150;
 }

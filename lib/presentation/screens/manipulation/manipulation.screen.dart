@@ -6,6 +6,23 @@ import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/manipulation/screens/assosiation.screen.dart';
 import 'package:rpe_c/presentation/screens/manipulation/screens/clustering.screen.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+
+final List<SalomonBottomBarItem> bottomNavBarIcons = [
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.group_work_outlined),
+    title: const Text("Association"),
+    selectedColor: Colors.blue,
+  ),
+
+  /// Search
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.add),
+    title: const Text("Clustering"),
+    selectedColor: Colors.blue,
+  ),
+
+];
 
 class ManipulationScreen extends StatefulWidget {
   final ManipulationsArgs manipulationsArgs;
@@ -28,9 +45,16 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
   List _items = [];
   List items = [];
   String dropdownValue = "Clustering";
+  var _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+
+    final screens = [
+      ClusteringScreen(),
+      AssosiationScreen()
+    ];
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: AppBar(
@@ -39,7 +63,12 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
         ),
         backgroundColor: Colors.blue,
       ),
-      body: _buildContent(),
+      body: screens[_currentIndex],
+      bottomNavigationBar: SalomonBottomBar(
+        currentIndex: _currentIndex,
+        onTap: (i) => setState(() => _currentIndex = i),
+        items: bottomNavBarIcons,
+      ),
     );
   }
 
@@ -51,26 +80,6 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    DropdownMenu<String>(
-                      initialSelection: manipulationType.first,
-                      onSelected: (String? value) {
-                        // This is called when the user selects an item.
-                        setState(() {
-                          dropdownValue = value!;
-                        });
-                      },
-                      dropdownMenuEntries: manipulationType
-                          .map<DropdownMenuEntry<String>>((String value) {
-                        return DropdownMenuEntry<String>(
-                            value: value, label: value);
-                      }).toList(),
-                    ),
-                  ],
-                ),
                 Row(mainAxisSize: MainAxisSize.max, children: [
                   Expanded(
                     child: TextField(
@@ -87,7 +96,7 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
                 ]),
                 SizedBox(
                     width: MediaQuery.sizeOf(context).width,
-                    height: MediaQuery.sizeOf(context).height * 0.7,
+                    height: MediaQuery.sizeOf(context).height * 0.9,
                     child: (dropdownValue == "Clustering")
                         ? ClusteringScreen()
                         : AssosiationScreen()),
@@ -105,3 +114,5 @@ class ManipulationsArgs {
 
   const ManipulationsArgs({required this.preDef});
 }
+
+

@@ -26,10 +26,12 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
     print("item");
     print(customer);
     setState(() {
+      print(3);
       if (!customer.items.contains(item)) {
         customer.items.add(item);
+        customer.size = customer.items.length * 150;
+        print(customer.size);
       }
-      print(customer.items.length);
     });
   }
 
@@ -77,7 +79,7 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
               children: [
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width,
-                  height: MediaQuery.sizeOf(context).height * 0.7,
+                  height: MediaQuery.sizeOf(context).height * 0.82,
                   child: Row(
                     children: [
                       _buildManipulationListRow(),
@@ -107,6 +109,7 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
               onSelected: (String? value) {
                 // This is called when the user selects an item.
                 setState(() {
+                  print(1);
                   dropdownValue = value!;
                 });
               },
@@ -159,60 +162,72 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
     String dropdownValue = clusters.first;
     List<Widget> manipulationWidgets = [];
     // manipulationWidgets.add();
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 20,
-      ),
-      child: Column(
-        children: [
-          DropdownMenu<String>(
-            initialSelection: clusters.first,
-            onSelected: (String? value) {
-              // This is called when the user selects an item.
-              setState(() {
-                dropdownValue = value!;
-              });
-            },
-            dropdownMenuEntries:
-            clusters.map<DropdownMenuEntry<String>>((String value) {
-              return DropdownMenuEntry<String>(value: value, label: value);
-            }).toList(),
+    return SizedBox(
+      height: MediaQuery.sizeOf(context).height*0.8,
+      child: Flexible(
+
+        child: SingleChildScrollView(
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownMenu<String>(
+                initialSelection: clusters.first,
+                onSelected: (String? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    dropdownValue = value!;
+                  });
+                },
+                dropdownMenuEntries:
+                    clusters.map<DropdownMenuEntry<String>>((String value) {
+                  return DropdownMenuEntry<String>(value: value, label: value);
+                }).toList(),
+              ),
+              Text("From"),
+              SizedBox(
+                  height: (activeAreas[0].size / 1),
+                  child: _buildPersonWithDropZone(activeAreas[0])),
+              const SizedBox(
+                height: 20,
+              ),
+              Text("TO"),
+              SizedBox(
+                  height: (activeAreas[1].size / 1),
+                  child: _buildPersonWithDropZone(activeAreas[1]))
+            ],
           ),
-          Text("From"),
-          _buildPersonWithDropZone(activeAreas[0]),
-          const SizedBox(
-            height: 20,
-          ),
-          Text("TO"),
-          _buildPersonWithDropZone(activeAreas[1])
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildPersonWithDropZone(ActiveArea customer) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 6,
-        ),
-        child: DragTarget<Item>(
-          builder: (context, candidateItems, rejectedItems) {
-            return ManipulationCluster(
-              hasItems: customer.items.isNotEmpty,
-              highlighted: candidateItems.isNotEmpty,
-              customer: customer,
-            );
-          },
-          onAccept: (item) {
-            _itemDroppedOnCustomerCart(
-              item: item,
-              customer: customer,
-            );
-          },
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 6,
+      ),
+      child: DragTarget<Item>(
+        builder: (context, candidateItems, rejectedItems) {
+          return ManipulationAssociations(
+            hasItems: customer.items.isNotEmpty,
+            highlighted: candidateItems.isNotEmpty,
+            customer: customer,
+            function: methodInParent,
+          );
+        },
+        onAccept: (item) {
+          _itemDroppedOnCustomerCart(
+            item: item,
+            customer: customer,
+          );
+        },
       ),
     );
   }
+
+  methodInParent() => setState(() {
+        print("state");
+      });
 }
