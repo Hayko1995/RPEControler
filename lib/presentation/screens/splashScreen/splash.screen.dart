@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    Timer(const Duration(seconds: 1), _initiateCache);
+    Future.delayed(const Duration(seconds: 1), _initiateCache);
     super.initState();
   }
 

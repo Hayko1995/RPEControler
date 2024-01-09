@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/mesh.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -105,6 +106,7 @@ Future<String> getData() async {
 Future initMesh() async {
   final MeshAPI mashAPI = MeshAPI();
   await mashAPI.meshE1();
+  logger.i("/////////");
 
 
 }
@@ -158,7 +160,7 @@ void onStart(ServiceInstance service) async {
 
   // bring to foreground
 
-  Timer.periodic(const Duration(seconds: 10), (timer) async {
+  Timer.periodic(const Duration(milliseconds: AppConstants.uiUpdateInterval), (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification

@@ -11,6 +11,7 @@ import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
 import 'package:rpe_c/presentation/screens/dashboard/dashboard.screen.dart';
@@ -36,38 +37,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Timer _timer;
   final DatabaseService _databaseService = DatabaseService();
+  late List<RpeNetwork> devices;
 
-  Future _initCRNetwork() async {
-    //TODO remove in production
-    // if (kDebugMode) {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+    meshNotifier.getNetworks();
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      devices = meshNotifier.networks!;
+      if (devices.isEmpty) {
+        Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
+      }
+    });
+
     _databaseService
         .insertNetwork(RpeNetwork(url: ApiRoutes.esp32Url, preDef: 1));
     // }
     // enable QR scan if not have network in DB
-    List devices = await _databaseService.getAllNetworks();
-    if (devices.isEmpty) {
-      return Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
-    }
-  }
 
-  @override
-  void initState() {
-    final userNotifier = Provider.of<UserNotifier>(context, listen: false);
-    // ReadCache.getString(key: AppKeys.userData).then(
-    //   (token) => {
-    //     userNotifier.getUserData(context: context, token: token),
-    //   },
-    // );
-    _timer = Timer(const Duration(seconds: 1), _initCRNetwork);
-    super.initState();
-  }
-
-  var _currentIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
     ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
     var themeFlag = _themeNotifier.darkTheme;
     return Scaffold(
@@ -86,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
 }

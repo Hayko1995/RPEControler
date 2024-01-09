@@ -108,7 +108,7 @@ Widget sensorWidget(context, data, widgetKey) {
       onTap: () {
         Navigator.of(context).pushNamed(
           AppRouter.sensorDetailsRoute,
-          arguments: SensorDetailsArgs(deviceId: data.nodeNumber),
+          arguments: SensorDetailsArgs(mac: data.nodeNumber),
         );
       },
       onLongPress: () {

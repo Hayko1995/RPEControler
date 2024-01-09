@@ -6,6 +6,7 @@ class AppConstants {
   static const String networkTable = "rpeNet";
   static const String dbName = "RPEControls.db";
   static const int airQuality = 1;
+  static const int uiUpdateInterval = 1500;
 
   static const bool debug = true;
 }

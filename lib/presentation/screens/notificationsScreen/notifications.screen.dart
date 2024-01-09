@@ -31,9 +31,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     //     userNotifier.getUserData(context: context, token: token),
     //   },
     // );
-    Timer.periodic(const Duration(seconds: 5), (timer) {
-      _updateTables();
-    });
+    // Timer.periodic(const Duration(seconds: 5), (timer) {
+    //   _updateTables();
+    // });
 
     super.initState();
   }

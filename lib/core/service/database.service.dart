@@ -187,6 +187,24 @@ class DatabaseService {
     return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
   }
 
+  Future<List<Device>> getDevicesByMac(List<String> mac) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+        AppConstants.deviceTable,
+        where: 'macAddress = ?',
+        whereArgs: mac);
+    return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
+  }
+
+  Future updateDevice(Device device) async {
+    final db = await _databaseService.database;
+    await db.update(
+        AppConstants.deviceTable,
+        device.toMap(),
+        where: 'macAddress = ?',
+        whereArgs: [device.macAddress]);
+  }
+
   // Future<CR> getCR(int id) async {
   //   final db = await _databaseService.database;
   //   final List<Map<String, dynamic>> maps =
@@ -247,7 +265,7 @@ class DatabaseService {
   // Future<void> updateCR(CR breed) async { TODO
   //   final db = await _databaseService.database;
   //
-  //   await db.update(aaaa
+  //   await db.update(
   //     AppConstants.crTable,
   //     breed.toMap(),
   //     where: 'id = ?',

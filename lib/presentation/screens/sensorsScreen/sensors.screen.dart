@@ -6,6 +6,7 @@ import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
+import 'package:rpe_c/core/service/mesh.service.dart';
 import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/widget/device.widget.dart';
 
@@ -28,19 +29,15 @@ class _SensorsState extends State<Sensors> {
   @override
   void initState() {
     super.initState();
-    final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
-    meshNotifier.getDevicesByMac(widget.predefineSensorsArguments.mac);
-
-    Future.delayed(const Duration(seconds: 1), () {
-      dataDevices = meshNotifier.getDevices!; //todo change
-      setState(() {});
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     // ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
     // var themeFlag = _themeNotifier.darkTheme;
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
+    dataDevices = meshNotifier.allDevices!;
+    logger.i(dataDevices);
 
     List<Widget> getSensors() {
       List<Widget> sensorList = [];

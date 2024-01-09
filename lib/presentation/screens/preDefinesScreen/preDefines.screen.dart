@@ -7,10 +7,6 @@ import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorsScreen/widget/device.widget.dart';
-
-import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/widgets/predefine.widgets.dart';
 
 class PredefineScreen extends StatefulWidget {
@@ -24,9 +20,9 @@ class PredefineScreen extends StatefulWidget {
 
 class _PredefineScreenState extends State<PredefineScreen> {
   final DatabaseService _databaseService = DatabaseService();
-  late Timer _timer;
   List<RpeNetwork> dataDevices = <RpeNetwork>[];
   List<RpeNetwork> data = <RpeNetwork>[];
+
   // var meshNotifier;
 
   @override
@@ -35,10 +31,9 @@ class _PredefineScreenState extends State<PredefineScreen> {
     print("initState");
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     meshNotifier.predefines(widget.predefineArguments.preDef);
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       dataDevices = meshNotifier.getPredefines!;
-      setState(() {
-      });
+      setState(() {});
     });
   }
 
@@ -74,7 +69,6 @@ class _PredefineScreenState extends State<PredefineScreen> {
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
 }

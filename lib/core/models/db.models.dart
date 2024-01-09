@@ -11,7 +11,7 @@ class Device {
   final String status;
   final String parentNodeNum;
   final String macAddress;
-  final String name;
+  late  String name;
   final String networkTableMAC;
   final String image;
 

@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
+import 'package:rpe_c/core/service/mesh.service.dart';
 
 final DatabaseService _databaseService = DatabaseService();
 
@@ -20,16 +22,26 @@ class MeshNotifier with ChangeNotifier {
   List<RpeNetwork>? get getAllNetworks => networks;
 
   List<RpeNetwork>? _predefines = [];
-  List<Device>? _devices = [];
 
   List<RpeNetwork>? get getPredefines => _predefines;
 
+  List<Device>? _devices = [];
+
   List<Device>? get getDevices => _devices;
+  Device? _device;
+
+  Device? get getDevice => _device;
+
+  List<Device>? _allDevices = [];
+
+  List<Device>? get allDevices => _allDevices;
 
   MeshNotifier() {
-    Timer.periodic(const Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(milliseconds: AppConstants.uiUpdateInterval),
+        (timer) {
       // _count++;
       getNetworks();
+      _getAllDevices();
     });
   }
 
@@ -39,12 +51,24 @@ class MeshNotifier with ChangeNotifier {
   }
 
   Future predefines(preDef) async {
-    print("preDef");
     _predefines = await _databaseService.getNetworksByPreDef([preDef]);
     notifyListeners();
   }
 
-  Future getDevicesByMac(mac) async {
-    _devices = await _databaseService.getDevices(mac);
+  getDeviceByMac(mac) {
+    for (Device device in _allDevices!) {
+      if (device.macAddress == mac) {
+        return device;
+      }
+    }
+  }
+
+  _getAllDevices() async {
+    _allDevices = await _databaseService.getAllDevices();
+    notifyListeners();
+  }
+
+  Future updateDevice(device) async {
+    _databaseService.updateDevice(device);
   }
 }
