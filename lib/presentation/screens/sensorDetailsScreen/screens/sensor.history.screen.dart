@@ -44,6 +44,8 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
     return Padding(
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
@@ -75,7 +77,7 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
             ),
             SizedBox(
                 // width: MediaQuery.sizeOf(context).width,
-                height: MediaQuery.sizeOf(context).height * 0.6,
+                height: MediaQuery.sizeOf(context).height * 0.25,
                 child: SizedBox(
                   // width: MediaQuery.sizeOf(context).width ,
 
@@ -178,10 +180,82 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
                                     ],
                                   ),
                                 ],
-                              )
+                              ),
                             ]))
                       ]),
                 )),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Column(
+                children: [
+                  Container(
+                      decoration: BoxDecoration(border: Border.all()),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          ),
+                          const Text("Assigned Timers ")
+                        ],
+                      )),
+                  Container(
+                      decoration: BoxDecoration(border: Border.all()),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          ),
+                          const Text("Assigned Thresholds ")
+                        ],
+                      )),
+                  Container(
+                      decoration: BoxDecoration(border: Border.all()),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          ),
+                          const Text("Zones/Clusters ")
+                        ],
+                      )),
+                  Container(
+                      decoration: BoxDecoration(border: Border.all()),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          ),
+                          const Text("Association with other Devices ")
+                        ],
+                      )),
+                  Container(
+                      decoration: BoxDecoration(border: Border.all()),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          ),
+                          const Text("Device Preferences")
+                        ],
+                      )),
+                ],
+              ),
+            )
           ],
         ));
   }
