@@ -151,7 +151,6 @@ class MeshAPI {
         ipAddr: network.url,
       );
 
-      _databaseService.clearAllDevice();
       int number;
       for (int i = 16; i <= length - 1; i = i + 16) {
         number = (i / 16).round();

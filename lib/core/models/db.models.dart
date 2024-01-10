@@ -5,7 +5,7 @@ class Device {
   final String nodeNumber;
   final String nodeType;
   final String nodeSubType;
-  final String location;
+  late String location;
   final String stackType;
   final String numChild;
   final String status;

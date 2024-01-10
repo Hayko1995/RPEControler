@@ -24,6 +24,8 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
   final TextEditingController deviceNameController = TextEditingController();
   late bool editable = false;
   late String newName = "";
+  late String newLocation = "";
+  late String location = "";
   late String deviceName = "";
 
   @override
@@ -34,12 +36,10 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
-    Future.delayed(const Duration(microseconds: 300), () {
-      dataDevice = meshNotifier.getDeviceByMac(widget.mac);
-      deviceName = dataDevice.name;
-      setState(() {});
-    });
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
+    dataDevice = meshNotifier.getDeviceByMac(widget.mac);
+    deviceName = dataDevice.name;
+    location = dataDevice.location;
 
     return Padding(
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -55,8 +55,14 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
                       setState(() {
                         editable = !editable;
                         if (editable == false) {
-                          dataDevice.name = newName;
-                          deviceName = dataDevice.name;
+                          if (newName != "") {
+                            dataDevice.name = newName;
+                            deviceName = newName;
+                          }
+                          if (newLocation != "") {
+                            dataDevice.location = newLocation;
+                            location = dataDevice.location;
+                          }
                           meshNotifier.updateDevice(dataDevice);
                         }
                         // meshNotifier.
@@ -113,7 +119,7 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
                                                     newName = text;
                                                   }),
                                             )
-                                          : Text("Device Name $deviceName" )
+                                          : Text("Device Name $deviceName")
                                     ],
                                   ),
                                   const SizedBox(height: 10),
@@ -135,12 +141,31 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
                                     ],
                                   ),
                                   const SizedBox(height: 10),
-                                  const Row(
+                                  Row(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text("Location "),
-                                      Text("Network status"),
+                                      editable
+                                          ? SizedBox(
+                                              width: 210,
+                                              child: TextField(
+                                                  decoration: InputDecoration(
+                                                    enabledBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          width: 2,
+                                                          color: Colors.blue),
+                                                      //<-- SEE HERE
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50.0),
+                                                    ),
+                                                  ),
+                                                  onChanged: (text) {
+                                                    newLocation = text;
+                                                  }),
+                                            )
+                                          : Text("location $location")
                                     ],
                                   ),
                                   const SizedBox(height: 10),

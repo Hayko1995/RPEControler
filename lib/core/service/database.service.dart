@@ -115,7 +115,7 @@ class DatabaseService {
     await db.execute(
       '''CREATE TABLE $deviceTable(
         nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
-        Location TEXT, stackType TEXT, numChild TEXT, status TEXT,
+        location TEXT, stackType TEXT, numChild TEXT, status TEXT,
         parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT)
     ''',
     );
