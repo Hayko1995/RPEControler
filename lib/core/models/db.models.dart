@@ -245,7 +245,8 @@ class RpeDevice {
 
   String toJson() => json.encode(toMap());
 
-  factory RpeDevice.fromJson(String source) => RpeDevice.fromMap(json.decode(source));
+  factory RpeDevice.fromJson(String source) =>
+      RpeDevice.fromMap(json.decode(source));
 
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
@@ -256,7 +257,6 @@ class RpeDevice {
          status $status, parentNodeNum $parentNodeNum, macAddress $macAddress,
          name $name, networkTableMAC $networkTableMAC, image $image )''';
 }
-
 
 class RpeNetwork {
   final String name;
@@ -376,4 +376,42 @@ class RpeNetwork {
   //TODO add fields
   @override
   String toString() => '''RPEDevice(name: $name, ip: $num, type: $domain''';
+}
+
+class Cluster {
+  late String clusterName;
+  late String devices;
+  late String description;
+
+  Cluster(
+      {required this.clusterName, required this.devices, this.description = ''});
+
+  // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
+  // columns in the database.
+  Map<String, dynamic> toMap() {
+    return {
+      'clusterName': clusterName,
+      'devices': devices,
+      'description': description,
+    };
+  }
+
+  factory Cluster.fromMap(Map<String, dynamic> map) {
+    return Cluster(
+      clusterName: map['clusterName'] ?? "",
+      devices: map['devices'] ?? "",
+      description: map['description'] ?? "",
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Cluster.fromJson(String source) =>
+      Cluster.fromMap(json.decode(source));
+
+  // Implement toString to make it easier to see information about
+  // each breed when using the print statement.
+  @override
+  String toString() => '''Cluster(clusterName: $clusterName, devices: $devices,  
+         description: $description )''';
 }

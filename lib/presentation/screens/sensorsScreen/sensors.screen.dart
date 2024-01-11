@@ -37,7 +37,6 @@ class _SensorsState extends State<Sensors> {
     // var themeFlag = _themeNotifier.darkTheme;
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
     dataDevices = meshNotifier.allDevices!;
-    logger.i(dataDevices);
 
     List<Widget> getSensors() {
       List<Widget> sensorList = [];

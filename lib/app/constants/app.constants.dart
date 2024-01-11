@@ -4,6 +4,7 @@ class AppConstants {
   static const String deviceTable = "rpeDevice";
   static const String uploadTable = "rpeUpload";
   static const String networkTable = "rpeNet";
+  static const String clusterTable = "clusters";
   static const String dbName = "RPEControls.db";
   static const int airQuality = 1;
   static const int uiUpdateInterval = 1500;

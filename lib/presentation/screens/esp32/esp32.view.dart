@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
-import 'package:rpe_c/core/api/product.api.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 
 class ESP32Screen extends StatefulWidget {
@@ -15,8 +14,6 @@ class ESP32Screen extends StatefulWidget {
 
 class _ESP32ScreenState extends State<ESP32Screen> {
   Color caughtColor = Colors.grey;
-
-  final ProductAPI _esp32 = ProductAPI();
 
   String data = "";
   String rpe32Data = '';

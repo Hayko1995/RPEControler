@@ -36,6 +36,7 @@ class DatabaseService {
     String networkTable = AppConstants.networkTable;
     String deviceTable = AppConstants.deviceTable;
     String uploadTable = AppConstants.uploadTable;
+    String clusterTable = AppConstants.clusterTable;
     await db.execute(
       'CREATE TABLE $networkTable ('
       'url TEXT NOT NULL UNIQUE PRIMARY KEY,'
@@ -163,6 +164,37 @@ class DatabaseService {
       'senD TEXT')
     ''',
     );
+
+    await db.execute(
+      '''CREATE TABLE $clusterTable(
+        clusterName TEXT PRIMARY KEY, devices TEXT, description TEXT        
+    ''',
+    );
+  }
+
+  Future<void> insertCluster(RpeNetwork breed) async {
+    final db = await _databaseService.database;
+    await db.insert(
+      AppConstants.clusterTable,
+      breed.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Cluster>> getAllClusters() async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps =
+        await db.query(AppConstants.clusterTable);
+    return List.generate(maps.length, (index) => Cluster.fromMap(maps[index]));
+  }
+
+  Future<List<Cluster>> getClusterByName(List<String> clusterName) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+        AppConstants.clusterTable,
+        where: 'clusterName = ?',
+        whereArgs: clusterName);
+    return List.generate(maps.length, (index) => Cluster.fromMap(maps[index]));
   }
 
   Future<void> insertNetwork(RpeNetwork breed) async {
@@ -170,7 +202,7 @@ class DatabaseService {
     await db.insert(
       AppConstants.networkTable,
       breed.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 
@@ -219,7 +251,8 @@ class DatabaseService {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.deviceTable);
-    return List.generate(maps.length, (index) => RpeDevice.fromMap(maps[index]));
+    return List.generate(
+        maps.length, (index) => RpeDevice.fromMap(maps[index]));
   }
 
   Future<List<RpeDevice>> getDevices(List<String> mac) async {
@@ -228,7 +261,8 @@ class DatabaseService {
         AppConstants.deviceTable,
         where: 'networkTableMAC = ?',
         whereArgs: mac);
-    return List.generate(maps.length, (index) => RpeDevice.fromMap(maps[index]));
+    return List.generate(
+        maps.length, (index) => RpeDevice.fromMap(maps[index]));
   }
 
   Future<List<RpeDevice>> getDevicesByMac(List<String> mac) async {
@@ -237,16 +271,14 @@ class DatabaseService {
         AppConstants.deviceTable,
         where: 'macAddress = ?',
         whereArgs: mac);
-    return List.generate(maps.length, (index) => RpeDevice.fromMap(maps[index]));
+    return List.generate(
+        maps.length, (index) => RpeDevice.fromMap(maps[index]));
   }
 
   Future updateDevice(RpeDevice device) async {
     final db = await _databaseService.database;
-    await db.update(
-        AppConstants.deviceTable,
-        device.toMap(),
-        where: 'macAddress = ?',
-        whereArgs: [device.macAddress]);
+    await db.update(AppConstants.deviceTable, device.toMap(),
+        where: 'macAddress = ?', whereArgs: [device.macAddress]);
   }
 
   // Future<CR> getCR(int id) async {

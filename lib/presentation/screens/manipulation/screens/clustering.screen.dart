@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/widgets.dart';
+import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 
 class ClusteringScreen extends StatefulWidget {
   @override
@@ -31,43 +34,29 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
 
   List<String> manipulatngType = <String>['Clustering', 'Associations'];
   List<String> sensorsType = <String>['All', 'Light', 'Buzzers'];
-  List<String> clusters = <String>['New'];
-  List dataDevices = [];
-  List _items = [];
+  List<String> clusters = <String>['New']; //todo change form DB
+  List devices = [];
   List items = [];
+  String newClusterName = "";
 
-  void _updateData() async {
-    List<RpeDevice> devices = await _databaseService.getAllDevices();
-    for (int i = 0; i < devices.length; i++) {
-      items.add(
-        Item(
-            name: devices[i].name, imageProvider: AssetImage(devices[i].image)),
-      );
-    }
-    if (mounted) {
-      setState(() {
-        _items = items;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    _updateData();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return _buildContent();
-  }
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+    devices = meshNotifier.allDevices!;
+    for (int i = 0; i < devices.length; i++) {
+      if ((items.singleWhere((it) => it.macAddress == devices[i].macAddress,
+          orElse: () => null)) == null) {
+        items.add(Item(
+            name: devices[i].name,
+            macAddress: devices[i].macAddress,
+            imageProvider: AssetImage(devices[i].image)));
+      }
 
-  Widget _buildContent() {
-    String dropdownValue = manipulatngType.first;
+    }
     return SingleChildScrollView(
       child: Stack(
         children: [
-
           SafeArea(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -76,16 +65,21 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                   SizedBox(
                     height: 30,
                     width: MediaQuery.sizeOf(context).width * 0.7,
-
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                        ),
+                    child: TextField(
+                      onChanged: (text) {
+                        newClusterName = text;
+                      },
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
                       ),
-
+                    ),
                   ),
                   FilledButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      logger.i(_people[0].items.length);
+
+                      Cluster(clusterName: newClusterName, devices: '');
+                    },
                     child: const Text("Save"),
                   ),
                 ]),
@@ -134,14 +128,14 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.all(16),
-            itemCount: _items.length,
+            itemCount: items.length,
             separatorBuilder: (context, index) {
               return const SizedBox(
                 height: 12,
               );
             },
             itemBuilder: (context, index) {
-              final item = _items[index];
+              final item = items[index];
               return _buildMenuItem(
                 item: item,
               );

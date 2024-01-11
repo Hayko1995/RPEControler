@@ -45,7 +45,9 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
     for (int i = 0; i < devices.length; i++) {
       items.add(
         Item(
-            name: devices[i].name, imageProvider: AssetImage(devices[i].image)),
+            name: devices[i].name,
+            macAddress: devices[i].macAddress,
+            imageProvider: AssetImage(devices[i].image)),
       );
     }
     if (mounted) {
@@ -79,13 +81,11 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
                   SizedBox(
                     height: 30,
                     width: MediaQuery.sizeOf(context).width * 0.7,
-
                     child: const TextField(
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(),
                       ),
                     ),
-
                   ),
                   FilledButton(
                     onPressed: () {},
