@@ -5,24 +5,50 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
-import 'package:rpe_c/core/api/mesh.api.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
-import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/screens/dashboard/widget/air.quality.widget.dart';
-import 'package:rpe_c/presentation/widgets/predefine.widgets.dart';
+import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
+import 'package:rpe_c/presentation/screens/preDefinesScreen/preDefines.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+import 'package:rpe_c/presentation/widgets/predefine.widgets.dart';
+
+class ClustersScreen extends StatefulWidget {
+  const ClustersScreen({super.key});
 
   @override
-  _DashboardState createState() => _DashboardState();
+  _ClustersScreenState createState() => _ClustersScreenState();
 }
 
-class _DashboardState extends State<Dashboard> {
+Widget widget(context, cluster,  widgetKey) {
+  final Function(bool?) toggleCheckboxState;
+
+  return GestureDetector(
+    key: widgetKey,
+    onTap: () {
+      Navigator.of(context).pushNamed(
+        AppRouter.clusterControlRouter,
+        arguments: ClusterControlArgs(cluster: cluster),
+      );
+    },
+    onLongPress: () {},
+    child: Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+                offset: const Offset(0, 5),
+                color: Theme.of(context).primaryColor.withOpacity(.2),
+                spreadRadius: 2,
+                blurRadius: 5)
+          ]),
+    child: Center(child: Text(cluster.clusterName)),),
+  );
+}
+
+class _ClustersScreenState extends State<ClustersScreen> {
   final PageController _pageController =
       PageController(viewportFraction: 0.8, initialPage: 0);
   double _page = 0;
@@ -52,17 +78,13 @@ class _DashboardState extends State<Dashboard> {
   List<Widget> getSensors() {
     List<Widget> sensorList = [];
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
-    List<RpeNetwork> data = meshNotifier.networks!;
-    int airQualityNumber = 0;
+    List<Cluster> data = meshNotifier.getAllClusters!;
+    logger.i(data);
     for (var i = 0; i < data.length; i++) {
-      if (data.elementAt(i).preDef == AppConstants.airQuality) {
-        airQualityNumber++;
-      }
+      sensorList
+          .add(widget(context, data.elementAt(i), GlobalKey()));
+
       // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
-    }
-    if (airQualityNumber > 0) {
-      sensorList.add(airQualityWidget(context, data.elementAt(0), 0,
-          "dashboard", airQualityNumber, GlobalKey()));
     }
     setState(() {});
     return sensorList;

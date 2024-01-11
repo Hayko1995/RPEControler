@@ -17,8 +17,6 @@ void buttonCall() {
   print("object");
 }
 
-final DatabaseService _databaseService = DatabaseService();
-
 Widget airQualityWidget(context, device, index, place, count, widgetKey) {
   final Function(bool?) toggleCheckboxState;
 

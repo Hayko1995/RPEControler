@@ -35,144 +35,94 @@ class DatabaseService {
   Future<void> _onCreate(Database db, int version) async {
     String networkTable = AppConstants.networkTable;
     String deviceTable = AppConstants.deviceTable;
-    String uploadTable = AppConstants.uploadTable;
     String clusterTable = AppConstants.clusterTable;
     await db.execute(
       'CREATE TABLE $networkTable ('
-      'url TEXT NOT NULL UNIQUE PRIMARY KEY,'
-      'macAddr TEXT ,'
-      'name TEXT, '
-      'num INTEGER, '
-      'domain INTEGER,'
-      'preDef INTEGER,'
-      'ipAddr TEXT,'
-      'key TEXT,'
-      'numOfNodes INTEGER,'
-      'nRT INTEGER,' // num of RTs in networks
-      'nRTCh INTEGER,' // num of children per RT (max 10 RT)
-      'nEDs INTEGER,' // num of EDs in network
-      'netT INTEGER,' // network type
-      'netId INTEGER,' // network Id
-      'netPId INTEGER,'
-      'netPT INTEGER,'
-      'nTim INTEGER,' // total of timers defined in a network
-      'nThr INTEGER,' // total of thresholds defined in a network
-      'nCl INTEGER,' // number of clusters
-      'nMCl INTEGER,'
-      'nAso INTEGER,' // number of associations
-      'nMAso INTEGER,' // number of multi network associations
-      'date INTEGER'
-      ')',
+          'url TEXT NOT NULL UNIQUE PRIMARY KEY,'
+          'macAddr TEXT ,'
+          'name TEXT, '
+          'num INTEGER, '
+          'domain INTEGER,'
+          'preDef INTEGER,'
+          'ipAddr TEXT,'
+          'key TEXT,'
+          'numOfNodes INTEGER,'
+          'nRT INTEGER,'
+          'nRTCh INTEGER,'
+          'nEDs INTEGER,'
+          'netT INTEGER,'
+          'netId INTEGER,'
+          'netPId INTEGER,'
+          'netPT INTEGER,'
+          'nTim INTEGER,'
+          'nThr INTEGER,'
+          'nCl INTEGER,'
+          'nMCl INTEGER,'
+          'nAso INTEGER,'
+          'nMAso INTEGER,'
+          'date INTEGER'
+          ')',
     );
     await db.execute(
-      'CREATE TABLE $uploadTable ('
-      'id INTEGER PRIMARY KEY, '
-      'dName  TEXT,'
-      'dNetNum INTEGER,'
-      'dNum INTEGER,'
-      'dType INTEGER,'
-      'dSubType INTEGER,'
-      'dStackType INTEGER,'
-      'dLocation TEXT,'
-      'dParNum INTEGER,' // Parent Node Num
-      'dNumChild INTEGER,'
-      'dAssociation INTEGER,'
-      'dMacAddr TEXT ,'
-      'dStatus INTEGER,'
-      'dDim INTEGER,'
-      'nAct INTEGER,'
-      'actStatus TEXT,' // actuation status
-      'numOfSen INTEGER,' // num of sensors
-      'numOfAssocSen INTEGER,'
-      'sensorVal TEXT,'
-      'clTbl TEXT,  ' // table which holds if a given device is part of a cluster (0-9)
-      'aITbl TEXT,  ' // assoc Initiator table
-      'aLTbl TEXT,'
-      'timI INTEGER,  ' //timerInd: 0,
-      'thI INTEGER,    ' //threshInd: 0,
+        'CREATE TABLE $deviceTable('
+            'nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,'
+            'location TEXT, stackType TEXT, numChild TEXT, status TEXT,'
+            'parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT,'
 
-      'thP1 TEXT,'
-      'thP2 TEXT,'
-      'thTY TEXT, ' // threshold type
-      'thSN TEXT,  ' // threshold sensor
-      'thAT TEXT,  ' // Action Type
-      'thSA TEXT, ' // Status
-      'thST TEXT,  ' // Start Time
-      'thET TEXT, ' // End Time
-      'thWK TEXT,  ' // Weekday
-      'thEM TEXT,'
-      'thSM TEXT,'
-      'ST TEXT,  ' // start time
-      'ET TEXT,  ' // end time
-      'TT TEXT,  ' // timer type
-      'WK TEXT,  ' // Weekday
-      'AT TEXT,  ' // action type
-      'SA TEXT,  ' // status
-      'EM TEXT,'
-      'SM TEXT,'
-      'senD TEXT'
-      ')',
-    );
-    await db.execute(
-      '''CREATE TABLE $deviceTable(
-        nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
-        location TEXT, stackType TEXT, numChild TEXT, status TEXT,
-        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT, 
         'dName  TEXT,'
-      'dNetNum INTEGER,'
-      'dNum INTEGER,'
-      'dType INTEGER,'
-      'dSubType INTEGER,'
-      'dStackType INTEGER,'
-      'dLocation TEXT,'
-      'dParNum INTEGER,' // Parent Node Num
-      'dNumChild INTEGER,'
-      'dAssociation INTEGER,'
-      'dMacAddr TEXT ,'
-      'dStatus INTEGER,'
-      'dDim INTEGER,'
-      'nAct INTEGER,'
-      'actStatus TEXT,' // actuation status
-      'numOfSen INTEGER,' // num of sensors
-      'numOfAssocSen INTEGER,'
-      'sensorVal TEXT,'
-      'clTbl TEXT,  ' // table which holds if a given device is part of a cluster (0-9)
-      'aITbl TEXT,  ' // assoc Initiator table
-      'aLTbl TEXT,'
-      'timI INTEGER,  ' //timerInd: 0,
-      'thI INTEGER,    ' //threshInd: 0,
-
-      'thP1 TEXT,'
-      'thP2 TEXT,'
-      'thTY TEXT, ' // threshold type
-      'thSN TEXT,  ' // threshold sensor
-      'thAT TEXT,  ' // Action Type
-      'thSA TEXT, ' // Status
-      'thST TEXT,  ' // Start Time
-      'thET TEXT, ' // End Time
-      'thWK TEXT,  ' // Weekday
-      'thEM TEXT,'
-      'thSM TEXT,'
-      'ST TEXT,  ' // start time
-      'ET TEXT,  ' // end time
-      'TT TEXT,  ' // timer type
-      'WK TEXT,  ' // Weekday
-      'AT TEXT,  ' // action type
-      'SA TEXT,  ' // status
-      'EM TEXT,'
-      'SM TEXT,'
-      'senD TEXT')
-    ''',
+            'dNetNum INTEGER,'
+            'dNum INTEGER,'
+            'dType INTEGER,'
+            'dSubType INTEGER,'
+            'dStackType INTEGER,'
+            'dLocation INTEGER,'
+            'dParNum INTEGER,'
+            'dNumChild INTEGER,'
+            'dAssociation INTEGER,'
+            'dMacAddr TEXT ,'
+            'dStatus INTEGER,'
+            'dDim INTEGER,'
+            'nAct INTEGER,'
+            'actStatus TEXT,'
+            'numOfSen INTEGER,'
+            'numOfAssocSen INTEGER,'
+            'sensorVal TEXT,'
+            'clTbl TEXT,'
+            'aITbl TEXT,'
+            'aLTbl TEXT,'
+            'timI INTEGER,'
+            'thI INTEGER,'
+            'thP1 TEXT,'
+            'thP2 TEXT,'
+            'thTY TEXT, '
+            'thSN TEXT,'
+            'thAT TEXT,'
+            'thSA TEXT, '
+            'thST TEXT,'
+            'thET TEXT, '
+            'thWK TEXT,'
+            'thEM TEXT,'
+            'thSM TEXT,'
+            'ST TEXT,'
+            'ET TEXT,'
+            'TT TEXT,'
+            'WK TEXT,'
+            'AT TEXT,'
+            'SA TEXT,'
+            'EM TEXT,'
+            'SM TEXT,'
+            'senD TEXT'
+            ')'
     );
 
     await db.execute(
       '''CREATE TABLE $clusterTable(
-        clusterName TEXT PRIMARY KEY, devices TEXT, description TEXT        
+        clusterName TEXT PRIMARY KEY, devices TEXT, description TEXT)
     ''',
     );
   }
 
-  Future<void> insertCluster(RpeNetwork breed) async {
+  Future<void> insertCluster(Cluster breed) async {
     final db = await _databaseService.database;
     await db.insert(
       AppConstants.clusterTable,
@@ -184,7 +134,7 @@ class DatabaseService {
   Future<List<Cluster>> getAllClusters() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
-        await db.query(AppConstants.clusterTable);
+    await db.query(AppConstants.clusterTable);
     return List.generate(maps.length, (index) => Cluster.fromMap(maps[index]));
   }
 
@@ -209,7 +159,7 @@ class DatabaseService {
   Future<List<RpeNetwork>> getAllNetworks() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
-        await db.query(AppConstants.networkTable);
+    await db.query(AppConstants.networkTable);
     return List.generate(
         maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
@@ -250,7 +200,7 @@ class DatabaseService {
   Future<List<RpeDevice>> getAllDevices() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
-        await db.query(AppConstants.deviceTable);
+    await db.query(AppConstants.deviceTable);
     return List.generate(
         maps.length, (index) => RpeDevice.fromMap(maps[index]));
   }
@@ -308,28 +258,6 @@ class DatabaseService {
     );
   }
 
-  Future<void> insertUpload(RpeDevice breed) async {
-    final db = await _databaseService.database;
-    await db.insert(
-      AppConstants.uploadTable,
-      breed.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future clearAllUploads() async {
-    final db = await _databaseService.database;
-    String tableName = AppConstants.uploadTable;
-    return await db.rawDelete("DELETE FROM $tableName");
-  }
-
-  Future<List<RpeDevice>> getAllUploads() async {
-    final db = await _databaseService.database;
-    final List<Map<String, dynamic>> maps =
-        await db.query(AppConstants.uploadTable);
-    return List.generate(
-        maps.length, (index) => RpeDevice.fromMap(maps[index]));
-  }
 
   // Future<CR> getCR(int id) async {
   //   final db = await _databaseService.database;
@@ -349,19 +277,11 @@ class DatabaseService {
   //   );
   // }
 
-  Future<void> deleteUpload(int id) async {
-    final db = await _databaseService.database;
-    await db.delete(
-      AppConstants.uploadTable,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
 
   Future<List<String>> getAllTableNames() async {
     final db = await _databaseService.database;
     List<Map> maps =
-        await db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;');
+    await db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;');
 
     List<String> tableNameList = [];
     if (maps.isNotEmpty) {

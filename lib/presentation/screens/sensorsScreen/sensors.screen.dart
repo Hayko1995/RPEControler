@@ -20,8 +20,6 @@ class Sensors extends StatefulWidget {
 }
 
 class _SensorsState extends State<Sensors> {
-  final DatabaseService _databaseService = DatabaseService();
-  late Timer _timer;
   List<RpeDevice> dataDevices = <RpeDevice>[];
 
 

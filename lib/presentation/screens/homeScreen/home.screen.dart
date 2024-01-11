@@ -7,7 +7,8 @@ import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/screens/dashboard/dashboard.screen.dart';
+import 'package:rpe_c/presentation/screens/homeScreen/screens/clusters/clusters.screen.dart';
+import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/widget/menu.widget.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screens = [Dashboard(), Dashboard(), Dashboard()];
+    final screens = [const DashboardScreen(), const ClustersScreen(), const DashboardScreen()];
 
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     meshNotifier.getNetworks();

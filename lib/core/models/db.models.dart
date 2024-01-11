@@ -2,21 +2,20 @@ import 'dart:convert';
 import 'dart:ffi';
 
 class RpeDevice {
-  final String nodeNumber;
-  final String nodeType;
-  final String nodeSubType;
+  late String nodeNumber;
+  late String nodeType;
+  late String nodeSubType;
   late String location;
-  final String stackType;
-  final String numChild;
-  final String status;
-  final String parentNodeNum;
-  final String macAddress;
+  late String stackType;
+  late String numChild;
+  late String status;
+  late String parentNodeNum;
+  late String macAddress;
   late String name;
-  final String networkTableMAC;
-  final String image;
-
-  //todo new Fileds
+  late String networkTableMAC;
+  late String image;
   late String dName;
+
   final int dNetNum;
   final int dNum;
   final int dType;
@@ -38,8 +37,8 @@ class RpeDevice {
       clTbl; // table which holds if a given device is part of a cluster (0-9)
   final String aITbl; // assoc Initiator table
   final String aLTbl;
-  final String timI; //timerInd: 0,
-  final String thI; //threshInd: 0,
+  final int timI; //timerInd: 0,
+  final int thI; //threshInd: 0,
   final String thP1;
   final String thP2;
   final String thTY; // threshold type
@@ -62,20 +61,18 @@ class RpeDevice {
   final String senD;
 
   RpeDevice(
-      {required this.nodeNumber,
-      required this.nodeType,
-      required this.nodeSubType,
-      required this.location,
-      required this.stackType,
-      required this.numChild,
-      required this.status,
-      required this.parentNodeNum,
-      required this.macAddress,
-      required this.name,
-      required this.networkTableMAC,
+      {this.nodeNumber = '',
+      this.nodeType = '',
+      this.nodeSubType = '',
+      this.location = '',
+      this.stackType = '',
+      this.numChild = '',
+      this.status = '',
+      this.parentNodeNum = '',
+      this.macAddress = '',
+      this.name = '',
+      this.networkTableMAC = '',
       this.image = '',
-
-      //todo new Filed
       this.dName = '',
       this.dNetNum = 0,
       this.dNum = 0,
@@ -97,8 +94,8 @@ class RpeDevice {
       this.clTbl = "",
       this.aITbl = "", // assoc Initiator table
       this.aLTbl = "",
-      this.timI = "", //timerInd: 0= "",
-      this.thI = "", //threshInd: 0= "",
+      this.timI = 0, //timerInd: 0= "",
+      this.thI = 0, //threshInd: 0= "",
       this.thP1 = "",
       this.thP2 = "",
       this.thTY = "", // threshold type
@@ -137,7 +134,6 @@ class RpeDevice {
       'networkTableMAC': networkTableMAC,
       'image': image,
 
-      //todo New Fields
       'dName': dName,
       'dNetNum': dNetNum,
       'dNum': dNum,
@@ -186,61 +182,62 @@ class RpeDevice {
 
   factory RpeDevice.fromMap(Map<String, dynamic> map) {
     return RpeDevice(
-        nodeNumber: map['nodeNumber'] ?? "",
-        nodeType: map['nodeType'] ?? "",
-        nodeSubType: map['nodeSubType'] ?? "",
-        location: map['location'] ?? "",
-        stackType: map['stackType'] ?? "",
-        numChild: map['numChild'] ?? "",
-        status: map['status'] ?? "",
-        parentNodeNum: map['parentNodeNum'] ?? "",
-        macAddress: map['macAddress'] ?? "",
-        name: map['name'] ?? "",
-        networkTableMAC: map['networkTableMAC'] ?? 0,
-        image: map['image'] ?? "",
-        dName: map['dName'] ?? "",
-        dNetNum: map['dNetNum'] ?? 0,
-        dNum: map['dNum'] ?? 0,
-        dType: map['dType'] ?? 0,
-        dSubType: map['dSubType'] ?? 0,
-        dStackType: map['dStackType'] ?? 0,
-        dLocation: map['dLocation'] ?? 0,
-        dParNum: map['dParNum'] ?? 0,
-        dNumChild: map['dNumChild'] ?? 0,
-        dAssociation: map['dAssociation'] ?? 0,
-        dMacAddr: map['dMacAddr'] ?? "",
-        dStatus: map['dStatus'] ?? 0,
-        dDim: map['dDim'] ?? 0,
-        nAct: map['nAct'] ?? 0,
-        actStatus: map['actStatus'] ?? "",
-        numOfSen: map['numOfSen'] ?? 0,
-        numOfAssocSen: map['numOfAssocSen'] ?? 0,
-        sensorVal: map['sensorVal'] ?? "",
-        clTbl: map['clTbl'] ?? "",
-        aITbl: map['aITbl'] ?? "",
-        aLTbl: map['aLTbl'] ?? "",
-        timI: map['timI'] ?? "",
-        thI: map['thI'] ?? "",
-        thP1: map['thP1'] ?? "",
-        thP2: map['thP2'] ?? "",
-        thTY: map['thTY'] ?? "",
-        thSN: map['thSN'] ?? "",
-        thAT: map['thAT'] ?? "",
-        thSA: map['thSA'] ?? "",
-        thST: map['thST'] ?? "",
-        thET: map['thET'] ?? "",
-        thWK: map['thWK'] ?? "",
-        thEM: map['thEM'] ?? "",
-        thSM: map['thSM'] ?? "",
-        ST: map['ST'] ?? "",
-        ET: map['ET'] ?? "",
-        TT: map['TT'] ?? "",
-        WK: map['WK'] ?? "",
-        AT: map['AT'] ?? "",
-        SA: map['SA'] ?? "",
-        EM: map['EM'] ?? "",
-        SM: map['SM'] ?? "",
-        senD: map['senD'] ?? "");
+      nodeNumber: map['nodeNumber'] ?? "",
+      nodeType: map['nodeType'] ?? "",
+      nodeSubType: map['nodeSubType'] ?? "",
+      location: map['location'] ?? "",
+      stackType: map['stackType'] ?? "",
+      numChild: map['numChild'] ?? "",
+      status: map['status'] ?? "",
+      parentNodeNum: map['parentNodeNum'] ?? "",
+      macAddress: map['macAddress'] ?? "",
+      name: map['name'] ?? "",
+      networkTableMAC: map['networkTableMAC'] ?? 0,
+      image: map['image'] ?? "",
+      dName: map['dName'] ?? "",
+      // dNetNum: map['dNetNum'] ?? 0,
+      // dNum: map['dNum'] ?? 0,
+      // dType: map['dType'] ?? 0,
+      // dSubType: map['dSubType'] ?? 0,
+      // dStackType: map['dStackType'] ?? 0,
+      // dLocation: map['dLocation'] ?? 0,
+      // dParNum: map['dParNum'] ?? 0,
+      // dNumChild: map['dNumChild'] ?? 0,
+      // dAssociation: map['dAssociation'] ?? 0,
+      // dMacAddr: map['dMacAddr'] ?? "",
+      // dStatus: map['dStatus'] ?? 0,
+      // dDim: map['dDim'] ?? 0,
+      // nAct: map['nAct'] ?? 0,
+      // actStatus: map['actStatus'] ?? "",
+      // numOfSen: map['numOfSen'] ?? 0,
+      // numOfAssocSen: map['numOfAssocSen'] ?? 0,
+      // sensorVal: map['sensorVal'] ?? "",
+      // clTbl: map['clTbl'] ?? "",
+      // aITbl: map['aITbl'] ?? "",
+      // aLTbl: map['aLTbl'] ?? "",
+      // timI: map['timI'] ?? "",
+      // thI: map['thI'] ?? "",
+      // thP1: map['thP1'] ?? "",
+      // thP2: map['thP2'] ?? "",
+      // thTY: map['thTY'] ?? "",
+      // thSN: map['thSN'] ?? "",
+      // thAT: map['thAT'] ?? "",
+      // thSA: map['thSA'] ?? "",
+      // thST: map['thST'] ?? "",
+      // thET: map['thET'] ?? "",
+      // thWK: map['thWK'] ?? "",
+      // thEM: map['thEM'] ?? "",
+      // thSM: map['thSM'] ?? "",
+      // ST: map['ST'] ?? "",
+      // ET: map['ET'] ?? "",
+      // TT: map['TT'] ?? "",
+      // WK: map['WK'] ?? "",
+      // AT: map['AT'] ?? "",
+      // SA: map['SA'] ?? "",
+      // EM: map['EM'] ?? "",
+      // SM: map['SM'] ?? "",
+      // senD: map['senD'] ?? ""
+    );
   }
 
   String toJson() => json.encode(toMap());
@@ -384,7 +381,9 @@ class Cluster {
   late String description;
 
   Cluster(
-      {required this.clusterName, required this.devices, this.description = ''});
+      {required this.clusterName,
+      required this.devices,
+      this.description = ''});
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
   // columns in the database.
@@ -412,6 +411,7 @@ class Cluster {
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
   @override
-  String toString() => '''Cluster(clusterName: $clusterName, devices: $devices,  
+  String toString() =>
+      '''Cluster(clusterName: $clusterName, devices: $devices,  
          description: $description )''';
 }

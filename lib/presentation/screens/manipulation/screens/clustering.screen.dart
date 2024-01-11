@@ -39,20 +39,19 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
   List items = [];
   String newClusterName = "";
 
-
   @override
   Widget build(BuildContext context) {
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     devices = meshNotifier.allDevices!;
     for (int i = 0; i < devices.length; i++) {
       if ((items.singleWhere((it) => it.macAddress == devices[i].macAddress,
-          orElse: () => null)) == null) {
+              orElse: () => null)) ==
+          null) {
         items.add(Item(
             name: devices[i].name,
             macAddress: devices[i].macAddress,
             imageProvider: AssetImage(devices[i].image)));
       }
-
     }
     return SingleChildScrollView(
       child: Stack(
@@ -77,6 +76,12 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                   FilledButton(
                     onPressed: () {
                       logger.i(_people[0].items.length);
+                      List<String> clusterItems = [];
+                      for (var item in _people[0].items) {
+                        clusterItems.add(item.macAddress);
+                      }
+                      meshNotifier.insertCluster(
+                          newClusterName, clusterItems.join(","));
 
                       Cluster(clusterName: newClusterName, devices: '');
                     },

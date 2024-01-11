@@ -2,8 +2,9 @@
 
 import 'package:concentric_transition/concentric_transition.dart';
 import 'package:flutter/material.dart';
-import 'package:lan_scanner/lan_scanner.dart';
+import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
 import 'package:rpe_c/presentation/screens/esp32/esp32.view.dart';
+import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
 import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
 import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
@@ -26,7 +27,6 @@ import 'package:rpe_c/presentation/screens/signUpScreen/signup.screen.dart';
 import 'package:rpe_c/presentation/screens/splashScreen/splash.screen.dart';
 import 'package:rpe_c/presentation/screens/watcherScreen/watcher.screen.dart';
 import 'package:rpe_c/presentation/screens/qrScan/qrScan.screen.dart';
-import 'package:rpe_c/presentation/screens/dashboard/dashboard.screen.dart';
 
 class AppRouter {
   static const String splashRoute = "/splash";
@@ -55,6 +55,7 @@ class AppRouter {
   static const String settingsRoute = "/settings";
   static const String esp32Route = "/esp32";
   static const String networkConfigRouter = '/networkConfig';
+  static const String clusterControlRouter = '/clusterControl';
 
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -80,6 +81,16 @@ class AppRouter {
             builder: (context) => PredefineScreen(
               predefineArguments:
                   ModalRoute.of(context)!.settings.arguments as PreDefineArgs,
+            ),
+            settings: settings,
+          );
+        }
+      case clusterControlRouter:
+        {
+          return MaterialPageRoute(
+            builder: (context) => ClusterControlScreen(
+              clusterControlsArguments:
+              ModalRoute.of(context)!.settings.arguments as ClusterControlArgs,
             ),
             settings: settings,
           );
@@ -127,7 +138,7 @@ class AppRouter {
       case dashboardRoute:
         {
           return MaterialPageRoute(
-            builder: (_) => const Dashboard(), //todo change
+            builder: (_) => const DashboardScreen(), //todo change
           );
         }
       case qrScanRoute:

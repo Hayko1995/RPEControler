@@ -152,32 +152,30 @@ class MeshAPI {
         ipAddr: network.url,
       );
 
-      _databaseService.clearAllDevice();
       int number;
       for (int i = 16; i <= length - 1; i = i + 16) {
         number = (i / 16).round();
-        await _databaseService.insertDevice(
-          RpeDevice(
-              networkTableMAC: network.name,
-              name: "device $number",
-              nodeNumber: lint[i],
-              nodeType: lint[i + 1],
-              nodeSubType: lint[i + 2],
-              location: lint[i + 3],
-              stackType: lint[i + 4],
-              numChild: lint[i + 5],
-              status: lint[i + 6],
-              parentNodeNum: lint[i + 7],
-              image: 'assets/images/icons/air-quality-sensor.png',
-              macAddress: lint[i + 8] +
-                  lint[i + 9] +
-                  lint[i + 10] +
-                  lint[i + 11] +
-                  lint[i + 12] +
-                  lint[i + 13] +
-                  lint[i + 14] +
-                  lint[i + 15]),
-        );
+        RpeDevice device = RpeDevice();
+        device.networkTableMAC = network.name;
+        device.name = "device $number";
+        device.nodeNumber = lint[i];
+        device.nodeType = lint[i + 1];
+        device.nodeSubType = lint[i + 2];
+        device.location = lint[i + 3];
+        device.stackType = lint[i + 4];
+        device.numChild = lint[i + 5];
+        device.status = lint[i + 6];
+        device.parentNodeNum = lint[i + 7];
+        device.image = 'assets/images/icons/air-quality-sensor.png';
+        device.macAddress = lint[i + 8] +
+            lint[i + 9] +
+            lint[i + 10] +
+            lint[i + 11] +
+            lint[i + 12] +
+            lint[i + 13] +
+            lint[i + 14] +
+            lint[i + 15];
+        await _databaseService.insertDevice(device);
       }
     }
   }

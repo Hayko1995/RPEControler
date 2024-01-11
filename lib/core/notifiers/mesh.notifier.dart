@@ -29,6 +29,9 @@ class MeshNotifier with ChangeNotifier {
 
   List<RpeDevice>? get getDevices => _devices;
   RpeDevice? _device;
+  List<Cluster> _clusters = [];
+
+  List<Cluster>? get getAllClusters => _clusters;
 
   RpeDevice? get getDevice => _device;
 
@@ -42,12 +45,17 @@ class MeshNotifier with ChangeNotifier {
       // _count++;
       getNetworks();
       _getAllDevices();
+      getClusters();
     });
   }
 
   Future getNetworks() async {
     networks = await _databaseService.getAllNetworks();
     notifyListeners();
+  }
+
+  Future getClusters() async {
+    _clusters = await _databaseService.getAllClusters();
   }
 
   Future predefines(preDef) async {
@@ -70,5 +78,10 @@ class MeshNotifier with ChangeNotifier {
 
   Future updateDevice(device) async {
     _databaseService.updateDevice(device);
+  }
+
+  insertCluster(clusterName, items) async {
+    await _databaseService
+        .insertCluster(Cluster(clusterName: clusterName, devices: items));
   }
 }
