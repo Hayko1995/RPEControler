@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:logger/logger.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
@@ -151,11 +152,12 @@ class MeshAPI {
         ipAddr: network.url,
       );
 
+      _databaseService.clearAllDevice();
       int number;
       for (int i = 16; i <= length - 1; i = i + 16) {
         number = (i / 16).round();
         await _databaseService.insertDevice(
-          Device(
+          RpeDevice(
               networkTableMAC: network.name,
               name: "device $number",
               nodeNumber: lint[i],
@@ -176,13 +178,6 @@ class MeshAPI {
                   lint[i + 14] +
                   lint[i + 15]),
         );
-      }
-
-      if (AppConstants.debug) {
-        List list = await _databaseService.getAllDevices();
-        String debugString = '';
-        // list.forEach((row) => print(row));
-        // logger.i(debugString);
       }
     }
   }

@@ -1,33 +1,38 @@
 import 'dart:async';
-
-import 'package:cache_manager/cache_manager.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
-import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
 import 'package:rpe_c/presentation/screens/dashboard/dashboard.screen.dart';
-import 'package:rpe_c/presentation/screens/ipScanScreen/ipScan.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/widget/menu.widget.dart';
-import 'package:rpe_c/presentation/screens/watcherScreen/watcher.screen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
-import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
-import 'package:rpe_c/core/notifiers/user.notifier.dart';
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
-var logger = Logger(
-  printer: PrettyPrinter(),
-);
+final List<SalomonBottomBarItem> bottomNavBarIcons = [
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.dashboard),
+    title: const Text("Networks"),
+    selectedColor: Colors.blue,
+  ),
+
+  /// Search
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.group_work),
+    title: const Text("Clusters"),
+    selectedColor: Colors.blue,
+  ),
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.widgets),
+    title: const Text("Widgets"),
+    selectedColor: Colors.blue,
+  ),
+];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -39,14 +44,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final DatabaseService _databaseService = DatabaseService();
   late List<RpeNetwork> devices;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  var _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final screens = [Dashboard(), Dashboard(), Dashboard()];
+
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     meshNotifier.getNetworks();
     Future.delayed(const Duration(milliseconds: 2000), () {
@@ -70,11 +73,15 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.blue,
         ),
         drawer: const Menu(),
-        body: const DoubleBackToCloseApp(
-            snackBar: SnackBar(content: Text('Tap back again to leave')),
-            child: Row(
-              children: [Dashboard()],
-            )));
+        body: DoubleBackToCloseApp(
+          snackBar: const SnackBar(content: Text('Tap back again to leave')),
+          child: screens[_currentIndex],
+        ),
+        bottomNavigationBar: SalomonBottomBar(
+          currentIndex: _currentIndex,
+          onTap: (i) => setState(() => _currentIndex = i),
+          items: bottomNavBarIcons,
+        ));
   }
 
   @override

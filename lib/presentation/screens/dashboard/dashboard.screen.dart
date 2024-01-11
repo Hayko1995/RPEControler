@@ -33,7 +33,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void initState() {
-
     _pageController.addListener(() {
       if (_pageController.page != null) {
         _page = _pageController.page!;
@@ -49,10 +48,6 @@ class _DashboardState extends State<Dashboard> {
     // );
     super.initState();
   }
-
-
-  List<String> list = <String>['Network', 'Clusters', 'Widgets'];
-
 
   List<Widget> getSensors() {
     List<Widget> sensorList = [];
@@ -75,7 +70,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    String dropdownValue = list.first;
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -84,19 +78,6 @@ class _DashboardState extends State<Dashboard> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          DropdownMenu<String>(
-            initialSelection: list.first,
-            onSelected: (String? value) {
-              // This is called when the user selects an item.
-              setState(() {
-                dropdownValue = value!;
-              });
-            },
-            dropdownMenuEntries:
-                list.map<DropdownMenuEntry<String>>((String value) {
-              return DropdownMenuEntry<String>(value: value, label: value);
-            }).toList(),
-          ),
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: GridView.count(

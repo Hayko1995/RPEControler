@@ -25,16 +25,16 @@ class MeshNotifier with ChangeNotifier {
 
   List<RpeNetwork>? get getPredefines => _predefines;
 
-  List<Device>? _devices = [];
+  List<RpeDevice>? _devices = [];
 
-  List<Device>? get getDevices => _devices;
-  Device? _device;
+  List<RpeDevice>? get getDevices => _devices;
+  RpeDevice? _device;
 
-  Device? get getDevice => _device;
+  RpeDevice? get getDevice => _device;
 
-  List<Device>? _allDevices = [];
+  List<RpeDevice>? _allDevices = [];
 
-  List<Device>? get allDevices => _allDevices;
+  List<RpeDevice>? get allDevices => _allDevices;
 
   MeshNotifier() {
     Timer.periodic(const Duration(milliseconds: AppConstants.uiUpdateInterval),
@@ -56,7 +56,7 @@ class MeshNotifier with ChangeNotifier {
   }
 
   getDeviceByMac(mac) {
-    for (Device device in _allDevices!) {
+    for (RpeDevice device in _allDevices!) {
       if (device.macAddress == mac) {
         return device;
       }

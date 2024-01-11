@@ -19,7 +19,7 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
   /// Search
   SalomonBottomBarItem(
     icon: const Icon(Icons.add),
-    title: const Text("Watcher"),
+    title: const Text("Set Threshold"),
     selectedColor: Colors.blue,
   ),
 
@@ -40,7 +40,7 @@ class sensorDetailsScreen extends StatefulWidget {
 }
 
 class _sensorDetailsScreenState extends State<sensorDetailsScreen> {
-  late Device dataDevice;
+  late RpeDevice dataDevice;
 
   @override
   void initState() {

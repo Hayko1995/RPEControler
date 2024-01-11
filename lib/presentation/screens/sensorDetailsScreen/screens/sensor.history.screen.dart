@@ -20,7 +20,7 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
   Color caughtColor = Colors.grey;
   final DatabaseService _databaseService = DatabaseService();
   List<String> data = [];
-  late Device dataDevice;
+  late RpeDevice dataDevice;
   final TextEditingController deviceNameController = TextEditingController();
   late bool editable = false;
   late String newName = "";

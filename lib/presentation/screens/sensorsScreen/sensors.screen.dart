@@ -22,7 +22,7 @@ class Sensors extends StatefulWidget {
 class _SensorsState extends State<Sensors> {
   final DatabaseService _databaseService = DatabaseService();
   late Timer _timer;
-  List<Device> dataDevices = <Device>[];
+  List<RpeDevice> dataDevices = <RpeDevice>[];
 
 
 
@@ -42,7 +42,7 @@ class _SensorsState extends State<Sensors> {
     List<Widget> getSensors() {
       List<Widget> sensorList = [];
       // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
-      List<Device> data = dataDevices;
+      List<RpeDevice> data = dataDevices;
       for (var i = 0; i < data.length; i++) {
         sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
       }

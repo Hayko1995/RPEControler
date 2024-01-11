@@ -41,7 +41,7 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
   List items = [];
 
   void _updateData() async {
-    List<Device> devices = await _databaseService.getAllDevices();
+    List<RpeDevice> devices = await _databaseService.getAllDevices();
     for (int i = 0; i < devices.length; i++) {
       items.add(
         Item(
@@ -75,6 +75,23 @@ class _AssosiationScreenState extends State<AssosiationScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Row(mainAxisSize: MainAxisSize.max, children: [
+                  SizedBox(
+                    height: 30,
+                    width: MediaQuery.sizeOf(context).width * 0.7,
+
+                    child: const TextField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                      ),
+                    ),
+
+                  ),
+                  FilledButton(
+                    onPressed: () {},
+                    child: const Text("Save"),
+                  ),
+                ]),
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width,
                   height: MediaQuery.sizeOf(context).height * 0.82,

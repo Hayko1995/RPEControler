@@ -59,11 +59,10 @@ class _SplashScreenState extends State<SplashScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'rpe_c',
+              'RPE Controls',
               style: TextStyle(
                 color: themeFlag ? AppColors.creamColor : AppColors.mirage,
-                fontFamily: AppFonts.contax,
-                fontSize: 50.0,
+                fontSize: 39.0,
               ),
             ),
           ],

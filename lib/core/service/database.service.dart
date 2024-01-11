@@ -116,7 +116,51 @@ class DatabaseService {
       '''CREATE TABLE $deviceTable(
         nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,
         location TEXT, stackType TEXT, numChild TEXT, status TEXT,
-        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT)
+        parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT, 
+        'dName  TEXT,'
+      'dNetNum INTEGER,'
+      'dNum INTEGER,'
+      'dType INTEGER,'
+      'dSubType INTEGER,'
+      'dStackType INTEGER,'
+      'dLocation TEXT,'
+      'dParNum INTEGER,' // Parent Node Num
+      'dNumChild INTEGER,'
+      'dAssociation INTEGER,'
+      'dMacAddr TEXT ,'
+      'dStatus INTEGER,'
+      'dDim INTEGER,'
+      'nAct INTEGER,'
+      'actStatus TEXT,' // actuation status
+      'numOfSen INTEGER,' // num of sensors
+      'numOfAssocSen INTEGER,'
+      'sensorVal TEXT,'
+      'clTbl TEXT,  ' // table which holds if a given device is part of a cluster (0-9)
+      'aITbl TEXT,  ' // assoc Initiator table
+      'aLTbl TEXT,'
+      'timI INTEGER,  ' //timerInd: 0,
+      'thI INTEGER,    ' //threshInd: 0,
+
+      'thP1 TEXT,'
+      'thP2 TEXT,'
+      'thTY TEXT, ' // threshold type
+      'thSN TEXT,  ' // threshold sensor
+      'thAT TEXT,  ' // Action Type
+      'thSA TEXT, ' // Status
+      'thST TEXT,  ' // Start Time
+      'thET TEXT, ' // End Time
+      'thWK TEXT,  ' // Weekday
+      'thEM TEXT,'
+      'thSM TEXT,'
+      'ST TEXT,  ' // start time
+      'ET TEXT,  ' // end time
+      'TT TEXT,  ' // timer type
+      'WK TEXT,  ' // Weekday
+      'AT TEXT,  ' // action type
+      'SA TEXT,  ' // status
+      'EM TEXT,'
+      'SM TEXT,'
+      'senD TEXT')
     ''',
     );
   }
@@ -138,7 +182,7 @@ class DatabaseService {
         maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
 
-  Future<void> insertDevice(Device breed) async {
+  Future<void> insertDevice(RpeDevice breed) async {
     final db = await _databaseService.database;
     await db.insert(
       AppConstants.deviceTable,
@@ -171,32 +215,32 @@ class DatabaseService {
     return await db.rawDelete("DELETE FROM $tableName");
   }
 
-  Future<List<Device>> getAllDevices() async {
+  Future<List<RpeDevice>> getAllDevices() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.deviceTable);
-    return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => RpeDevice.fromMap(maps[index]));
   }
 
-  Future<List<Device>> getDevices(List<String> mac) async {
+  Future<List<RpeDevice>> getDevices(List<String> mac) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
         AppConstants.deviceTable,
         where: 'networkTableMAC = ?',
         whereArgs: mac);
-    return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => RpeDevice.fromMap(maps[index]));
   }
 
-  Future<List<Device>> getDevicesByMac(List<String> mac) async {
+  Future<List<RpeDevice>> getDevicesByMac(List<String> mac) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
         AppConstants.deviceTable,
         where: 'macAddress = ?',
         whereArgs: mac);
-    return List.generate(maps.length, (index) => Device.fromMap(maps[index]));
+    return List.generate(maps.length, (index) => RpeDevice.fromMap(maps[index]));
   }
 
-  Future updateDevice(Device device) async {
+  Future updateDevice(RpeDevice device) async {
     final db = await _databaseService.database;
     await db.update(
         AppConstants.deviceTable,
@@ -232,7 +276,7 @@ class DatabaseService {
     );
   }
 
-  Future<void> insertUpload(RpeUpload breed) async {
+  Future<void> insertUpload(RpeDevice breed) async {
     final db = await _databaseService.database;
     await db.insert(
       AppConstants.uploadTable,
@@ -247,12 +291,12 @@ class DatabaseService {
     return await db.rawDelete("DELETE FROM $tableName");
   }
 
-  Future<List<RpeUpload>> getAllUploads() async {
+  Future<List<RpeDevice>> getAllUploads() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.uploadTable);
     return List.generate(
-        maps.length, (index) => RpeUpload.fromMap(maps[index]));
+        maps.length, (index) => RpeDevice.fromMap(maps[index]));
   }
 
   // Future<CR> getCR(int id) async {

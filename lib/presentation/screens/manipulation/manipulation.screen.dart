@@ -11,14 +11,14 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 final List<SalomonBottomBarItem> bottomNavBarIcons = [
   SalomonBottomBarItem(
     icon: const Icon(Icons.group_work_outlined),
-    title: const Text("Association"),
+    title: const Text("Clustering"),
     selectedColor: Colors.blue,
   ),
 
   /// Search
   SalomonBottomBarItem(
     icon: const Icon(Icons.add),
-    title: const Text("Clustering"),
+    title: const Text("Association"),
     selectedColor: Colors.blue,
   ),
 
@@ -73,38 +73,22 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
   }
 
   Widget _buildContent() {
-    return SingleChildScrollView(
-      child: Stack(
-        children: [
-          SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(mainAxisSize: MainAxisSize.max, children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Enter a search term',
-                      ),
-                    ),
-                  ),
-                  FilledButton(
-                    onPressed: () {},
-                    child: const Text("Save"),
-                  ),
-                ]),
-                SizedBox(
-                    width: MediaQuery.sizeOf(context).width,
-                    height: MediaQuery.sizeOf(context).height * 0.9,
-                    child: (dropdownValue == "Clustering")
-                        ? ClusteringScreen()
-                        : AssosiationScreen()),
-              ],
-            ),
+    return Stack(
+      children: [
+        SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height * 0.5,
+                  child: (dropdownValue == "Clustering")
+                      ? ClusteringScreen()
+                      : AssosiationScreen()),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

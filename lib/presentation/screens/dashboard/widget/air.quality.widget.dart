@@ -11,11 +11,11 @@ class ItemBuilder extends StatelessWidget {
   const ItemBuilder({
     Key? key,
     required List<Item> this.items,
-    required List<Device> this.devices,
+    required List<RpeDevice> this.devices,
     required this.index,
   }) : super(key: key);
 
-  final List<Device> devices;
+  final List<RpeDevice> devices;
   final List<Item> items;
   final int index;
 
