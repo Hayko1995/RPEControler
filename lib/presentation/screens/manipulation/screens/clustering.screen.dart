@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
@@ -13,13 +14,12 @@ class ClusteringScreen extends StatefulWidget {
 }
 
 class _ClusteringScreenState extends State<ClusteringScreen> {
-  final DatabaseService _databaseService = DatabaseService();
-
   final List<ActiveArea> _people = [
     ActiveArea(),
   ];
   final GlobalKey _draggableKey = GlobalKey();
   List<Widget> slideble = [];
+  final fieldText = TextEditingController();
 
   void _itemDroppedOnCustomerCart({
     required Item item,
@@ -65,6 +65,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                     height: 30,
                     width: MediaQuery.sizeOf(context).width * 0.7,
                     child: TextField(
+                      controller: fieldText,
                       onChanged: (text) {
                         newClusterName = text;
                       },
@@ -75,6 +76,17 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                   ),
                   FilledButton(
                     onPressed: () {
+                      Fluttertoast.showToast(
+                          msg: "Saved",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+
+                      fieldText.clear();
+                      FocusScope.of(context).unfocus(); //hide kayboard
                       logger.i(_people[0].items.length);
                       List<String> clusterItems = [];
                       for (var item in _people[0].items) {
@@ -84,6 +96,9 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                           newClusterName, clusterItems.join(","));
 
                       Cluster(clusterName: newClusterName, devices: '');
+                      setState(() {
+                        newClusterName = '';
+                      });
                     },
                     child: const Text("Save"),
                   ),
