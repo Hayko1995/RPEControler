@@ -2,7 +2,9 @@
 
 import 'package:concentric_transition/concentric_transition.dart';
 import 'package:flutter/material.dart';
+import 'package:rpe_c/presentation/screens/assosiationScreen/assosiation.screen.dart';
 import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
+import 'package:rpe_c/presentation/screens/clusteringScreen/clustering.screen.dart';
 import 'package:rpe_c/presentation/screens/esp32/esp32.view.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
 import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
@@ -56,6 +58,8 @@ class AppRouter {
   static const String esp32Route = "/esp32";
   static const String networkConfigRouter = '/networkConfig';
   static const String clusterControlRouter = '/clusterControl';
+  static const String clusteringRouter = '/clustering';
+  static const String associationsRouter = '/associations';
 
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -68,9 +72,29 @@ class AppRouter {
       case sensorDetailsRoute:
         {
           return MaterialPageRoute(
-            builder: (context) => sensorDetailsScreen(
+            builder: (context) => SensorDetailsScreen(
               sensorDetailsArguments: ModalRoute.of(context)!.settings.arguments
                   as SensorDetailsArgs,
+            ),
+            settings: settings,
+          );
+        }
+      case clusteringRouter:
+        {
+          return MaterialPageRoute(
+            builder: (context) => ClusteringScreen(
+              clusteringArguments:
+                  ModalRoute.of(context)!.settings.arguments as ClusteringArgs,
+            ),
+            settings: settings,
+          );
+        }
+      case associationsRouter:
+        {
+          return MaterialPageRoute(
+            builder: (context) => AssociationScreen(
+              associationArguments:
+                  ModalRoute.of(context)!.settings.arguments as AssociationArgs,
             ),
             settings: settings,
           );
@@ -89,8 +113,9 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => ClusterControlScreen(
-              clusterControlsArguments:
-              ModalRoute.of(context)!.settings.arguments as ClusterControlArgs,
+              clusterControlsArguments: ModalRoute.of(context)!
+                  .settings
+                  .arguments as ClusterControlArgs,
             ),
             settings: settings,
           );

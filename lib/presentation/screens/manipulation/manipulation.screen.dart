@@ -3,8 +3,9 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/screens/manipulation/screens/assosiation.screen.dart';
-import 'package:rpe_c/presentation/screens/manipulation/screens/clustering.screen.dart';
+import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
+import 'package:rpe_c/presentation/screens/assosiationScreen/assosiation.screen.dart';
+import 'package:rpe_c/presentation/screens/clusteringScreen/clustering.screen.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -21,7 +22,6 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
     title: const Text("Association"),
     selectedColor: Colors.blue,
   ),
-
 ];
 
 class ManipulationScreen extends StatefulWidget {
@@ -49,10 +49,9 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final screens = [
-      ClusteringScreen(),
-      AssosiationScreen()
+      const ClusteringScreen(clusteringArguments: ClusteringArgs()),
+      AssociationScreen()
     ];
 
     return Scaffold(
@@ -83,8 +82,9 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
                   width: MediaQuery.sizeOf(context).width,
                   height: MediaQuery.sizeOf(context).height * 0.5,
                   child: (dropdownValue == "Clustering")
-                      ? ClusteringScreen()
-                      : AssosiationScreen()),
+                      ? ClusteringScreen(
+                          clusteringArguments: ClusteringArgs())
+                      : AssociationScreen()),
             ],
           ),
         ),
@@ -98,5 +98,3 @@ class ManipulationsArgs {
 
   const ManipulationsArgs({required this.preDef});
 }
-
-

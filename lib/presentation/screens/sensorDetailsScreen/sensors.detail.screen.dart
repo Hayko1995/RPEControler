@@ -30,16 +30,16 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
   ),
 ];
 
-class sensorDetailsScreen extends StatefulWidget {
+class SensorDetailsScreen extends StatefulWidget {
   final SensorDetailsArgs sensorDetailsArguments;
 
-  const sensorDetailsScreen({super.key, required this.sensorDetailsArguments});
+  const SensorDetailsScreen({super.key, required this.sensorDetailsArguments});
 
   @override
-  State<sensorDetailsScreen> createState() => _sensorDetailsScreenState();
+  State<SensorDetailsScreen> createState() => _SensorDetailsScreenState();
 }
 
-class _sensorDetailsScreenState extends State<sensorDetailsScreen> {
+class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
   late RpeDevice dataDevice;
 
   @override

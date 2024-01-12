@@ -18,7 +18,7 @@ class ClustersScreen extends StatefulWidget {
   const ClustersScreen({super.key});
 
   @override
-  _ClustersScreenState createState() => _ClustersScreenState();
+  ClustersScreenState createState() => ClustersScreenState();
 }
 
 Widget widget(context, cluster,  widgetKey) {
@@ -48,7 +48,7 @@ Widget widget(context, cluster,  widgetKey) {
   );
 }
 
-class _ClustersScreenState extends State<ClustersScreen> {
+class ClustersScreenState extends State<ClustersScreen> {
   final PageController _pageController =
       PageController(viewportFraction: 0.8, initialPage: 0);
   double _page = 0;
@@ -81,8 +81,7 @@ class _ClustersScreenState extends State<ClustersScreen> {
     List<Cluster> data = meshNotifier.getAllClusters!;
     logger.i(data);
     for (var i = 0; i < data.length; i++) {
-      sensorList
-          .add(widget(context, data.elementAt(i), GlobalKey()));
+      sensorList.add(widget(context, data.elementAt(i), GlobalKey()));
 
       // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
     }
