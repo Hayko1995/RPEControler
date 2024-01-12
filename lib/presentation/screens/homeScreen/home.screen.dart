@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screens = [const DashboardScreen(), ClustersScreen(), const DashboardScreen()];
+    final screens = [const DashboardScreen(), const ClustersScreen(), const DashboardScreen()];
 
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     meshNotifier.getNetworks();

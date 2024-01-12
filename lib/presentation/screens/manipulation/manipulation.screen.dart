@@ -50,8 +50,11 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      const ClusteringScreen(clusteringArguments: ClusteringArgs()),
-      AssociationScreen()
+      const ClusteringScreen(
+          clusteringArguments: ClusteringArgs(cluster: null)),
+      const AssociationScreen(
+        associationArguments: AssociationArgs(cluster: null),
+      )
     ];
 
     return Scaffold(
@@ -82,9 +85,11 @@ class _ManipulationScreenState extends State<ManipulationScreen> {
                   width: MediaQuery.sizeOf(context).width,
                   height: MediaQuery.sizeOf(context).height * 0.5,
                   child: (dropdownValue == "Clustering")
-                      ? ClusteringScreen(
-                          clusteringArguments: ClusteringArgs())
-                      : AssociationScreen()),
+                      ? const ClusteringScreen(
+                          clusteringArguments: ClusteringArgs(cluster: null))
+                      : const AssociationScreen(
+                          associationArguments: AssociationArgs(cluster: null),
+                        )),
             ],
           ),
         ),

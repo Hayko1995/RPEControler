@@ -102,49 +102,73 @@ class _ManipulationAssociations extends State<ManipulationAssociations> {
   Widget addSlidableWidget(name, index) {
     return Column(
       children: [
-        Slidable(
-          key: ValueKey(index + 1),
-          endActionPane: ActionPane(
-            motion: const ScrollMotion(),
-            children: [
-              SlidableAction(
-                onPressed: (BuildContext context) {
-                  setState(() {
-                    widget.customer.items.removeAt(index);
-                    if (widget.customer.items.length * 150 < 150) {
-                      widget.customer.size = 150;
-                    } else {
-                      widget.customer.size = widget.customer.items.length * 150;
-                    }
+        GestureDetector(
+          onLongPress: () {
+            showModalBottomSheet(
+                context: context,
 
-                    widget.function();
-                  });
-                },
-                backgroundColor: const Color(0xFFFE4A49),
-                foregroundColor: Colors.white,
-                icon: Icons.delete,
-                label: 'Delete',
-              ),
-            ],
-          ),
+                builder: (context) {
+                  return SizedBox(
+                      height: 300,
+                      width: double.maxFinite,
+                      child: Row(
+                        children: [
+                          Center(
+                            child: Slider(
+                              value: 0.5,
+                              // The initial value of the slider
+                              min: 0,
+                              // The minimum value of the slider
+                              max: 1,
+                              // The maximum value of the slider
+                              divisions: 10,
+                              // The number of divisions on the slider
+                              onChanged: (double value) {
+                                // This callback is called whenever the slider value changes
+                                // Use the value parameter to update your application state
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 10),
 
-          // The child of the Slidable is what the user sees when the
-          // component is not dragged.
-          child: ListTile(title: Text(name)),
-        ),
-        Slider(
-          value: 0.5,
-          // The initial value of the slider
-          min: 0,
-          // The minimum value of the slider
-          max: 1,
-          // The maximum value of the slider
-          divisions: 10,
-          // The number of divisions on the slider
-          onChanged: (double value) {
-            // This callback is called whenever the slider value changes
-            // Use the value parameter to update your application state
+                          ElevatedButton(onPressed: (){
+                            Navigator.pop(context);
+                          }, child: Text('Save'))
+                        ],
+                      ));
+                });
           },
+          child: Slidable(
+            key: ValueKey(index + 1),
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (BuildContext context) {
+                    setState(() {
+                      widget.customer.items.removeAt(index);
+                      if (widget.customer.items.length * 150 < 150) {
+                        widget.customer.size = 150;
+                      } else {
+                        widget.customer.size =
+                            widget.customer.items.length * 150;
+                      }
+
+                      widget.function();
+                    });
+                  },
+                  backgroundColor: const Color(0xFFFE4A49),
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                ),
+              ],
+            ),
+
+            // The child of the Slidable is what the user sees when the
+            // component is not dragged.
+            child: ListTile(title: Text(name)),
+          ),
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
@@ -73,7 +74,6 @@ class AssociationScreenState extends State<AssociationScreen> {
   }
 
   Widget _buildContent() {
-    String dropdownValue = manipulatngType.first;
     return SingleChildScrollView(
       child: Stack(
         children: [
@@ -128,7 +128,6 @@ class AssociationScreenState extends State<AssociationScreen> {
               onSelected: (String? value) {
                 // This is called when the user selects an item.
                 setState(() {
-                  print(1);
                   dropdownValue = value!;
                 });
               },
@@ -201,14 +200,14 @@ class AssociationScreenState extends State<AssociationScreen> {
                 return DropdownMenuEntry<String>(value: value, label: value);
               }).toList(),
             ),
-            Text("From"),
+            const Text("From"),
             SizedBox(
                 height: (activeAreas[0].size / 1),
                 child: _buildPersonWithDropZone(activeAreas[0])),
             const SizedBox(
               height: 20,
             ),
-            Text("TO"),
+            const Text("TO"),
             SizedBox(
                 height: (activeAreas[1].size / 1),
                 child: _buildPersonWithDropZone(activeAreas[1]))
@@ -243,7 +242,7 @@ class AssociationScreenState extends State<AssociationScreen> {
   }
 
   methodInParent() => setState(() {
-        print("state");
+        logger.i("state");
       });
 }
 

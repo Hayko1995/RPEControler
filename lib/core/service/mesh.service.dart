@@ -106,9 +106,6 @@ Future<String> getData() async {
 Future initMesh() async {
   final MeshAPI mashAPI = MeshAPI();
   await mashAPI.meshE1();
-  logger.i("/////////");
-
-
 }
 
 Future<String> updateMesh() async {
@@ -160,7 +157,8 @@ void onStart(ServiceInstance service) async {
 
   // bring to foreground
 
-  Timer.periodic(const Duration(milliseconds: AppConstants.uiUpdateInterval), (timer) async {
+  Timer.periodic(const Duration(milliseconds: AppConstants.uiUpdateInterval),
+      (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification
