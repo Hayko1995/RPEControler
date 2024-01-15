@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
-import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/logger/logger.dart';
-import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/screens/qrScan/configureNetwork.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 

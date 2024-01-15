@@ -5,17 +5,19 @@ import 'package:provider/provider.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
-import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorsScreen/widget/device.widget.dart';
-
-
+import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
 
 Widget sensorWidget(context, data, widgetKey) {
   final Function(bool?) toggleCheckboxState;
 
   return GestureDetector(
       key: widgetKey,
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          AppRouter.sensorDetailsRoute,
+          arguments: SensorDetailsArgs(mac: data.macAddress),
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -55,10 +57,8 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
 
   RangeValues _currentRangeValues = const RangeValues(40, 80);
 
-
   @override
   Widget build(BuildContext context) {
-
     // ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
     // var themeFlag = _themeNotifier.darkTheme;
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
@@ -69,8 +69,8 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
       Cluster data = widget.clusterControlsArguments.cluster;
       List<String> clusterDeviceList = data.devices.split(',');
 
-      for( var device in dataDevices ){
-        if (clusterDeviceList.contains(device.macAddress)){
+      for (var device in dataDevices) {
+        if (clusterDeviceList.contains(device.macAddress)) {
           sensorList.add(sensorWidget(context, device, GlobalKey()));
         }
       }
@@ -84,23 +84,44 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
         ),
         body: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Cluster name "),
+                Text(
+                  widget.clusterControlsArguments.cluster.clusterName,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Cluster name "),
+                Text(
+                  widget.clusterControlsArguments.cluster.type,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
             Center(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                RangeSlider(
-                values: _currentRangeValues,
-                max: 100,
-                divisions: 5,
-                labels: RangeLabels(
-                  _currentRangeValues.start.round().toString(),
-                  _currentRangeValues.end.round().toString(),
-                ),
-                onChanged: (RangeValues values) {
-                  setState(() {
-                    _currentRangeValues = values;
-                  });
-                },
-              ),
+                  RangeSlider(
+                    values: _currentRangeValues,
+                    max: 100,
+                    divisions: 5,
+                    labels: RangeLabels(
+                      _currentRangeValues.start.round().toString(),
+                      _currentRangeValues.end.round().toString(),
+                    ),
+                    onChanged: (RangeValues values) {
+                      setState(() {
+                        _currentRangeValues = values;
+                      });
+                    },
+                  ),
                   Switch(
                     value: isSwitched,
                     onChanged: (value) {

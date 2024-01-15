@@ -195,48 +195,48 @@ class RpeDevice {
       networkTableMAC: map['networkTableMAC'] ?? 0,
       image: map['image'] ?? "",
       dName: map['dName'] ?? "",
-      // dNetNum: map['dNetNum'] ?? 0,
-      // dNum: map['dNum'] ?? 0,
-      // dType: map['dType'] ?? 0,
-      // dSubType: map['dSubType'] ?? 0,
-      // dStackType: map['dStackType'] ?? 0,
-      // dLocation: map['dLocation'] ?? 0,
-      // dParNum: map['dParNum'] ?? 0,
-      // dNumChild: map['dNumChild'] ?? 0,
-      // dAssociation: map['dAssociation'] ?? 0,
-      // dMacAddr: map['dMacAddr'] ?? "",
-      // dStatus: map['dStatus'] ?? 0,
-      // dDim: map['dDim'] ?? 0,
-      // nAct: map['nAct'] ?? 0,
-      // actStatus: map['actStatus'] ?? "",
-      // numOfSen: map['numOfSen'] ?? 0,
-      // numOfAssocSen: map['numOfAssocSen'] ?? 0,
-      // sensorVal: map['sensorVal'] ?? "",
-      // clTbl: map['clTbl'] ?? "",
-      // aITbl: map['aITbl'] ?? "",
-      // aLTbl: map['aLTbl'] ?? "",
-      // timI: map['timI'] ?? "",
-      // thI: map['thI'] ?? "",
-      // thP1: map['thP1'] ?? "",
-      // thP2: map['thP2'] ?? "",
-      // thTY: map['thTY'] ?? "",
-      // thSN: map['thSN'] ?? "",
-      // thAT: map['thAT'] ?? "",
-      // thSA: map['thSA'] ?? "",
-      // thST: map['thST'] ?? "",
-      // thET: map['thET'] ?? "",
-      // thWK: map['thWK'] ?? "",
-      // thEM: map['thEM'] ?? "",
-      // thSM: map['thSM'] ?? "",
-      // ST: map['ST'] ?? "",
-      // ET: map['ET'] ?? "",
-      // TT: map['TT'] ?? "",
-      // WK: map['WK'] ?? "",
-      // AT: map['AT'] ?? "",
-      // SA: map['SA'] ?? "",
-      // EM: map['EM'] ?? "",
-      // SM: map['SM'] ?? "",
-      // senD: map['senD'] ?? ""
+      dNetNum: map['dNetNum'] ?? 0,
+      dNum: map['dNum'] ?? 0,
+      dType: map['dType'] ?? 0,
+      dSubType: map['dSubType'] ?? 0,
+      dStackType: map['dStackType'] ?? 0,
+      dLocation: map['dLocation'] ?? 0,
+      dParNum: map['dParNum'] ?? 0,
+      dNumChild: map['dNumChild'] ?? 0,
+      dAssociation: map['dAssociation'] ?? 0,
+      dMacAddr: map['dMacAddr'] ?? "",
+      dStatus: map['dStatus'] ?? 0,
+      dDim: map['dDim'] ?? 0,
+      nAct: map['nAct'] ?? 0,
+      actStatus: map['actStatus'] ?? "",
+      numOfSen: map['numOfSen'] ?? 0,
+      numOfAssocSen: map['numOfAssocSen'] ?? 0,
+      sensorVal: map['sensorVal'] ?? "",
+      clTbl: map['clTbl'] ?? "",
+      aITbl: map['aITbl'] ?? "",
+      aLTbl: map['aLTbl'] ?? "",
+      timI: map['timI'] ?? "",
+      thI: map['thI'] ?? "",
+      thP1: map['thP1'] ?? "",
+      thP2: map['thP2'] ?? "",
+      thTY: map['thTY'] ?? "",
+      thSN: map['thSN'] ?? "",
+      thAT: map['thAT'] ?? "",
+      thSA: map['thSA'] ?? "",
+      thST: map['thST'] ?? "",
+      thET: map['thET'] ?? "",
+      thWK: map['thWK'] ?? "",
+      thEM: map['thEM'] ?? "",
+      thSM: map['thSM'] ?? "",
+      ST: map['ST'] ?? "",
+      ET: map['ET'] ?? "",
+      TT: map['TT'] ?? "",
+      WK: map['WK'] ?? "",
+      AT: map['AT'] ?? "",
+      SA: map['SA'] ?? "",
+      EM: map['EM'] ?? "",
+      SM: map['SM'] ?? "",
+      senD: map['senD'] ?? ""
     );
   }
 
@@ -377,12 +377,14 @@ class RpeNetwork {
 
 class Cluster {
   late String clusterName;
+  late String type;
   late String devices;
   late String description;
 
   Cluster(
       {required this.clusterName,
       required this.devices,
+      required this.type,
       this.description = ''});
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
@@ -391,6 +393,7 @@ class Cluster {
     return {
       'clusterName': clusterName,
       'devices': devices,
+      'type': type,
       'description': description,
     };
   }
@@ -398,6 +401,7 @@ class Cluster {
   factory Cluster.fromMap(Map<String, dynamic> map) {
     return Cluster(
       clusterName: map['clusterName'] ?? "",
+      type: map['type'] ?? "",
       devices: map['devices'] ?? "",
       description: map['description'] ?? "",
     );

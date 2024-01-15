@@ -80,8 +80,8 @@ class MeshNotifier with ChangeNotifier {
     _databaseService.updateDevice(device);
   }
 
-  insertCluster(clusterName, items) async {
-    await _databaseService
-        .insertCluster(Cluster(clusterName: clusterName, devices: items));
+  insertCluster(clusterName, type, items) async {
+    await _databaseService.insertCluster(
+        Cluster(clusterName: clusterName, type: type, devices: items));
   }
 }
