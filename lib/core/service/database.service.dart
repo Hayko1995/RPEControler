@@ -38,82 +38,79 @@ class DatabaseService {
     String clusterTable = AppConstants.clusterTable;
     await db.execute(
       'CREATE TABLE $networkTable ('
-          'url TEXT NOT NULL UNIQUE PRIMARY KEY,'
-          'macAddr TEXT ,'
-          'name TEXT, '
-          'num INTEGER, '
-          'domain INTEGER,'
-          'preDef INTEGER,'
-          'ipAddr TEXT,'
-          'key TEXT,'
-          'numOfNodes INTEGER,'
-          'nRT INTEGER,'
-          'nRTCh INTEGER,'
-          'nEDs INTEGER,'
-          'netT INTEGER,'
-          'netId INTEGER,'
-          'netPId INTEGER,'
-          'netPT INTEGER,'
-          'nTim INTEGER,'
-          'nThr INTEGER,'
-          'nCl INTEGER,'
-          'nMCl INTEGER,'
-          'nAso INTEGER,'
-          'nMAso INTEGER,'
-          'date INTEGER'
-          ')',
+      'url TEXT NOT NULL UNIQUE PRIMARY KEY,'
+      'macAddr TEXT ,'
+      'name TEXT, '
+      'num INTEGER, '
+      'domain INTEGER,'
+      'preDef INTEGER,'
+      'ipAddr TEXT,'
+      'key TEXT,'
+      'numOfNodes INTEGER,'
+      'nRT INTEGER,'
+      'nRTCh INTEGER,'
+      'nEDs INTEGER,'
+      'netT INTEGER,'
+      'netId INTEGER,'
+      'netPId INTEGER,'
+      'netPT INTEGER,'
+      'nTim INTEGER,'
+      'nThr INTEGER,'
+      'nCl INTEGER,'
+      'nMCl INTEGER,'
+      'nAso INTEGER,'
+      'nMAso INTEGER,'
+      'date INTEGER'
+      ')',
     );
-    await db.execute(
-        'CREATE TABLE $deviceTable('
-            'nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,'
-            'location TEXT, stackType TEXT, numChild TEXT, status TEXT,'
-            'parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT,'
-
+    await db.execute('CREATE TABLE $deviceTable('
+        'nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,'
+        'location TEXT, stackType TEXT, numChild TEXT, status TEXT,'
+        'parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT,'
         'dName  TEXT,'
-            'dNetNum INTEGER,'
-            'dNum INTEGER,'
-            'dType INTEGER,'
-            'dSubType INTEGER,'
-            'dStackType INTEGER,'
-            'dLocation INTEGER,'
-            'dParNum INTEGER,'
-            'dNumChild INTEGER,'
-            'dAssociation INTEGER,'
-            'dMacAddr TEXT ,'
-            'dStatus INTEGER,'
-            'dDim INTEGER,'
-            'nAct INTEGER,'
-            'actStatus TEXT,'
-            'numOfSen INTEGER,'
-            'numOfAssocSen INTEGER,'
-            'sensorVal TEXT,'
-            'clTbl TEXT,'
-            'aITbl TEXT,'
-            'aLTbl TEXT,'
-            'timI INTEGER,'
-            'thI INTEGER,'
-            'thP1 TEXT,'
-            'thP2 TEXT,'
-            'thTY TEXT, '
-            'thSN TEXT,'
-            'thAT TEXT,'
-            'thSA TEXT, '
-            'thST TEXT,'
-            'thET TEXT, '
-            'thWK TEXT,'
-            'thEM TEXT,'
-            'thSM TEXT,'
-            'ST TEXT,'
-            'ET TEXT,'
-            'TT TEXT,'
-            'WK TEXT,'
-            'AT TEXT,'
-            'SA TEXT,'
-            'EM TEXT,'
-            'SM TEXT,'
-            'senD TEXT'
-            ')'
-    );
+        'dNetNum TEXT,'
+        'dNum INTEGER,'
+        'dType INTEGER,'
+        'dSubType INTEGER,'
+        'dStackType INTEGER,'
+        'dLocation INTEGER,'
+        'dParNum INTEGER,'
+        'dNumChild INTEGER,'
+        'dAssociation INTEGER,'
+        'dMacAddr TEXT ,'
+        'dStatus INTEGER,'
+        'dDim INTEGER,'
+        'nAct INTEGER,'
+        'actStatus TEXT,'
+        'numOfSen INTEGER,'
+        'numOfAssocSen INTEGER,'
+        'sensorVal TEXT,'
+        'clTbl TEXT,'
+        'aITbl TEXT,'
+        'aLTbl TEXT,'
+        'timI INTEGER,'
+        'thI INTEGER,'
+        'thP1 TEXT,'
+        'thP2 TEXT,'
+        'thTY TEXT, '
+        'thSN TEXT,'
+        'thAT TEXT,'
+        'thSA TEXT, '
+        'thST TEXT,'
+        'thET TEXT, '
+        'thWK TEXT,'
+        'thEM TEXT,'
+        'thSM TEXT,'
+        'ST TEXT,'
+        'ET TEXT,'
+        'TT TEXT,'
+        'WK TEXT,'
+        'AT TEXT,'
+        'SA TEXT,'
+        'EM TEXT,'
+        'SM TEXT,'
+        'senD TEXT'
+        ')');
 
     await db.execute(
       '''CREATE TABLE $clusterTable(
@@ -134,7 +131,7 @@ class DatabaseService {
   Future<List<Cluster>> getAllClusters() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
-    await db.query(AppConstants.clusterTable);
+        await db.query(AppConstants.clusterTable);
     return List.generate(maps.length, (index) => Cluster.fromMap(maps[index]));
   }
 
@@ -159,7 +156,7 @@ class DatabaseService {
   Future<List<RpeNetwork>> getAllNetworks() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
-    await db.query(AppConstants.networkTable);
+        await db.query(AppConstants.networkTable);
     return List.generate(
         maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
@@ -200,7 +197,7 @@ class DatabaseService {
   Future<List<RpeDevice>> getAllDevices() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
-    await db.query(AppConstants.deviceTable);
+        await db.query(AppConstants.deviceTable);
     return List.generate(
         maps.length, (index) => RpeDevice.fromMap(maps[index]));
   }
@@ -223,6 +220,16 @@ class DatabaseService {
         whereArgs: mac);
     return List.generate(
         maps.length, (index) => RpeDevice.fromMap(maps[index]));
+  }
+
+  Future<RpeDevice> getDevicesByNodeNumType(
+      nodeType, nodeSubType, nodeNumber) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+        AppConstants.deviceTable,
+        where: 'nodeType = ? and nodeSubtype = ? and nodeNumber = ? ',
+        whereArgs: [nodeType, nodeSubType, nodeNumber]);
+    return RpeDevice.fromMap(maps[0]);
   }
 
   Future updateDevice(RpeDevice device) async {
@@ -258,7 +265,6 @@ class DatabaseService {
     );
   }
 
-
   // Future<CR> getCR(int id) async {
   //   final db = await _databaseService.database;
   //   final List<Map<String, dynamic>> maps =
@@ -277,11 +283,10 @@ class DatabaseService {
   //   );
   // }
 
-
   Future<List<String>> getAllTableNames() async {
     final db = await _databaseService.database;
     List<Map> maps =
-    await db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;');
+        await db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;');
 
     List<String> tableNameList = [];
     if (maps.isNotEmpty) {

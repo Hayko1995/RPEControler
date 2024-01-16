@@ -127,6 +127,7 @@ class MeshAPI {
       //   print("${lint[11]}${lint[12]}${lint[13]}${lint[14]} CR reported time");
       //   print("${lint[15]} reserved ");
       // }
+      String netNum = lint[10];
       length = int.parse("0x${lint[1]}${lint[2]}");
 
       int CR_Reported_Time = (int.parse(lint[12]) * 65536) +
@@ -156,6 +157,7 @@ class MeshAPI {
       for (int i = 16; i <= length - 1; i = i + 16) {
         number = (i / 16).round();
         RpeDevice device = RpeDevice();
+        device.dNetNum = netNum;
         device.networkTableMAC = network.name;
         device.name = "device $number";
         device.nodeNumber = lint[i];
@@ -181,20 +183,10 @@ class MeshAPI {
   }
 
   Future meshE3() async {
+    //todo need to understand response size
     List<RpeNetwork> networks = await _databaseService.getAllNetworks();
     String command = "E3FF060001FA";
     List<String> lint = [];
-    // List<String> aa = [];
-
-    // for (var i = 0; i < pktHdr.length; i += 2) {
-    //   result.add(int.parse(pktHdr.substring(i, i + 2), radix: 16));
-    // }
-    // print(result);
-    // for (int i = 0; i < result.length; i++) {
-    //   aa.add(result[i].toRadixString(16));
-    // }
-    // var command = aa.join(" " );
-    //todo add problem response failure situation
     RpeNetwork network;
     for (network in networks) {
       int length = 0;
@@ -210,10 +202,10 @@ class MeshAPI {
           int _integerData = int.parse(stringList[i]);
           lint.add(_integerData.toRadixString(16));
         }
-        // print(lint);
-
+        print(lint);
+        //
         // print(lint[0] + " command type E3");
-        // print(lint[1] + lint[2] + "wifiPacketLen");
+        // print(lint[1] + lint[2] + " wifiPacketLen");
         // print(lint[3] +
         //     lint[4] +
         //     lint[5] +
@@ -227,27 +219,38 @@ class MeshAPI {
         // print(lint[15] + " rpe net id ");
 
         length = int.parse("0x${lint[1]}${lint[2]}");
-        // print(lint.length);
-        // _databaseService.clearAllUploads();
+        print("lenght");
+        print(lint.length);
+        for (int i = 16; i <= length ; i = i + 14) {
+          String nodeType = lint[i];
+          String nodeSubType = lint[i + 1];
+          String nodeNum = lint[i + 2];
+          String nodeStatus = lint[i + 3];
+          String nodeMsglen =
+              lint[i + 4]; //todo need to understand and integrate
+          String nodeTimeStamp = lint[i + 5] + //todo need to convert to time
+              lint[i + 6] +
+              lint[i + 7] +
+              lint[i + 8];
+          String uploadmsgType = lint[i + 9]; //todo understand
+          String messegeSubType = lint[i + 10]; //
+          int sensorType = int.parse(lint[i + 11]);
+          print("sensorType //////////////// ");
+          print(nodeType);
+          print(nodeSubType);
+          print(sensorType);
+          int sensorVal = int.parse("0x${lint[i + 12]}${lint[i + 13]}");
 
-        for (int i = 16; i <= length - 1; i = i + 14) {
-          // await _databaseService.insertUpload(RpeUpload(
-          //     dType: int.parse(lint[i + 1]),
-          //     dSubType: int.parse(lint[i + 2]),
-          //     dNum: lint[i + 3] as int,
-          //     dStatus: lint[i + 4] as int,
-          //     nodeMessageLen: lint[i + 5],
-          //     timeStamp: lint[i + 6],
-          //     uploadMessageType: lint[i + 7],
-          //     messageSubType: lint[i + 8],
-          //     sensorType: lint[i + 9],
-          //     sensorValue: lint[i + 10]));
-          //
-          // break; //todo remove
+          RpeDevice device = await _databaseService.getDevicesByNodeNumType(
+              nodeType, nodeSubType, nodeNum);
+          logger.i(device);
+          List<String> sensorVals = device.sensorVal.split(',');
+          sensorVals[sensorType] = sensorVal.toString();
+          device.sensorVal = sensorVals.join(',');
+
+          device.status = nodeStatus;
+          await _databaseService.updateDevice(device);
         }
-
-        // List list = await _databaseService.getAllUploads();
-        // list.forEach((row) => print(row));
       } catch (e) {
         logger.e(e);
         return Null;

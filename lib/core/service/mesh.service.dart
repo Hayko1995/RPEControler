@@ -106,10 +106,12 @@ Future<String> getData() async {
 Future initMesh() async {
   final MeshAPI mashAPI = MeshAPI();
   await mashAPI.meshE1();
+  logger.i("send E1");
 }
 
 Future<String> updateMesh() async {
   final MeshAPI _mashAPI = MeshAPI();
+  logger.i("send E3");
   await _mashAPI.meshE3();
 
   // _mashAPI.sendToMesh("E2E2E2E2");
@@ -187,6 +189,7 @@ void onStart(ServiceInstance service) async {
 
     // test using external plugin
     initMesh();
+    updateMesh();
     // Future<String> data1 = updateMesh();
     // Future<String> data = getData();
     // String response = await data;

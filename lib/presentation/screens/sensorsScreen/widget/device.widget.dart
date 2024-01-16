@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 
@@ -16,6 +17,8 @@ void buttonCall() {
 
 Widget sensorWidget(context, data, widgetKey) {
   final Function(bool?) toggleCheckboxState;
+
+  final value = data.sensorVal.split(',');
 
   return GestureDetector(
       key: widgetKey,
@@ -64,6 +67,8 @@ Widget sensorWidget(context, data, widgetKey) {
           children: [
             const SizedBox(height: 3),
             Text(data.name.toString().toUpperCase(),
+                style: Theme.of(context).textTheme.titleMedium),
+            Text(value[0].toString().toUpperCase(),
                 style: Theme.of(context).textTheme.titleMedium)
           ],
         ),

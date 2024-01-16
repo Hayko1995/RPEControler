@@ -15,8 +15,8 @@ class RpeDevice {
   late String networkTableMAC;
   late String image;
   late String dName;
+  late String dNetNum;
 
-  final int dNetNum;
   final int dNum;
   final int dType;
   final int dSubType;
@@ -25,14 +25,13 @@ class RpeDevice {
   final int dParNum; // Parent Node Num
   final int dNumChild;
   final int dAssociation;
-  final String dMacAddr;
   final int dStatus;
   final int dDim;
   final int nAct;
   final String actStatus; // actuation status
   final int numOfSen; // num of sensors
   final int numOfAssocSen;
-  final String sensorVal;
+  late String sensorVal;
   final String
       clTbl; // table which holds if a given device is part of a cluster (0-9)
   final String aITbl; // assoc Initiator table
@@ -74,7 +73,7 @@ class RpeDevice {
       this.networkTableMAC = '',
       this.image = '',
       this.dName = '',
-      this.dNetNum = 0,
+      this.dNetNum = '',
       this.dNum = 0,
       this.dType = 0,
       this.dSubType = 0,
@@ -83,14 +82,13 @@ class RpeDevice {
       this.dParNum = 0, // Parent Node Num
       this.dNumChild = 0,
       this.dAssociation = 0,
-      this.dMacAddr = "",
       this.dStatus = 0,
       this.dDim = 0,
       this.nAct = 0,
       this.actStatus = "", // actuation status
       this.numOfSen = 0, // num of sensors
       this.numOfAssocSen = 0,
-      this.sensorVal = "",
+      this.sensorVal = "0,0,0,0,0,0,0,0,0,0,0",
       this.clTbl = "",
       this.aITbl = "", // assoc Initiator table
       this.aLTbl = "",
@@ -144,7 +142,6 @@ class RpeDevice {
       'dParNum': dParNum,
       'dNumChild': dNumChild,
       'dAssociation': dAssociation,
-      'dMacAddr': dMacAddr,
       'dStatus': dStatus,
       'dDim': dDim,
       'nAct': nAct,
@@ -182,62 +179,60 @@ class RpeDevice {
 
   factory RpeDevice.fromMap(Map<String, dynamic> map) {
     return RpeDevice(
-      nodeNumber: map['nodeNumber'] ?? "",
-      nodeType: map['nodeType'] ?? "",
-      nodeSubType: map['nodeSubType'] ?? "",
-      location: map['location'] ?? "",
-      stackType: map['stackType'] ?? "",
-      numChild: map['numChild'] ?? "",
-      status: map['status'] ?? "",
-      parentNodeNum: map['parentNodeNum'] ?? "",
-      macAddress: map['macAddress'] ?? "",
-      name: map['name'] ?? "",
-      networkTableMAC: map['networkTableMAC'] ?? 0,
-      image: map['image'] ?? "",
-      dName: map['dName'] ?? "",
-      dNetNum: map['dNetNum'] ?? 0,
-      dNum: map['dNum'] ?? 0,
-      dType: map['dType'] ?? 0,
-      dSubType: map['dSubType'] ?? 0,
-      dStackType: map['dStackType'] ?? 0,
-      dLocation: map['dLocation'] ?? 0,
-      dParNum: map['dParNum'] ?? 0,
-      dNumChild: map['dNumChild'] ?? 0,
-      dAssociation: map['dAssociation'] ?? 0,
-      dMacAddr: map['dMacAddr'] ?? "",
-      dStatus: map['dStatus'] ?? 0,
-      dDim: map['dDim'] ?? 0,
-      nAct: map['nAct'] ?? 0,
-      actStatus: map['actStatus'] ?? "",
-      numOfSen: map['numOfSen'] ?? 0,
-      numOfAssocSen: map['numOfAssocSen'] ?? 0,
-      sensorVal: map['sensorVal'] ?? "",
-      clTbl: map['clTbl'] ?? "",
-      aITbl: map['aITbl'] ?? "",
-      aLTbl: map['aLTbl'] ?? "",
-      timI: map['timI'] ?? "",
-      thI: map['thI'] ?? "",
-      thP1: map['thP1'] ?? "",
-      thP2: map['thP2'] ?? "",
-      thTY: map['thTY'] ?? "",
-      thSN: map['thSN'] ?? "",
-      thAT: map['thAT'] ?? "",
-      thSA: map['thSA'] ?? "",
-      thST: map['thST'] ?? "",
-      thET: map['thET'] ?? "",
-      thWK: map['thWK'] ?? "",
-      thEM: map['thEM'] ?? "",
-      thSM: map['thSM'] ?? "",
-      ST: map['ST'] ?? "",
-      ET: map['ET'] ?? "",
-      TT: map['TT'] ?? "",
-      WK: map['WK'] ?? "",
-      AT: map['AT'] ?? "",
-      SA: map['SA'] ?? "",
-      EM: map['EM'] ?? "",
-      SM: map['SM'] ?? "",
-      senD: map['senD'] ?? ""
-    );
+        nodeNumber: map['nodeNumber'] ?? "",
+        nodeType: map['nodeType'] ?? "",
+        nodeSubType: map['nodeSubType'] ?? "",
+        location: map['location'] ?? "",
+        stackType: map['stackType'] ?? "",
+        numChild: map['numChild'] ?? "",
+        status: map['status'] ?? "",
+        parentNodeNum: map['parentNodeNum'] ?? "",
+        macAddress: map['macAddress'] ?? "",
+        name: map['name'] ?? "",
+        networkTableMAC: map['networkTableMAC'] ?? 0,
+        image: map['image'] ?? "",
+        dName: map['dName'] ?? "",
+        dNetNum: map['dNetNum'] ?? "",
+        dNum: map['dNum'] ?? 0,
+        dType: map['dType'] ?? 0,
+        dSubType: map['dSubType'] ?? 0,
+        dStackType: map['dStackType'] ?? 0,
+        dLocation: map['dLocation'] ?? 0,
+        dParNum: map['dParNum'] ?? 0,
+        dNumChild: map['dNumChild'] ?? 0,
+        dAssociation: map['dAssociation'] ?? 0,
+        dStatus: map['dStatus'] ?? 0,
+        dDim: map['dDim'] ?? 0,
+        nAct: map['nAct'] ?? 0,
+        actStatus: map['actStatus'] ?? "",
+        numOfSen: map['numOfSen'] ?? 0,
+        numOfAssocSen: map['numOfAssocSen'] ?? 0,
+        sensorVal: map['sensorVal'] ?? "",
+        clTbl: map['clTbl'] ?? "",
+        aITbl: map['aITbl'] ?? "",
+        aLTbl: map['aLTbl'] ?? "",
+        timI: map['timI'] ?? "",
+        thI: map['thI'] ?? "",
+        thP1: map['thP1'] ?? "",
+        thP2: map['thP2'] ?? "",
+        thTY: map['thTY'] ?? "",
+        thSN: map['thSN'] ?? "",
+        thAT: map['thAT'] ?? "",
+        thSA: map['thSA'] ?? "",
+        thST: map['thST'] ?? "",
+        thET: map['thET'] ?? "",
+        thWK: map['thWK'] ?? "",
+        thEM: map['thEM'] ?? "",
+        thSM: map['thSM'] ?? "",
+        ST: map['ST'] ?? "",
+        ET: map['ET'] ?? "",
+        TT: map['TT'] ?? "",
+        WK: map['WK'] ?? "",
+        AT: map['AT'] ?? "",
+        SA: map['SA'] ?? "",
+        EM: map['EM'] ?? "",
+        SM: map['SM'] ?? "",
+        senD: map['senD'] ?? "");
   }
 
   String toJson() => json.encode(toMap());
