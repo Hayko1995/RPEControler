@@ -49,19 +49,20 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
     _initNetworkInfo();
     _provider();
   }
+
   Future<void> _provider() async {
-
-
-
     provisioner.listen((response) {
-      print("Device ${response.bssidText} connected to WiFi!");
+      _databaseService.insertNetwork(RpeNetwork(
+          name: response.bssidText,
+          url: response.ipAddressText!,
+          domain: widget.networkConfigArguments.type));
+
+      Navigator.of(context)
+          .pushReplacementNamed(AppRouter.homeRoute);
     });
 
-
-
-// Provisioning does not have any timeout so it needs to be
-// stopped manually
   }
+
   Future<void> _initNetworkInfo() async {
     String? wifiIPv4, wifiIPv6, wifiGatewayIP, wifiBroadcast, wifiSubmask;
 
@@ -189,13 +190,9 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                     child: Column(
                       children: [
                         Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
-                          child: CustomTextField.customTextField(
-                            textEditingController: userEmailController,
-                            hintText: wifiName!,
-                          ),
-                        ),
+                            padding:
+                                const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
+                            child: Text("WIFI name $wifiName")),
                         vSizedBox1,
                         Padding(
                           padding:
@@ -222,58 +219,32 @@ class _ConfigureNetworkState extends State<ConfigureNetworkScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         onPressed: () async {
+                          wifiName =
+                              wifiName!.substring(1, wifiName!.length - 1);
                           try {
-                            await provisioner.start(ProvisioningRequest.fromStrings(
-                              ssid: "boosight",
-                              bssid: "26:0a:e8:17:f5:14",
-                              password: "12345679",
+                            await provisioner
+                                .start(ProvisioningRequest.fromStrings(
+                              ssid: wifiName!,
+                              bssid: wifiBSSID!,
+                              password: userPassController.text,
                             ));
 
                             // If you are going to use this library in Flutter
                             // this is good place to show some Dialog and wait for exit
                             //
                             // Or simply you can delay with Future.delayed function
-                            await Future.delayed(Duration(seconds: 10));
+                            await Future.delayed(Duration(seconds: 20)); // todo add loading in ui
+                            provisioner.stop();
                           } catch (e, s) {
                             print(e);
                           }
-
-                          // _databaseService.insertNetwork(RpeNetwork(
-                          //     name: widget.networkConfigArguments.mac,
-                          //     url: widget.networkConfigArguments.url,
-                          //     domain: widget.networkConfigArguments.type));
-
-                          // Navigator.of(context)
-                          //     .pushReplacementNamed(AppRouter.homeRoute);
 
                           //TODO write host to db
                           //TODO need to config ESP32
                         },
                         color: AppColors.rawSienna,
                         child: const Text(
-                          'Use in standalone ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      MaterialButton(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                        minWidth: MediaQuery.of(context).size.width * 0.4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        onPressed: () async {
-                          _databaseService.insertNetwork(RpeNetwork(
-                              name: widget.networkConfigArguments.mac,
-                              url: widget.networkConfigArguments.url,
-                              domain: widget.networkConfigArguments.type));
-                        },
-                        color: AppColors.rawSienna,
-                        child: const Text(
-                          'Connect to router',
+                          'Connect ',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
