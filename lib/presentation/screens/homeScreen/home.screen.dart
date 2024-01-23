@@ -43,7 +43,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final DatabaseService _databaseService = DatabaseService();
+  final DatabaseService _databaseService = DatabaseService(); //todo change
   late List<RpeNetwork> devices;
   var _currentIndex = 0;
 
@@ -55,9 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
     meshNotifier.getNetworks();
     Future.delayed(const Duration(milliseconds: 2000), () {
       devices = meshNotifier.networks!;
-      if (devices.isEmpty) {
+      // if (devices.isEmpty) {
         Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
-      }
+      // }
     });
 
     _databaseService

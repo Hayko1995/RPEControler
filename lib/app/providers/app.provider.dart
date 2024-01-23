@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:rpe_c/core/notifiers/authentication.notifier.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
+import 'package:rpe_c/core/notifiers/provisining.notifier.dart';
 import 'package:rpe_c/core/notifiers/size.notifier.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'package:rpe_c/core/notifiers/user.notifier.dart';
@@ -13,5 +14,6 @@ class AppProvider {
     ChangeNotifierProvider(create: (_) => UserNotifier()),
     ChangeNotifierProvider(create: (_) => MeshNotifier()),
     ChangeNotifierProvider(create: (_) => SizeNotifier()),
+    ChangeNotifierProvider(create: (_) => ProvisionNotifier()),
   ];
 }
