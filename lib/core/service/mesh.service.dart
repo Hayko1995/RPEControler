@@ -188,8 +188,8 @@ void onStart(ServiceInstance service) async {
     }
 
     // test using external plugin
-    // initMesh();
-    // updateMesh();
+    initMesh();
+    updateMesh();
     // Future<String> data1 = updateMesh();
     // Future<String> data = getData();
     // String response = await data;

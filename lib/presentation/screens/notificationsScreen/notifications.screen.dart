@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
@@ -15,44 +16,9 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   Color caughtColor = Colors.grey;
 
-  String data = "";
-  String rpe32Data = '';
-  String rpe32time = '';
-  String time = '';
-
   @override
   void initState() {
-    // final userNotifier = Provider.of<UserNotifier>(context, listen: false);
-    // ReadCache.getString(key: AppKeys.userData).then(
-    //   (token) => {
-    //     userNotifier.getUserData(context: context, token: token),
-    //   },
-    // );
-    // Timer.periodic(const Duration(seconds: 5), (timer) {
-    //   _updateTables();
-    // });
-
     super.initState();
-  }
-
-  void _updateTables() async {
-    // final MeshAPI _mashAPI = MeshAPI();
-    // _mashAPI.sendToMesh("E1FF060001FA");
-    // final _data = await _esp32.updateData();
-    // try {
-    //   data = _data;
-    // } catch (e) {
-    //   data = "error";
-    // }
-
-    // DateTime dateToday = new DateTime.now();
-    // String time = dateToday.toString().substring(0, 10);
-    // DateTime now = DateTime.now();
-    // String _time = DateFormat.Hms().format(now);
-    // setState(() {
-    //   rpe32Data = data + " ^C";
-    //   rpe32time = _time;
-    // });
   }
 
   @override
@@ -60,31 +26,35 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
     var themeFlag = _themeNotifier.darkTheme;
     return SafeArea(
+
       child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Notifications'),
+            backgroundColor: Colors.blue,
+          ),
         backgroundColor: themeFlag ? AppColors.mirage : AppColors.creamColor,
         resizeToAvoidBottomInset: false,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        body: ListView(
           children: [
-            Center(
-              child: Text(
-                rpe32Data,
-                style: TextStyle(
-                  color: themeFlag ? AppColors.creamColor : AppColors.mirage,
-                  fontSize: 24.0,
-                ),
+            Slidable(
+              // Specify a key if the Slidable is dismissible.
+              key: const ValueKey(0),
+              // The end action pane is the one at the right or the bottom side.
+              endActionPane: ActionPane(
+                motion: ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    backgroundColor: Color(0xFFFE4A49),
+                    onPressed: (BuildContext context) {},
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  ),
+                ],
               ),
+              child: const ListTile(title: Text('notification one ')),
             ),
-            Center(
-              child: Text(
-                rpe32time,
-                style: TextStyle(
-                  color: themeFlag ? AppColors.creamColor : AppColors.mirage,
-                  fontSize: 24.0,
-                ),
-              ),
-            )
+
           ],
         ),
       ),

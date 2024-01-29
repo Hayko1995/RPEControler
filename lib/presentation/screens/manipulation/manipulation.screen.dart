@@ -34,15 +34,12 @@ class ManipulationScreen extends StatefulWidget {
 }
 
 class _ManipulationScreenState extends State<ManipulationScreen> {
-  final DatabaseService _databaseService = DatabaseService();
-
   TextEditingController textController = TextEditingController();
   String displayText = "";
 
   List<String> manipulationType = <String>['Clustering', 'Associations'];
   List<String> sensorsType = <String>['All', 'Light', 'Buzzers'];
   List dataDevices = [];
-  List _items = [];
   List items = [];
   String dropdownValue = "Clustering";
   var _currentIndex = 0;

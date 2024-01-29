@@ -55,9 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
     meshNotifier.getNetworks();
     Future.delayed(const Duration(milliseconds: 2000), () {
       devices = meshNotifier.networks!;
-      // if (devices.isEmpty) {
+      if (devices.isEmpty) {
         Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
-      // }
+      }
     });
 
     _databaseService
