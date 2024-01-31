@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.history.screen.dart';
+import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.references.screen.dart';
+import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.setThreshhold.screen.dart';
+import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.setTimers.screen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 final List<SalomonBottomBarItem> bottomNavBarIcons = [
@@ -55,13 +57,13 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
     // var themeFlag = _themeNotifier.darkTheme;
 
     final screens = [
-      SensorHistoryScreen(
+      SensorReferencesScreen(
         mac: widget.sensorDetailsArguments.mac,
       ),
-      SensorHistoryScreen(
+      SensorSetThresholdScreen(
         mac: widget.sensorDetailsArguments.mac,
       ),
-      SensorHistoryScreen(
+      SensorTimersScreen(
         mac: widget.sensorDetailsArguments.mac,
       ),
     ];

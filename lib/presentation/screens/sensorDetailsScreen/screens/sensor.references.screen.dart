@@ -7,16 +7,16 @@ import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/core/service/mesh.service.dart';
 
-class SensorHistoryScreen extends StatefulWidget {
+class SensorReferencesScreen extends StatefulWidget {
   final String mac;
 
-  const SensorHistoryScreen({super.key, required this.mac});
+  const SensorReferencesScreen({super.key, required this.mac});
 
   @override
-  _SensorHistoryScreenState createState() => _SensorHistoryScreenState();
+  _SensorReferencesScreenState createState() => _SensorReferencesScreenState();
 }
 
-class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
+class _SensorReferencesScreenState extends State<SensorReferencesScreen> {
   Color caughtColor = Colors.grey;
   final DatabaseService _databaseService = DatabaseService();
   List<String> data = [];
@@ -27,6 +27,11 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
   late String newLocation = "";
   late String location = "";
   late String deviceName = "";
+  late bool timersOpen = false;
+  late bool thresholdOpen = false;
+  late bool zonesOpen = false;
+  late bool associationsOpen = false;
+  late bool deviceOpen = false;
 
   @override
   void initState() {
@@ -108,9 +113,11 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
                                                   decoration: InputDecoration(
                                                     enabledBorder:
                                                         UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          width: 2,
-                                                          color: Colors.blue),
+                                                      borderSide:
+                                                          const BorderSide(
+                                                              width: 2,
+                                                              color:
+                                                                  Colors.blue),
                                                       //<-- SEE HERE
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -154,9 +161,11 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
                                                   decoration: InputDecoration(
                                                     enabledBorder:
                                                         UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          width: 2,
-                                                          color: Colors.blue),
+                                                      borderSide:
+                                                          const BorderSide(
+                                                              width: 2,
+                                                              color:
+                                                                  Colors.blue),
                                                       //<-- SEE HERE
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -190,67 +199,168 @@ class _SensorHistoryScreenState extends State<SensorHistoryScreen> {
                 children: [
                   Container(
                       decoration: BoxDecoration(border: Border.all()),
-                      child: Row(
+                      child: Column(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: () {
-                              setState(() {});
-                            },
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {
+                                  setState(() {
+                                    timersOpen = !timersOpen;
+                                  });
+                                },
+                              ),
+                              const Row(
+                                children: [
+                                  Text("Assigned Timers "),
+                                ],
+                              )
+                            ],
                           ),
-                          const Text("Assigned Timers ")
+                          if (timersOpen)
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("Timer 1 set on time 13:00"),
+                                    OutlinedButton(
+                                        onPressed: () {},
+                                        child: Text("delete")),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Timer 2 set on time 14:55"),
+                                    OutlinedButton(
+                                        onPressed: () {},
+                                        child: Text("delete")),
+                                  ],
+                                ),
+                              ],
+                            ),
                         ],
                       )),
                   Container(
                       decoration: BoxDecoration(border: Border.all()),
-                      child: Row(
+                      child: Column(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: () {
-                              setState(() {});
-                            },
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {
+                                  setState(() {
+                                    thresholdOpen = !thresholdOpen;
+                                  });
+                                },
+                              ),
+                              const Text("Assigned Thresholds "),
+                            ],
                           ),
-                          const Text("Assigned Thresholds ")
+                          if (thresholdOpen)
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("Thrashold set 15%"),
+                                    OutlinedButton(
+                                        onPressed: () {},
+                                        child: Text("delete")),
+                                  ],
+                                ),
+                              ],
+                            ),
                         ],
                       )),
                   Container(
                       decoration: BoxDecoration(border: Border.all()),
-                      child: Row(
+                      child: Column(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: () {
-                              setState(() {});
-                            },
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {
+                                  setState(() {
+                                    zonesOpen = !zonesOpen;
+                                  });
+                                },
+                              ),
+                              const Text("Zones/Clusters ")
+                            ],
                           ),
-                          const Text("Zones/Clusters ")
+                          if (zonesOpen)
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("In zone 1 "),
+                                    OutlinedButton(
+                                        onPressed: () {},
+                                        child: Text("delete")),
+                                  ],
+                                ),
+                              ],
+                            ),
                         ],
                       )),
                   Container(
                       decoration: BoxDecoration(border: Border.all()),
-                      child: Row(
+                      child: Column(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: () {
-                              setState(() {});
-                            },
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {
+                                  setState(() {
+                                    associationsOpen = !associationsOpen;
+                                  });
+                                },
+                              ),
+                              const Text("Association with other Devices ")
+                            ],
                           ),
-                          const Text("Association with other Devices ")
+                          if (associationsOpen)
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("have assosiation with vzgo 1  "),
+                                    OutlinedButton(
+                                        onPressed: () {},
+                                        child: Text("delete")),
+                                  ],
+                                ),
+                              ],
+                            ),
                         ],
                       )),
                   Container(
                       decoration: BoxDecoration(border: Border.all()),
-                      child: Row(
+                      child: Column(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: () {
-                              setState(() {});
-                            },
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.add),
+                                onPressed: () {
+                                  setState(() {
+                                    deviceOpen = !deviceOpen;
+                                  });
+                                },
+                              ),
+                              const Text("Device Preferences")
+                            ],
                           ),
-                          const Text("Device Preferences")
+                          if (deviceOpen)
+                            const Column(
+                              children: [
+                                Text(
+                                    "in this place will be device preferences :)"),
+                              ],
+                            ),
                         ],
                       )),
                 ],

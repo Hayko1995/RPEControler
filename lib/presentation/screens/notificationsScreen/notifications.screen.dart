@@ -26,20 +26,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
     var themeFlag = _themeNotifier.darkTheme;
     return SafeArea(
-
       child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Notifications'),
-            backgroundColor: Colors.blue,
-          ),
+        appBar: AppBar(
+          title: const Text('Notifications'),
+          backgroundColor: Colors.blue,
+        ),
         backgroundColor: themeFlag ? AppColors.mirage : AppColors.creamColor,
         resizeToAvoidBottomInset: false,
         body: ListView(
           children: [
             Slidable(
-              // Specify a key if the Slidable is dismissible.
               key: const ValueKey(0),
-              // The end action pane is the one at the right or the bottom side.
               endActionPane: ActionPane(
                 motion: ScrollMotion(),
                 children: [
@@ -54,7 +51,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
               child: const ListTile(title: Text('notification one ')),
             ),
-
           ],
         ),
       ),
