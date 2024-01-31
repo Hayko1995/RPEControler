@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
@@ -22,14 +23,26 @@ class _SensorSetThresholdScreenState extends State<SensorSetThresholdScreen> {
   final DatabaseService _databaseService = DatabaseService();
   List<String> data = [];
   late RpeDevice dataDevice;
-  List<String> typeOfTimer = <String>['One Time', "Multiple Time"];
-  List<String> typeOfControl = <String>['Set Control', "one Time"];
+  List<String> typeOfTimer = <String>['One Time', "Periodic"];
+  List<String> typeOfControl = <String>["ON", "Off"];
   List<String> stateOfTimer = <String>['ON', "Off"];
+  bool openCheckboxes = false;
+  Map<String, bool> values = {
+    'MA': false,
+    'TU': false,
+    'WE': false,
+    "TH": false,
+    "FR": false,
+    "SA":false,
+    "SU":false,
+  };
+
   final TextEditingController _startDate = new TextEditingController();
   final TextEditingController _endDate = new TextEditingController();
   final TextEditingController _name = new TextEditingController();
   final TextEditingController _email = new TextEditingController();
   final TextEditingController _sms = new TextEditingController();
+
 
   @override
   void initState() {
@@ -43,6 +56,9 @@ class _SensorSetThresholdScreenState extends State<SensorSetThresholdScreen> {
     String timerType = typeOfTimer.first;
     String controlType = typeOfControl.first;
     String timerState = stateOfTimer.first;
+
+    var selectedIndexes = [];
+
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -65,8 +81,15 @@ class _SensorSetThresholdScreenState extends State<SensorSetThresholdScreen> {
                               // This is called when the user selects an item.
                               setState(() {
                                 timerType = value!;
+                                if (timerType == 'Periodic') {
+                                  openCheckboxes = true;
+                                }
+                                else {
+                                  openCheckboxes = false;
+                                }
                               });
                             },
+                            label: const Text("Timer"),
                             dropdownMenuEntries: typeOfTimer
                                 .map<DropdownMenuEntry<String>>((String value) {
                               return DropdownMenuEntry<String>(
@@ -76,13 +99,14 @@ class _SensorSetThresholdScreenState extends State<SensorSetThresholdScreen> {
                         ),
                         SizedBox(
                           child: DropdownMenu<String>(
-                            initialSelection: typeOfControl.first,
                             onSelected: (String? value) {
                               // This is called when the user selects an item.
                               setState(() {
                                 timerType = value!;
+
                               });
                             },
+                            label: const Text("Control"),
                             dropdownMenuEntries: typeOfControl
                                 .map<DropdownMenuEntry<String>>((String value) {
                               return DropdownMenuEntry<String>(
@@ -95,6 +119,33 @@ class _SensorSetThresholdScreenState extends State<SensorSetThresholdScreen> {
                 SizedBox(
                   height: 10,
                 ),
+                if (openCheckboxes)
+                  SizedBox(
+                    width: 300,
+                      height: 150,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+
+                      children: values.keys.map((String key) {
+                        return SizedBox(
+                          width: 40,
+                          child: Column(
+                            children: [
+                              Text(key),
+                              Checkbox(
+                                value: values[key],
+                                onChanged: (value) {
+                                  setState(() {
+                                    values[key] = value!;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -110,7 +161,6 @@ class _SensorSetThresholdScreenState extends State<SensorSetThresholdScreen> {
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Start Date',
-
                             ),
                           ),
                         ),
@@ -166,7 +216,6 @@ class _SensorSetThresholdScreenState extends State<SensorSetThresholdScreen> {
                         ),
                       ),
                     ]),
-
                 SizedBox(
                   height: 20,
                 ),
@@ -210,7 +259,6 @@ class _SensorSetThresholdScreenState extends State<SensorSetThresholdScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-
                       FilledButton(
                           onPressed: () {
                             setState(() {});

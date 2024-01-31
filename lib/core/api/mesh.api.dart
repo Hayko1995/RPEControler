@@ -202,7 +202,7 @@ class MeshAPI {
           int _integerData = int.parse(stringList[i]);
           lint.add(_integerData.toRadixString(16));
         }
-        print(lint);
+        // print(lint);
         //
         // print(lint[0] + " command type E3");
         // print(lint[1] + lint[2] + " wifiPacketLen");
@@ -219,8 +219,6 @@ class MeshAPI {
         // print(lint[15] + " rpe net id ");
 
         length = int.parse("0x${lint[1]}${lint[2]}");
-        print("lenght");
-        print(lint.length);
         for (int i = 16; i <= length ; i = i + 14) {
           String nodeType = lint[i];
           String nodeSubType = lint[i + 1];
@@ -235,15 +233,11 @@ class MeshAPI {
           String uploadmsgType = lint[i + 9]; //todo understand
           String messegeSubType = lint[i + 10]; //
           int sensorType = int.parse(lint[i + 11]);
-          print("sensorType //////////////// ");
-          print(nodeType);
-          print(nodeSubType);
-          print(sensorType);
           int sensorVal = int.parse("0x${lint[i + 12]}${lint[i + 13]}");
 
           RpeDevice device = await _databaseService.getDevicesByNodeNumType(
               nodeType, nodeSubType, nodeNum);
-          logger.i(device);
+          // logger.i(device);
           List<String> sensorVals = device.sensorVal.split(',');
           sensorVals[sensorType] = sensorVal.toString();
           device.sensorVal = sensorVals.join(',');
