@@ -7,6 +7,7 @@ class AppConstants {
   static const String dbName = "RPEControls.db";
   static const int airQuality = 1;
   static const int uiUpdateInterval = 1500;
+  static const String advName = 'Prov'; //TODO change
 
   static const bool debug = true;
 }
@@ -843,4 +844,6 @@ var sensorRangeType = {
   'hMax': 100,
   'dlta': 1,
 };
+
+
 

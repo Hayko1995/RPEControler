@@ -8,11 +8,13 @@ import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rpe_c/core/service/mesh.service.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 // import 'web_url/configure_nonweb.dart'
 //     if (dart.library.html) 'web_url/configure_web.dart';
 
 Future<void> main() async {
+  FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
   DartPingIOS.register();
   // configureApp();
   WidgetsFlutterBinding.ensureInitialized();

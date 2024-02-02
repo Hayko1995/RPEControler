@@ -27,7 +27,7 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
 
   SalomonBottomBarItem(
     icon: const Icon(Icons.timer),
-    title: const Text("Editor"),
+    title: const Text("Set Timer"),
     selectedColor: Colors.blue,
   ),
 ];
