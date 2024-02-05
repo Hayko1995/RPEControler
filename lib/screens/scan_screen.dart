@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 
 import 'device_screen.dart';
 import '../utils/snackbar.dart';
@@ -30,12 +31,15 @@ class _ScanScreenState extends State<ScanScreen> {
     super.initState();
 
     _scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
+      // _scanResults = results;
       for (var result in results) {
         String name = result.advertisementData.advName;
         if (name.isNotEmpty) {
           if (result.advertisementData.advName.substring(0, 4) ==
               AppConstants.advName) {
-            _scanResults = [result];
+            if (!_scanResults.contains(result)) {
+              _scanResults.add(result);
+            }
           }
         }
       }
@@ -108,6 +112,7 @@ class _ScanScreenState extends State<ScanScreen> {
     MaterialPageRoute route = MaterialPageRoute(
         builder: (context) => DeviceScreen(device: device),
         settings: RouteSettings(name: '/DeviceScreen'));
+    onStopPressed();
     Navigator.of(context).push(route);
   }
 

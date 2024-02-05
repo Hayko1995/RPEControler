@@ -1,9 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
+import 'package:network_info_plus/network_info_plus.dart';
+import 'package:rpe_c/app/constants/app.colors.dart';
+import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/logger/logger.dart';
+import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/service/database.service.dart';
+import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
 import '../widgets/service_tile.dart';
 import '../widgets/characteristic_tile.dart';
 import '../widgets/descriptor_tile.dart';
@@ -34,10 +44,19 @@ class _DeviceScreenState extends State<DeviceScreen> {
   late StreamSubscription<bool> _isConnectingSubscription;
   late StreamSubscription<bool> _isDisconnectingSubscription;
   late StreamSubscription<int> _mtuSubscription;
+  final TextEditingController userEmailController = TextEditingController();
+  final TextEditingController userPassController = TextEditingController();
+  final DatabaseService _databaseService = DatabaseService();
+
+  final NetworkInfo _networkInfo = NetworkInfo();
+  String _connectionStatus = 'Unknown';
+  String? wifiName = "";
+  String? wifiBSSID = "";
 
   @override
   void initState() {
     super.initState();
+    _initNetworkInfo();
 
     _connectionStateSubscription =
         widget.device.connectionState.listen((state) async {
@@ -75,8 +94,113 @@ class _DeviceScreenState extends State<DeviceScreen> {
       }
     });
 
-    Future.delayed(Duration(milliseconds: 500), () {
-      onDiscoverServicesPressed();
+    Future.delayed(Duration(milliseconds: 3000), () {
+      if (_connectionState.toString().split('.')[1] == "connected") {
+        onDiscoverServicesPressed();
+      }
+    });
+  }
+
+  Future<void> _initNetworkInfo() async {
+    String? wifiIPv4, wifiIPv6, wifiGatewayIP, wifiBroadcast, wifiSubmask;
+
+    try {
+      if (!kIsWeb && Platform.isIOS) {
+        // ignore: deprecated_member_use
+        var status = await _networkInfo.getLocationServiceAuthorization();
+        if (status == LocationAuthorizationStatus.notDetermined) {
+          // ignore: deprecated_member_use
+          status = await _networkInfo.requestLocationServiceAuthorization();
+        }
+        if (status == LocationAuthorizationStatus.authorizedAlways ||
+            status == LocationAuthorizationStatus.authorizedWhenInUse) {
+          wifiName = await _networkInfo.getWifiName();
+        } else {
+          wifiName = await _networkInfo.getWifiName();
+        }
+      } else {
+        wifiName = await _networkInfo.getWifiName();
+      }
+    } on PlatformException catch (e) {
+      logger.i('Failed to get Wifi Name', error: e);
+      wifiName = 'Failed to get Wifi Name';
+    }
+
+    try {
+      if (!kIsWeb && Platform.isIOS) {
+        // ignore: deprecated_member_use
+        var status = await _networkInfo.getLocationServiceAuthorization();
+        if (status == LocationAuthorizationStatus.notDetermined) {
+          // ignore: deprecated_member_use
+          status = await _networkInfo.requestLocationServiceAuthorization();
+        }
+        if (status == LocationAuthorizationStatus.authorizedAlways ||
+            status == LocationAuthorizationStatus.authorizedWhenInUse) {
+          wifiBSSID = await _networkInfo.getWifiBSSID();
+        } else {
+          wifiBSSID = await _networkInfo.getWifiBSSID();
+        }
+      } else {
+        wifiBSSID = await _networkInfo.getWifiBSSID();
+      }
+    } on PlatformException catch (e) {
+      logger.i('Failed to get Wifi BSSID', error: e);
+      wifiBSSID = 'Failed to get Wifi BSSID';
+    }
+
+    try {
+      wifiIPv4 = await _networkInfo.getWifiIP();
+    } on PlatformException catch (e) {
+      logger.i('Failed to get Wifi IPv4', error: e);
+      wifiIPv4 = 'Failed to get Wifi IPv4';
+    }
+
+    try {
+      if (!Platform.isWindows) {
+        wifiIPv6 = await _networkInfo.getWifiIPv6();
+      }
+    } on PlatformException catch (e) {
+      logger.i('Failed to get Wifi IPv6', error: e);
+      wifiIPv6 = 'Failed to get Wifi IPv6';
+    }
+
+    try {
+      if (!Platform.isWindows) {
+        wifiSubmask = await _networkInfo.getWifiSubmask();
+      }
+    } on PlatformException catch (e) {
+      logger.i('Failed to get Wifi submask address', error: e);
+      wifiSubmask = 'Failed to get Wifi submask address';
+    }
+
+    try {
+      if (!Platform.isWindows) {
+        wifiBroadcast = await _networkInfo.getWifiBroadcast();
+      }
+    } on PlatformException catch (e) {
+      logger.i('Failed to get Wifi broadcast', error: e);
+      wifiBroadcast = 'Failed to get Wifi broadcast';
+    }
+
+    try {
+      if (!Platform.isWindows) {
+        wifiGatewayIP = await _networkInfo.getWifiGatewayIP();
+      }
+    } on PlatformException catch (e) {
+      logger.i('Failed to get Wifi gateway address', error: e);
+      wifiGatewayIP = 'Failed to get Wifi gateway address';
+    }
+
+    setState(() {
+      _connectionStatus = 'Wifi Name: $wifiName\n'
+          'Wifi BSSID: $wifiBSSID\n'
+          'Wifi IPv4: $wifiIPv4\n'
+          'Wifi IPv6: $wifiIPv6\n'
+          'Wifi Broadcast: $wifiBroadcast\n'
+          'Wifi Gateway: $wifiGatewayIP\n'
+          'Wifi Submask: $wifiSubmask\n';
+
+      print(_connectionStatus);
     });
   }
 
@@ -263,26 +387,61 @@ class _DeviceScreenState extends State<DeviceScreen> {
     ]);
   }
 
-  Future pair() async {
+  Future pair(ssid, pass) async {
     BluetoothCharacteristic c = _services.first.characteristics.first;
-    List<int> byteIntList =
-        utf8.encode('{"ssid":"RPE-WiFi","password":"RPas\$2024"}');
+    List<int> byteIntList = utf8.encode('{"ssid":$ssid,"password": "$pass"}');
     await c.write(byteIntList, allowLongWrite: true);
     Snackbar.show(ABC.c, "Write: Success", success: true);
 
     await c.setNotifyValue(c.isNotifying == false);
     // Snackbar.show(ABC.c, "$op : Success", success: true);
     if (c.properties.read) {
-      await c.read();
+      int i = 0;
+      while (true) {
+        i = i + 1;
+
+        List<int> result = await c.read();
+        print(result);
+        try {
+          logger.w(utf8.decode(result));
+          Map<String, dynamic> map = jsonDecode(utf8.decode(result));
+          String ip = map['IP'];
+          logger.i("");
+          var _ip = "";
+          for (int i = 2; i <= ip.length - 2; i += 2) {
+            final hex = ip.substring(i, i + 2);
+            final number = int.parse(hex, radix: 16);
+            _ip += number.toString() + ".";
+          }
+          logger.w(_ip.substring(0, _ip.length - 1));
+
+          _databaseService.insertNetwork(
+              RpeNetwork(url: _ip.substring(0, _ip.length - 1), preDef: 1));
+
+          Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
+
+          if (i > 20) {
+            break;
+          }
+        } on Exception catch (_) {
+          print('never reached');
+        }
+        // utf8.decode(result);
+      }
+      // _databaseService.insertNetwork(RpeNetwork(
+      //     name:
+      //     url: ,
+      //     domain: widget.networkConfigArguments.type));
+
+      // Navigator.of(context)
+      //     .pushReplacementNamed(AppRouter.homeRoute);
     }
   }
 
   Future reset() async {
     BluetoothCharacteristic c = _services.first.characteristics.first;
-    List<int> byteIntList =
-        utf8.encode('{"request":"reset"}');
+    List<int> byteIntList = utf8.encode('{"request":"reset"}');
     await c.write(byteIntList, allowLongWrite: true);
-
   }
 
   @override
@@ -296,26 +455,93 @@ class _DeviceScreenState extends State<DeviceScreen> {
         ),
         body: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              FilledButton(
-                  onPressed: () {
-                    pair();
-                  },
-                  child: Text("pair")),
-              FilledButton(
-                  onPressed: () {
-                    reset();
-                  },
-                  child: Text("reset")),
-              buildRemoteId(context),
-              ListTile(
-                leading: buildRssiTile(context),
-                title: Text(
-                    'Device is ${_connectionState.toString().split('.')[1]}.'),
-                trailing: buildGetServices(context),
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width,
+                height: MediaQuery.sizeOf(context).height * 0.9,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Column(
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  35.0, 0.0, 35.0, 2.0),
+                              child: Text("WIFI name $wifiName")),
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
+                            child: CustomTextField.customTextField(
+                              textEditingController: userPassController,
+                              hintText: 'Enter a password',
+                              validator: (val) =>
+                                  val!.isEmpty ? 'Enter a password' : null,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        MaterialButton(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          minWidth: MediaQuery.of(context).size.width * 0.4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          onPressed: () async {
+                            pair(wifiName, userPassController.text);
+                          },
+                          color: AppColors.rawSienna,
+                          child: const Text(
+                            'Connect ',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        MaterialButton(
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          minWidth: MediaQuery.of(context).size.width * 0.4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          onPressed: () async {
+                            reset();
+                          },
+                          color: AppColors.rawSienna,
+                          child: const Text(
+                            'Reset',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-              buildMtuTile(context),
-              ..._buildServiceTiles(context, widget.device),
+
+              // buildRemoteId(context),
+              // ListTile(
+              //   leading: buildRssiTile(context),
+              //   title: Text(
+              //       'Device is ${_connectionState.toString().split('.')[1]}.'),
+              //   trailing: buildGetServices(context),
+              // ),
+              // buildMtuTile(context),
+              // ..._buildServiceTiles(context, widget.device),
             ],
           ),
         ),
