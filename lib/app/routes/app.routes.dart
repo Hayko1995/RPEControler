@@ -29,6 +29,7 @@ import 'package:rpe_c/presentation/screens/signUpScreen/signup.screen.dart';
 import 'package:rpe_c/presentation/screens/splashScreen/splash.screen.dart';
 import 'package:rpe_c/presentation/screens/watcherScreen/watcher.screen.dart';
 import 'package:rpe_c/presentation/screens/qrScan/qrScan.screen.dart';
+import 'package:rpe_c/screens/device_screen.dart';
 
 class AppRouter {
   static const String splashRoute = "/splash";
@@ -60,6 +61,7 @@ class AppRouter {
   static const String clusterControlRouter = '/clusterControl';
   static const String clusteringRouter = '/clustering';
   static const String associationsRouter = '/associations';
+  static const String bleDeviceRouter = '/bleDevice';
 
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -75,6 +77,17 @@ class AppRouter {
             builder: (context) => SensorDetailsScreen(
               sensorDetailsArguments: ModalRoute.of(context)!.settings.arguments
                   as SensorDetailsArgs,
+            ),
+            settings: settings,
+          );
+        }
+
+      case bleDeviceRouter:
+        {
+          return MaterialPageRoute(
+            builder: (context) => DeviceScreen(
+              bleArgs:
+              ModalRoute.of(context)!.settings.arguments as BleArgs,
             ),
             settings: settings,
           );

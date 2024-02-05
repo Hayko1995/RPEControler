@@ -13,6 +13,7 @@ import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
+import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
 import '../widgets/service_tile.dart';
 import '../widgets/characteristic_tile.dart';
@@ -21,9 +22,9 @@ import '../utils/snackbar.dart';
 import '../utils/extra.dart';
 
 class DeviceScreen extends StatefulWidget {
-  final BluetoothDevice device;
+  final BleArgs bleArgs;
 
-  const DeviceScreen({Key? key, required this.device}) : super(key: key);
+  const DeviceScreen({super.key, required this.bleArgs});
 
   @override
   State<DeviceScreen> createState() => _DeviceScreenState();
@@ -59,27 +60,27 @@ class _DeviceScreenState extends State<DeviceScreen> {
     _initNetworkInfo();
 
     _connectionStateSubscription =
-        widget.device.connectionState.listen((state) async {
+        widget.bleArgs.device.connectionState.listen((state) async {
       _connectionState = state;
       if (state == BluetoothConnectionState.connected) {
         _services = []; // must rediscover services
       }
       if (state == BluetoothConnectionState.connected && _rssi == null) {
-        _rssi = await widget.device.readRssi();
+        _rssi = await widget.bleArgs.device.readRssi();
       }
       if (mounted) {
         setState(() {});
       }
     });
 
-    _mtuSubscription = widget.device.mtu.listen((value) {
+    _mtuSubscription = widget.bleArgs.device.mtu.listen((value) {
       _mtuSize = value;
       if (mounted) {
         setState(() {});
       }
     });
 
-    _isConnectingSubscription = widget.device.isConnecting.listen((value) {
+    _isConnectingSubscription = widget.bleArgs.device.isConnecting.listen((value) {
       _isConnecting = value;
       if (mounted) {
         setState(() {});
@@ -87,7 +88,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
     });
 
     _isDisconnectingSubscription =
-        widget.device.isDisconnecting.listen((value) {
+        widget.bleArgs.device.isDisconnecting.listen((value) {
       _isDisconnecting = value;
       if (mounted) {
         setState(() {});
@@ -219,7 +220,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
   Future onConnectPressed() async {
     try {
-      await widget.device.connectAndUpdateStream();
+      await widget.bleArgs.device.connectAndUpdateStream();
       Snackbar.show(ABC.c, "Connect: Success", success: true);
     } catch (e) {
       if (e is FlutterBluePlusException &&
@@ -234,7 +235,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
   Future onCancelPressed() async {
     try {
-      await widget.device.disconnectAndUpdateStream(queue: false);
+      await widget.bleArgs.device.disconnectAndUpdateStream(queue: false);
       Snackbar.show(ABC.c, "Cancel: Success", success: true);
     } catch (e) {
       Snackbar.show(ABC.c, prettyException("Cancel Error:", e), success: false);
@@ -243,7 +244,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
   Future onDisconnectPressed() async {
     try {
-      await widget.device.disconnectAndUpdateStream();
+      await widget.bleArgs.device.disconnectAndUpdateStream();
       Snackbar.show(ABC.c, "Disconnect: Success", success: true);
     } catch (e) {
       Snackbar.show(ABC.c, prettyException("Disconnect Error:", e),
@@ -258,7 +259,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
       });
     }
     try {
-      _services = await widget.device.discoverServices();
+      _services = await widget.bleArgs.device.discoverServices();
       Guid guid = Guid('00ff');
       if (_services[2].characteristics.first.serviceUuid == guid) {
         _services = [_services[2]];
@@ -276,7 +277,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
   Future onRequestMtuPressed() async {
     try {
-      await widget.device.requestMtu(512, predelay: 0);
+      await widget.bleArgs.device.requestMtu(512, predelay: 0);
       Snackbar.show(ABC.c, "Request Mtu: Success", success: true);
     } catch (e) {
       Snackbar.show(ABC.c, prettyException("Change Mtu Error:", e),
@@ -321,7 +322,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
   Widget buildRemoteId(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text('${widget.device.remoteId}'),
+      child: Text('${widget.bleArgs.device.remoteId}'),
     );
   }
 
@@ -413,12 +414,14 @@ class _DeviceScreenState extends State<DeviceScreen> {
             final number = int.parse(hex, radix: 16);
             _ip += number.toString() + ".";
           }
-          logger.w(_ip.substring(0, _ip.length - 1));
-
+          ip = _ip.substring(0, _ip.length - 1);
           _databaseService.insertNetwork(
-              RpeNetwork(url: _ip.substring(0, _ip.length - 1), preDef: 1));
+              RpeNetwork(url: "http://" + ip , preDef: 1));
 
-          Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
+          MaterialPageRoute route = MaterialPageRoute(
+              builder: (context) => HomeScreen());
+
+          Navigator.of(context).push(route);
 
           if (i > 20) {
             break;
@@ -450,7 +453,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
       key: Snackbar.snackBarKeyC,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.device.platformName),
+          title: Text(widget.bleArgs.device.platformName),
           actions: [buildConnectButton(context)],
         ),
         body: SingleChildScrollView(
@@ -548,4 +551,11 @@ class _DeviceScreenState extends State<DeviceScreen> {
       ),
     );
   }
+}
+
+
+class BleArgs {
+  final BluetoothDevice device; //todo need to create associations
+
+  const BleArgs({required this.device});
 }

@@ -4,13 +4,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/logger/logger.dart';
+import 'package:rpe_c/utils/extra.dart';
+import 'package:rpe_c/utils/snackbar.dart';
+import 'package:rpe_c/widgets/scan_result_tile.dart';
+import 'package:rpe_c/widgets/system_device_tile.dart';
 
 import 'device_screen.dart';
-import '../utils/snackbar.dart';
-import '../widgets/system_device_tile.dart';
-import '../widgets/scan_result_tile.dart';
-import '../utils/extra.dart';
+
+
+
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({Key? key}) : super(key: key);
@@ -109,11 +113,14 @@ class _ScanScreenState extends State<ScanScreen> {
       Snackbar.show(ABC.c, prettyException("Connect Error:", e),
           success: false);
     });
+
+    onStopPressed();
     MaterialPageRoute route = MaterialPageRoute(
-        builder: (context) => DeviceScreen(device: device),
-        settings: RouteSettings(name: '/DeviceScreen'));
+        builder: (context) => DeviceScreen( bleArgs: BleArgs(device: device),),
+        settings: RouteSettings(name: AppRouter.bleDeviceRouter));
     onStopPressed();
     Navigator.of(context).push(route);
+
   }
 
   Future onRefresh() {
@@ -144,12 +151,9 @@ class _ScanScreenState extends State<ScanScreen> {
         .map(
           (d) => SystemDeviceTile(
             device: d,
-            onOpen: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DeviceScreen(device: d),
-                settings: RouteSettings(name: '/DeviceScreen'),
-              ),
-            ),
+            onOpen: () => Navigator.of(context).pushNamed(
+                AppRouter.bleDeviceRouter,
+                arguments: BleArgs(device: d)),
             onConnect: () => onConnectPressed(d),
           ),
         )
@@ -169,23 +173,20 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldMessenger(
-      key: Snackbar.snackBarKeyB,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Find Devices'),
-        ),
-        body: RefreshIndicator(
-          onRefresh: onRefresh,
-          child: ListView(
-            children: <Widget>[
-              ..._buildSystemDeviceTiles(context),
-              ..._buildScanResultTiles(context),
-            ],
-          ),
-        ),
-        floatingActionButton: buildScanButton(context),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Find Devices'),
       ),
+      body: RefreshIndicator(
+        onRefresh: onRefresh,
+        child: ListView(
+          children: <Widget>[
+            ..._buildSystemDeviceTiles(context),
+            ..._buildScanResultTiles(context),
+          ],
+        ),
+      ),
+      floatingActionButton: buildScanButton(context),
     );
   }
 }
