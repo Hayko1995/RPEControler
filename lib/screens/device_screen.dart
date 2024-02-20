@@ -9,7 +9,6 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
-import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
@@ -48,11 +47,15 @@ class _DeviceScreenState extends State<DeviceScreen> {
   final TextEditingController userEmailController = TextEditingController();
   final TextEditingController userPassController = TextEditingController();
   final DatabaseService _databaseService = DatabaseService();
+  late BluetoothDescriptor descriptor;
 
   final NetworkInfo _networkInfo = NetworkInfo();
   String _connectionStatus = 'Unknown';
   String? wifiName = "";
   String? wifiBSSID = "";
+
+  late StreamSubscription<List<int>> _lastValueSubscription;
+  List<int> _value = [];
 
   @override
   void initState() {
@@ -80,8 +83,10 @@ class _DeviceScreenState extends State<DeviceScreen> {
       }
     });
 
-    _isConnectingSubscription = widget.bleArgs.device.isConnecting.listen((value) {
+    _isConnectingSubscription =
+        widget.bleArgs.device.isConnecting.listen((value) {
       _isConnecting = value;
+
       if (mounted) {
         setState(() {});
       }
@@ -95,10 +100,41 @@ class _DeviceScreenState extends State<DeviceScreen> {
       }
     });
 
-    Future.delayed(Duration(milliseconds: 3000), () {
+    Future.delayed(Duration(milliseconds: 3000), () async {
       if (_connectionState.toString().split('.')[1] == "connected") {
-        onDiscoverServicesPressed();
+        await onDiscoverServicesPressed();
       }
+
+      _services.first.characteristics.first.onValueReceived.listen((value) {
+        _value = value;
+        print("aaaaaaaaaaaaa1111");
+        print(value);
+        print("aaaaaaaaaaaaa1111");
+
+        if (value.first == 123) {
+          try {
+            logger.w(utf8.decode(value));
+            Map<String, dynamic> map = jsonDecode(utf8.decode(value));
+            String ip = map['IP'];
+            var _ip = "";
+            for (int i = 2; i <= ip.length - 2; i += 2) {
+              final hex = ip.substring(i, i + 2);
+              final number = int.parse(hex, radix: 16);
+              _ip += number.toString() + ".";
+            }
+            ip = _ip.substring(0, _ip.length - 1);
+            _databaseService
+                .insertNetwork(RpeNetwork(url: "http://" + ip, preDef: 1));
+
+            MaterialPageRoute route =
+                MaterialPageRoute(builder: (context) => HomeScreen());
+
+            Navigator.of(context).push(route);
+          } on Exception catch (_) {
+            print('another time ');
+          }
+        }
+      });
     });
   }
 
@@ -394,43 +430,15 @@ class _DeviceScreenState extends State<DeviceScreen> {
     await c.write(byteIntList, allowLongWrite: true);
     Snackbar.show(ABC.c, "Write: Success", success: true);
 
-    await c.setNotifyValue(c.isNotifying == false);
+    await c.setNotifyValue(true);
+
+    print("notify");
     // Snackbar.show(ABC.c, "$op : Success", success: true);
     if (c.properties.read) {
       int i = 0;
-      while (true) {
-        i = i + 1;
+      List<int> result = await c.read();
+      // utf8.decode(result);
 
-        List<int> result = await c.read();
-        print(result);
-        try {
-          logger.w(utf8.decode(result));
-          Map<String, dynamic> map = jsonDecode(utf8.decode(result));
-          String ip = map['IP'];
-          logger.i("");
-          var _ip = "";
-          for (int i = 2; i <= ip.length - 2; i += 2) {
-            final hex = ip.substring(i, i + 2);
-            final number = int.parse(hex, radix: 16);
-            _ip += number.toString() + ".";
-          }
-          ip = _ip.substring(0, _ip.length - 1);
-          _databaseService.insertNetwork(
-              RpeNetwork(url: "http://" + ip , preDef: 1));
-
-          MaterialPageRoute route = MaterialPageRoute(
-              builder: (context) => HomeScreen());
-
-          Navigator.of(context).push(route);
-
-          if (i > 20) {
-            break;
-          }
-        } on Exception catch (_) {
-          print('never reached');
-        }
-        // utf8.decode(result);
-      }
       // _databaseService.insertNetwork(RpeNetwork(
       //     name:
       //     url: ,
@@ -552,7 +560,6 @@ class _DeviceScreenState extends State<DeviceScreen> {
     );
   }
 }
-
 
 class BleArgs {
   final BluetoothDevice device; //todo need to create associations

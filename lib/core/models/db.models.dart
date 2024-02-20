@@ -16,6 +16,7 @@ class RpeDevice {
   late String image;
   late String dName;
   late String dNetNum;
+  late int isActivation;
 
   final int dNum;
   final int dType;
@@ -62,6 +63,7 @@ class RpeDevice {
   RpeDevice(
       {this.nodeNumber = '',
       this.nodeType = '',
+      this.isActivation = 0,
       this.nodeSubType = '',
       this.location = '',
       this.stackType = '',
@@ -123,6 +125,7 @@ class RpeDevice {
       'nodeType': nodeType,
       'nodeSubType': nodeSubType,
       'location': location,
+      'isActivation': isActivation,
       'stackType': stackType,
       'numChild': numChild,
       'status': status,
@@ -182,6 +185,7 @@ class RpeDevice {
         nodeNumber: map['nodeNumber'] ?? "",
         nodeType: map['nodeType'] ?? "",
         nodeSubType: map['nodeSubType'] ?? "",
+        isActivation: map['isActivation'] ?? 0,
         location: map['location'] ?? "",
         stackType: map['stackType'] ?? "",
         numChild: map['numChild'] ?? "",
@@ -243,8 +247,8 @@ class RpeDevice {
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
   @override
-  String toString() => '''Device(nodeNumber: $nodeNumber, groups: $nodeType,  
-         nodeSubType: $nodeSubType,  location: $location,
+  String toString() => '''Device(nodeNumber: $nodeNumber, groups: $nodeType,
+  isActivation: $isActivation,  nodeSubType: $nodeSubType,  location: $location,
          stackType $stackType, numChild $numChild,
          status $status, parentNodeNum $parentNodeNum, macAddress $macAddress,
          name $name, networkTableMAC $networkTableMAC, image $image )''';

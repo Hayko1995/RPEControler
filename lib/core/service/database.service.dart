@@ -68,6 +68,7 @@ class DatabaseService {
         'location TEXT, stackType TEXT, numChild TEXT, status TEXT,'
         'parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT,'
         'dName  TEXT,'
+        'isActivation  INTEGER,'
         'dNetNum TEXT,'
         'dNum INTEGER,'
         'dType INTEGER,'

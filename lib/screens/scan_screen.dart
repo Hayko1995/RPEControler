@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/logger/logger.dart';
@@ -12,9 +13,6 @@ import 'package:rpe_c/widgets/scan_result_tile.dart';
 import 'package:rpe_c/widgets/system_device_tile.dart';
 
 import 'device_screen.dart';
-
-
-
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({Key? key}) : super(key: key);
@@ -33,6 +31,11 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   void initState() {
     super.initState();
+    Permission.location.isDenied.then((value) {
+      if (value) {
+        Permission.location.request();
+      }
+    });
 
     _scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
       // _scanResults = results;
@@ -116,11 +119,12 @@ class _ScanScreenState extends State<ScanScreen> {
 
     onStopPressed();
     MaterialPageRoute route = MaterialPageRoute(
-        builder: (context) => DeviceScreen( bleArgs: BleArgs(device: device),),
+        builder: (context) => DeviceScreen(
+              bleArgs: BleArgs(device: device),
+            ),
         settings: RouteSettings(name: AppRouter.bleDeviceRouter));
     onStopPressed();
     Navigator.of(context).push(route);
-
   }
 
   Future onRefresh() {

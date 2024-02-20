@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/core/service/mesh.service.dart';
 
 class SensorReferencesScreen extends StatefulWidget {
   final String mac;
@@ -96,7 +95,7 @@ class _SensorReferencesScreenState extends State<SensorReferencesScreen> {
                         SizedBox(
                             width: MediaQuery.sizeOf(context).width * 0.3,
                             child: Image.asset(
-                                'assets/images/icons/air-quality-sensor.png')),
+                                dataDevice.image)),
                         SizedBox(
                             width: MediaQuery.sizeOf(context).width * 0.6,
                             child: Column(children: [

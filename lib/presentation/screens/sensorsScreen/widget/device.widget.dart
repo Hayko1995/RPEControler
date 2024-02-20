@@ -53,6 +53,10 @@ Widget sensorWidget(context, data, widgetKey) {
       },
       child: Container(
         decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(data.image),
+              fit: BoxFit.fill,
+            ),
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [

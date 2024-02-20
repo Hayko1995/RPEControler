@@ -23,11 +23,6 @@ Future<void> main() async {
       Permission.notification.request();
     }
   });
-  await Permission.location.isDenied.then((value) {
-    if (value) {
-      Permission.location.request();
-    }
-  });
   await initializeService(); // intilayze background service
   runApp(const Lava());
 }

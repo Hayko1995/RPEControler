@@ -46,7 +46,7 @@ class AssociationScreenState extends State<AssociationScreen> {
   List items = [];
 
   void _updateData() async {
-    List<RpeDevice> devices = await _databaseService.getAllDevices();
+    List<RpeDevice> devices = await _databaseService.getAllDevices(); //TODO change
     for (int i = 0; i < devices.length; i++) {
       items.add(
         Item(

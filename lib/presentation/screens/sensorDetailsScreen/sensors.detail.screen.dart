@@ -20,16 +20,16 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
 
   /// Search
   SalomonBottomBarItem(
-    icon: const Icon(Icons.add),
-    title: const Text("Set Threshold"),
+    icon: const Icon(Icons.timer),
+    title: const Text("Config"),
     selectedColor: Colors.blue,
   ),
 
-  SalomonBottomBarItem(
-    icon: const Icon(Icons.timer),
-    title: const Text("Set Timer"),
-    selectedColor: Colors.blue,
-  ),
+  // SalomonBottomBarItem(
+  //   icon: const Icon(Icons.timer),
+  //   title: const Text("Set Timer"),
+  //   selectedColor: Colors.blue,
+  // ),
 ];
 
 class SensorDetailsScreen extends StatefulWidget {
