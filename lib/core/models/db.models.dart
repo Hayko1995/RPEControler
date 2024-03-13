@@ -17,6 +17,11 @@ class RpeDevice {
   late String dName;
   late String dNetNum;
   late int isActivation;
+  late int deviceType; // device can be 4 type,
+  //1 control button
+  //2 control dimmer
+  //3 indicator button
+  // indicator dimmer
 
   final int dNum;
   final int dType;
@@ -63,6 +68,7 @@ class RpeDevice {
   RpeDevice(
       {this.nodeNumber = '',
       this.nodeType = '',
+      this.deviceType = 5,
       this.isActivation = 0,
       this.nodeSubType = '',
       this.location = '',
@@ -124,6 +130,7 @@ class RpeDevice {
       'nodeNumber': nodeNumber,
       'nodeType': nodeType,
       'nodeSubType': nodeSubType,
+      'deviceType': deviceType,
       'location': location,
       'isActivation': isActivation,
       'stackType': stackType,
@@ -184,6 +191,7 @@ class RpeDevice {
     return RpeDevice(
         nodeNumber: map['nodeNumber'] ?? "",
         nodeType: map['nodeType'] ?? "",
+        deviceType: map['deviceType'] ?? 0,
         nodeSubType: map['nodeSubType'] ?? "",
         isActivation: map['isActivation'] ?? 0,
         location: map['location'] ?? "",
@@ -247,9 +255,9 @@ class RpeDevice {
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
   @override
-  String toString() => '''Device(nodeNumber: $nodeNumber, groups: $nodeType,
-  isActivation: $isActivation,  nodeSubType: $nodeSubType,  location: $location,
-         stackType $stackType, numChild $numChild,
+  String toString() => '''Device(nodeNumber: $nodeNumber, 
+  isActivation: $isActivation, deviceType: $deviceType,  nodeType: $nodeType,  nodeSubType: $nodeSubType,
+    location: $location, stackType $stackType, numChild $numChild,
          status $status, parentNodeNum $parentNodeNum, macAddress $macAddress,
          name $name, networkTableMAC $networkTableMAC, image $image )''';
 }

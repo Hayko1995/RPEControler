@@ -20,6 +20,11 @@ class AppConstants {
     "00": "assets/images/icons/air-quality-sensor.png",
   };
 
+  static List<String> buttonActivators = ['02', '03', '1A', '40'];
+  static List<String> dimmerActivators = ['01'];
+  static List<String> buttonSensor = ['06'];
+  static List<String> dimmerSensor = ['06'];
+
   static const Map<String, dynamic> deviceTypes = {
     'devType': {
       1: {

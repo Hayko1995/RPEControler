@@ -123,7 +123,7 @@ Widget sensorWidget(context, data, widgetKey) {
                     type: GFToggleType.custom,
                     onChanged: checkBoxCallBack,
                   ),
-                  OutlinedButton(onPressed: buttonCall, child: Text("data"))
+                  // OutlinedButton(onPressed: buttonCall, child: Text("data"))
                 ],
               ),
             )

@@ -49,19 +49,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screens = [const DashboardScreen(), const ClustersScreen(), const DashboardScreen()];
+    final screens = [
+      const DashboardScreen(),
+      const ClustersScreen(),
+      const DashboardScreen()
+    ];
+
+    //TODO change
+    _databaseService
+        .insertNetwork(RpeNetwork(url: ApiRoutes.esp32Url, preDef: 1));
 
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     meshNotifier.getNetworks();
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 3000), () {
       devices = meshNotifier.networks!;
       if (devices.isEmpty) {
         Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
       }
     });
 
-    _databaseService
-        .insertNetwork(RpeNetwork(url: ApiRoutes.esp32Url, preDef: 1));
     // }
     // enable QR scan if not have network in DB
 

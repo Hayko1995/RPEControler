@@ -70,6 +70,7 @@ class DatabaseService {
         'dName  TEXT,'
         'isActivation  INTEGER,'
         'dNetNum TEXT,'
+        'deviceType INTEGER,'
         'dNum INTEGER,'
         'dType INTEGER,'
         'dSubType INTEGER,'

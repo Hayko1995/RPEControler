@@ -3,7 +3,6 @@ import 'package:getwidget/getwidget.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 
 void checkBoxCallBack(bool? checkBoxState) {
   if (checkBoxState != null) {
@@ -19,6 +18,8 @@ Widget sensorWidget(context, data, widgetKey) {
   final Function(bool?) toggleCheckboxState;
 
   final value = data.sensorVal.split(',');
+  int deviceType = data.deviceType;
+  logger.i(data);
 
   return GestureDetector(
       key: widgetKey,
@@ -29,27 +30,28 @@ Widget sensorWidget(context, data, widgetKey) {
         );
       },
       onLongPress: () {
-        showMenu(
-          items: <PopupMenuEntry>[
-            const PopupMenuItem(
-              //value: this._index,
-              child: Column(
-                children: [
-                  GFToggle(
-                    value: true,
-                    enabledThumbColor: Colors.blue,
-                    enabledTrackColor: Colors.green,
-                    type: GFToggleType.custom,
-                    onChanged: checkBoxCallBack,
-                  ),
-                  OutlinedButton(onPressed: buttonCall, child: Text("data"))
-                ],
-              ),
-            )
-          ],
-          context: context,
-          position: _getRelativeRect(widgetKey),
-        );
+        if (data.deviceType == 0) {
+          showMenu(
+            items: <PopupMenuEntry>[
+              PopupMenuItem(
+                //value: this._index,
+                child: Column(
+                  children: [
+                    GFToggle(
+                      value: true,
+                      enabledThumbColor: Colors.blue,
+                      enabledTrackColor: Colors.green,
+                      type: GFToggleType.custom,
+                      onChanged: checkBoxCallBack,
+                    )
+                  ],
+                ),
+              )
+            ],
+            context: context,
+            position: _getRelativeRect(widgetKey),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(

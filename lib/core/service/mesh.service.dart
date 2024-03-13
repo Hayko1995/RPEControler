@@ -187,8 +187,7 @@ void onStart(ServiceInstance service) async {
       }
     }
 
-    // test using external plugin
-    // initMesh();
+    initMesh();
     // updateMesh();
     // Future<String> data1 = updateMesh();
     // Future<String> data = getData();

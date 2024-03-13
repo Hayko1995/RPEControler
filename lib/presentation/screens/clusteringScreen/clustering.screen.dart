@@ -103,6 +103,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                             for (var item in _people[0].items) {
                               clusterItems.add(item.macAddress);
                             }
+                            //todo add clustering function
                             meshNotifier.insertCluster(newClusterName,
                                 'unknown', clusterItems.join(","));
                             setState(() {
