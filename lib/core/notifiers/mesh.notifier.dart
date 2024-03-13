@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/core/service/mesh.service.dart';
 
 final DatabaseService _databaseService = DatabaseService();
 
@@ -51,11 +50,21 @@ class MeshNotifier with ChangeNotifier {
 
   Future getNetworks() async {
     networks = await _databaseService.getAllNetworks();
-    notifyListeners();
+    return networks;
   }
 
   Future getClusters() async {
     _clusters = await _databaseService.getAllClusters();
+  }
+
+  Future sendClusterCommand() async {
+    //todo add cluster command
+  }
+
+  Future sendActivationCommand(command, netId) async {
+    final MeshAPI meshAPI = MeshAPI();
+    String url = await _databaseService.getUrlByNetId([netId]);
+    meshAPI.sendActivationCommand(command, url);
   }
 
   Future predefines(preDef) async {

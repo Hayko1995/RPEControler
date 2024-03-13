@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 class RpeDevice {
   late String nodeNumber;
@@ -22,6 +21,7 @@ class RpeDevice {
   //2 control dimmer
   //3 indicator button
   // indicator dimmer
+  late String netId;
 
   final int dNum;
   final int dType;
@@ -71,6 +71,7 @@ class RpeDevice {
       this.deviceType = 5,
       this.isActivation = 0,
       this.nodeSubType = '',
+      this.netId = '',
       this.location = '',
       this.stackType = '',
       this.numChild = '',
@@ -130,6 +131,7 @@ class RpeDevice {
       'nodeNumber': nodeNumber,
       'nodeType': nodeType,
       'nodeSubType': nodeSubType,
+      'netId': netId,
       'deviceType': deviceType,
       'location': location,
       'isActivation': isActivation,
@@ -191,6 +193,7 @@ class RpeDevice {
     return RpeDevice(
         nodeNumber: map['nodeNumber'] ?? "",
         nodeType: map['nodeType'] ?? "",
+        netId: map['netId'] ?? '',
         deviceType: map['deviceType'] ?? 0,
         nodeSubType: map['nodeSubType'] ?? "",
         isActivation: map['isActivation'] ?? 0,
@@ -255,7 +258,7 @@ class RpeDevice {
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.
   @override
-  String toString() => '''Device(nodeNumber: $nodeNumber, 
+  String toString() => '''Device(nodeNumber: $nodeNumber, netId: $netId,
   isActivation: $isActivation, deviceType: $deviceType,  nodeType: $nodeType,  nodeSubType: $nodeSubType,
     location: $location, stackType $stackType, numChild $numChild,
          status $status, parentNodeNum $parentNodeNum, macAddress $macAddress,
@@ -265,21 +268,22 @@ class RpeDevice {
 class RpeNetwork {
   final String name;
   final int num;
-  final int domain;
+  late int domain;
+  late String preSetDomain;
   final int preDef;
   final String macAddr;
-  final String ipAddr;
+  late String ipAddr;
   final String url;
   final String key;
-  final int numOfNodes;
+  late int numOfNodes;
   final int nRT; // num of RTs in networks
   final int nRTCh; // num of children per RT (max 10 RT)
   final int nEDs; // num of EDs in network
   final int netT; // network type
-  final int netId; // network Id
+  late String netId; // network Id
   final int netPId; //TODO what is this
   final int netPT; //TODO what is this
-  final int nTim; // total of timers defined in a network
+  late int nTim; // total of timers defined in a network
   final int nThr; // total of thresholds defined in a network
   final int nCl; // number of clusters
   final int nMCl;
@@ -291,6 +295,7 @@ class RpeNetwork {
       {this.name = "",
       this.num = 0,
       this.domain = 0,
+      this.preSetDomain = '',
       this.preDef = 0,
       this.macAddr = "",
       this.ipAddr = "",
@@ -301,7 +306,7 @@ class RpeNetwork {
       this.nRTCh = 0,
       this.nEDs = 0,
       this.netT = 0,
-      this.netId = 0,
+      this.netId = '',
       this.netPId = 0,
       this.netPT = 0,
       this.nTim = 0,
@@ -319,6 +324,7 @@ class RpeNetwork {
       'name': name,
       'num': num,
       'domain': domain,
+      "preSetDomain": preSetDomain,
       'preDef': preDef,
       'macAddr': macAddr,
       'ipAddr': ipAddr,
@@ -347,6 +353,7 @@ class RpeNetwork {
       name: map['name'] ?? "",
       num: map['num'] ?? "",
       domain: map['domain'] ?? "",
+      preSetDomain: map['preSetDomain'] ?? "",
       preDef: map['preDef'] ?? "",
       macAddr: map['macAddr'] ?? "",
       ipAddr: map['ipAddr'] ?? "",
@@ -357,7 +364,7 @@ class RpeNetwork {
       nRTCh: map['nRTCh'],
       nEDs: map['nEDs'],
       netT: map['netT'],
-      netId: map['netId'],
+      netId: map['netId'] ?? '',
       netPId: map['netPId'],
       netPT: map['netPT'],
       nTim: map['nTim'],
@@ -379,7 +386,8 @@ class RpeNetwork {
   // each breed when using the print statement.
   //TODO add fields
   @override
-  String toString() => '''RPEDevice(name: $name, ip: $num, type: $domain''';
+  String toString() =>
+      '''RPEDevice(name: $name, ip: $num, type: $domain', netID: $netId, 'preSetDomain' $preSetDomain''';
 }
 
 class Cluster {

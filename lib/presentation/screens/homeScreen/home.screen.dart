@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';

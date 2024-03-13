@@ -93,8 +93,8 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 }
 
 Future<String> getData() async {
-  final MeshAPI _mashAPI = MeshAPI();
-  var products = await _mashAPI.meshUpdate();
+  final MeshAPI _meshAPI = MeshAPI();
+  var products = await _meshAPI.meshUpdate();
   if (products != Null) {
     var data = MeshModel.fromJson(jsonDecode(products)).data;
     String jsonUser = jsonEncode(data);
@@ -104,8 +104,8 @@ Future<String> getData() async {
 }
 
 Future initMesh() async {
-  final MeshAPI mashAPI = MeshAPI();
-  await mashAPI.meshE1();
+  final MeshAPI meshAPI = MeshAPI();
+  await meshAPI.meshE1();
   // logger.i("send E1");
 }
 

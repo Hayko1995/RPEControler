@@ -1,8 +1,7 @@
 import 'package:path/path.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
-import 'package:rpe_c/core/api/mesh.api.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:rpe_c/core/models/db.models.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   static final DatabaseService _databaseService = DatabaseService._internal();
@@ -43,6 +42,7 @@ class DatabaseService {
       'name TEXT, '
       'num INTEGER, '
       'domain INTEGER,'
+      'preSetDomain Text,'
       'preDef INTEGER,'
       'ipAddr TEXT,'
       'key TEXT,'
@@ -51,7 +51,7 @@ class DatabaseService {
       'nRTCh INTEGER,'
       'nEDs INTEGER,'
       'netT INTEGER,'
-      'netId INTEGER,'
+      'netId TEXT,'
       'netPId INTEGER,'
       'netPT INTEGER,'
       'nTim INTEGER,'
@@ -70,6 +70,7 @@ class DatabaseService {
         'dName  TEXT,'
         'isActivation  INTEGER,'
         'dNetNum TEXT,'
+        'netId TEXT,'
         'deviceType INTEGER,'
         'dNum INTEGER,'
         'dType INTEGER,'
@@ -190,6 +191,15 @@ class DatabaseService {
         maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
 
+  Future getUrlByNetId(List<String> ids) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db
+        .query(AppConstants.networkTable, where: 'netId = ?', whereArgs: ids);
+    return List.generate(
+            maps.length, (index) => RpeNetwork.fromMap(maps[index]))[0]
+        .url;
+  }
+
   Future clearAllDevice() async {
     final db = await _databaseService.database;
     String tableName = AppConstants.deviceTable;
@@ -238,6 +248,12 @@ class DatabaseService {
     final db = await _databaseService.database;
     await db.update(AppConstants.deviceTable, device.toMap(),
         where: 'macAddress = ?', whereArgs: [device.macAddress]);
+  }
+
+  Future updateNetwork(RpeNetwork network) async {
+    final db = await _databaseService.database;
+    await db.update(AppConstants.networkTable, network.toMap(),
+        where: 'url = ?', whereArgs: [network.url]);
   }
 
   // Future<CR> getCR(int id) async {

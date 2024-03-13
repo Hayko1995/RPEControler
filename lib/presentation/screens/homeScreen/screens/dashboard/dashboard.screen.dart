@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 
@@ -48,6 +49,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     List<Widget> sensorList = [];
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
     List<RpeNetwork> data = meshNotifier.networks!;
+    logger.w(data);
     int airQualityNumber = 0;
     for (var i = 0; i < data.length; i++) {
       if (data.elementAt(i).preDef == AppConstants.airQuality) {

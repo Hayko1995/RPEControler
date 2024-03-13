@@ -1,12 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/api.routes.dart';
-import 'package:logger/logger.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 
 class MeshAPI {
   final client = http.Client();
@@ -42,6 +39,19 @@ class MeshAPI {
       return body;
     } catch (e) {
       return Null;
+    }
+  }
+
+  Future sendActivationCommand(command, url) async {
+    try {
+      final Uri uri = Uri.parse(url);
+      final http.Response response =
+          await client.post(uri, headers: headers, body: command);
+      final body = response.body;
+      //todo add response analizing function
+      logger.i(body);
+    } catch (e) {
+      logger.e("command is faled");
     }
   }
 
@@ -81,7 +91,9 @@ class MeshAPI {
   }
 
   Future meshE1() async {
+    //todo Remove from API and move to provider
     List<RpeNetwork> networks = await _databaseService.getAllNetworks();
+    String netId = '';
 
     String command = "E1FF060001FA";
     List<String> lint = [];
@@ -131,15 +143,19 @@ class MeshAPI {
       if (hr < 10) _hr = '0$hr';
       if (min < 10) _min = '0$min';
       if (sec < 10) _sec = '0$sec';
+      netId = lint[10];
 
-      RpeNetwork(
-        numOfNodes: int.parse(lint[3]),
-        domain: int.parse(lint[8]),
-        netId: (int.parse(lint[12]) * 65536) +
-            (int.parse(lint[13]) * 256) +
-            int.parse(lint[14]),
-        ipAddr: network.url,
-      );
+      // RpeNetwork newNetwork = RpeNetwork(
+      network.numOfNodes = int.parse(lint[3]);
+      network.domain = int.parse(lint[8]);
+      network.preSetDomain = lint[9];
+      network.netId = netId;
+      network.nTim = (int.parse(lint[12]) * 65536) +
+          (int.parse(lint[13]) * 256) +
+          int.parse(lint[14]);
+      network.ipAddr = network.url;
+      // );
+      await _databaseService.updateNetwork(network);
 
       int number;
       for (int i = 16; i <= length - 33; i = i + 16) {
@@ -158,6 +174,7 @@ class MeshAPI {
         device.parentNodeNum = lint[i + 7];
         device.isActivation = 1; // add
         device.image = AppConstants.images["00"];
+        device.netId = netId;
         if (AppConstants.images.containsKey(lint[i + 1])) {
           device.image = AppConstants.images[lint[i + 1]];
         }
