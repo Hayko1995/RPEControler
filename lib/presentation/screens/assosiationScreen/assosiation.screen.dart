@@ -46,11 +46,14 @@ class AssociationScreenState extends State<AssociationScreen> {
   List items = [];
 
   void _updateData() async {
-    List<RpeDevice> devices = await _databaseService.getAllDevices(); //TODO change
+    List<RpeDevice> devices =
+        await _databaseService.getAllDevices(); //TODO change
     for (int i = 0; i < devices.length; i++) {
       items.add(
         Item(
             name: devices[i].name,
+            netId: devices[i].netId,
+            nodeNumber: devices[i].nodeNumber,
             macAddress: devices[i].macAddress,
             imageProvider: AssetImage(devices[i].image)),
       );

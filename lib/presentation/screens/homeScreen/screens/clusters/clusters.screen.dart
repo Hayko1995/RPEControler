@@ -1,18 +1,10 @@
 //TODO fix designer responsive when kayboard come out
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
-import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
-import 'package:rpe_c/presentation/screens/preDefinesScreen/preDefines.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
-
-import 'package:rpe_c/presentation/widgets/predefine.widgets.dart';
 
 class ClustersScreen extends StatefulWidget {
   const ClustersScreen({super.key});
@@ -21,7 +13,7 @@ class ClustersScreen extends StatefulWidget {
   ClustersScreenState createState() => ClustersScreenState();
 }
 
-Widget widget(context, cluster,  widgetKey) {
+Widget widget(context, cluster, widgetKey) {
   final Function(bool?) toggleCheckboxState;
 
   return GestureDetector(
@@ -44,7 +36,8 @@ Widget widget(context, cluster,  widgetKey) {
                 spreadRadius: 2,
                 blurRadius: 5)
           ]),
-    child: Center(child: Text(cluster.clusterName)),),
+      child: Center(child: Text(cluster.clusterName)),
+    ),
   );
 }
 
@@ -79,7 +72,7 @@ class ClustersScreenState extends State<ClustersScreen> {
     List<Widget> sensorList = [];
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
     List<Cluster> data = meshNotifier.getAllClusters!;
-    logger.i(data);
+    // logger.i(data);
     for (var i = 0; i < data.length; i++) {
       sensorList.add(widget(context, data.elementAt(i), GlobalKey()));
 

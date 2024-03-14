@@ -142,9 +142,9 @@ class _QRScanScreenState extends State<QRScanScreen> {
       String networkType = qrData['type'];
 
       //TODO change https://pub.dev/packages/wifi_iot/example use this exmple
-      logger.w(data);
-      logger.w(ssid);
-      logger.w(password);
+      // logger.w(data);
+      // logger.w(ssid);
+      // logger.w(password);
 
       controller.dispose();
       Navigator.of(context).pushReplacementNamed(

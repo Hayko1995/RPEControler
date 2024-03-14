@@ -113,7 +113,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
         if (value.first == 123) {
           try {
-            logger.w(utf8.decode(value));
+            // logger.w(utf8.decode(value));
             Map<String, dynamic> map = jsonDecode(utf8.decode(value));
             String ip = map['IP'];
             var _ip = "";

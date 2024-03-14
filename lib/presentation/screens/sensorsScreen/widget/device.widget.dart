@@ -12,7 +12,7 @@ Widget sensorWidget(context, data, widgetKey) {
 
   final value = data.sensorVal.split(',');
   int deviceType = data.deviceType;
-  logger.i(data);
+  // logger.i(data);
 
   final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
 

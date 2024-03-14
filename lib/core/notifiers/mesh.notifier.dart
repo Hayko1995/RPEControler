@@ -57,8 +57,14 @@ class MeshNotifier with ChangeNotifier {
     _clusters = await _databaseService.getAllClusters();
   }
 
-  Future sendClusterCommand() async {
+  Future sendClusterCommand(
+      singleNet, netId, clusterId, clusterNodes) async {
     //todo add cluster command
+
+    final MeshAPI meshAPI = MeshAPI();
+    String url = await _databaseService.getUrlByNetId([netId]);
+    meshAPI.createCluster(
+        singleNet, netId, clusterId, clusterNodes, url); //todo Ask Harry
   }
 
   Future sendActivationCommand(command, netId) async {
@@ -89,8 +95,11 @@ class MeshNotifier with ChangeNotifier {
     _databaseService.updateDevice(device);
   }
 
-  insertCluster(clusterName, type, items) async {
-    await _databaseService.insertCluster(
-        Cluster(clusterName: clusterName, type: type, devices: items));
+  insertCluster(clusterId, clusterName, type, items) async {
+    await _databaseService.insertCluster(Cluster(
+        clusterId: clusterId,
+        clusterName: clusterName,
+        type: type,
+        devices: items));
   }
 }

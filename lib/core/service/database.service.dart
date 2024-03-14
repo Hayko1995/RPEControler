@@ -117,7 +117,7 @@ class DatabaseService {
 
     await db.execute(
       '''CREATE TABLE $clusterTable(
-        clusterName TEXT PRIMARY KEY, type TEXT, devices TEXT, description TEXT)
+        clusterId INTEGER PRIMARY KEY AUTOINCREMENT, clusterName TEXT, type TEXT, devices TEXT, description TEXT)
     ''',
     );
   }

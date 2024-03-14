@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
+import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/widgets.dart';
-import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 
 class ClusteringScreen extends StatefulWidget {
   final ClusteringArgs clusteringArguments;
@@ -52,6 +51,8 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
           null) {
         items.add(Item(
             name: devices[i].name,
+            netId: devices[i].netId,
+            nodeNumber: devices[i].nodeNumber,
             macAddress: devices[i].macAddress,
             imageProvider: AssetImage(devices[i].image)));
       }
@@ -98,15 +99,35 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
 
                             fieldText.clear();
                             FocusScope.of(context).unfocus(); //hide kayboard
-                            logger.i(_people[0].items.length);
+                            // logger.i(_people[0].items.length);
                             List<String> clusterItems = [];
+                            String clusterNodes = '';
                             for (var item in _people[0].items) {
                               clusterItems.add(item.macAddress);
+                              clusterNodes = clusterNodes + item.nodeNumber;
                             }
-                            //todo add clustering function
-                            meshNotifier.sendClusterCommand();
-                            meshNotifier.insertCluster(newClusterName,
-                                'unknown', clusterItems.join(","));
+                            //todo change to multi network
+                            bool singleNet = true;
+                            List<Cluster> allClusters =
+                                meshNotifier.getAllClusters!;
+                            int clusterId = 0;
+                            if (allClusters.length == 0) {
+                              clusterId = 0;
+                            } else {
+                              clusterId = allClusters.last.clusterId;
+                            }
+                            clusterId = clusterId + 1;
+
+                            meshNotifier.sendClusterCommand(
+                                singleNet,
+                                _people[0].items[0].netId,
+                                clusterId,
+                                clusterNodes);
+                            meshNotifier.insertCluster(
+                                clusterId,
+                                newClusterName,
+                                'unknown',
+                                clusterItems.join(","));
                             setState(() {
                               newClusterName = '';
                             });

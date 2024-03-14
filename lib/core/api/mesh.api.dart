@@ -42,6 +42,47 @@ class MeshAPI {
     }
   }
 
+  Future createCluster(
+      singleNet, netNumber, clusterId, String clusterNodes, url) async {
+    String command = "";
+    //todo add problem response failure situation
+    if (singleNet) {
+      String singleNetCommand = "01";
+      command = '9101';
+
+      String nodeNumber = "00";
+      String clusterType = "00"; // need to understand
+      String clusterStatus = "00"; //?
+      String multiClusterId = "00"; //?
+      double length = clusterNodes.length / 2.round();
+      String numberOfNodes = length.toInt().toRadixString(16);
+      length = (command.length + 2) / 2.round();
+      String messageLength = length.toInt().toRadixString(16); //todo fix
+
+      command = command +
+          messageLength +
+          nodeNumber +
+          netNumber +
+          singleNetCommand +
+          clusterId.toString() +
+          clusterType +
+          clusterStatus +
+          multiClusterId +
+          numberOfNodes +
+          clusterNodes;
+    }
+
+    final Uri uri = Uri.parse(url);
+    try {
+      final http.Response response =
+          await client.post(uri, headers: headers, body: command);
+      final body = response.body;
+      return body;
+    } catch (e) {
+      return Null;
+    }
+  }
+
   Future sendActivationCommand(command, url) async {
     try {
       final Uri uri = Uri.parse(url);
@@ -49,7 +90,7 @@ class MeshAPI {
           await client.post(uri, headers: headers, body: command);
       final body = response.body;
       //todo add response analizing function
-      logger.i(body);
+      // logger.i(body);
     } catch (e) {
       logger.e("command is faled");
     }
@@ -116,16 +157,16 @@ class MeshAPI {
       }
 
       // if (kDebugMode) {
-      print(lint);
-      print("${lint[0]} command type E1");
-      print("${lint[1]}  ${lint[2]} data Langht");
-      print("${lint[3]} number of nodes ");
-      print("${lint[4]}${lint[5]}${lint[6]}${lint[7]} rpe net id ");
-      print("${lint[8]} domain type ");
-      print("${lint[9]} preset domain ");
-      print("${lint[10]} network number ");
-      print("${lint[11]}${lint[12]}${lint[13]}${lint[14]} CR reported time");
-      print("${lint[15]} reserved ");
+      // print(lint);
+      // print("${lint[0]} command type E1");
+      // print("${lint[1]}  ${lint[2]} data Langht");
+      // print("${lint[3]} number of nodes ");
+      // print("${lint[4]}${lint[5]}${lint[6]}${lint[7]} rpe net id ");
+      // print("${lint[8]} domain type ");
+      // print("${lint[9]} preset domain ");
+      // print("${lint[10]} network number ");
+      // print("${lint[11]}${lint[12]}${lint[13]}${lint[14]} CR reported time");
+      // print("${lint[15]} reserved ");
       // }
       String netNum = lint[10];
       length = int.parse("0x${lint[1]}${lint[2]}");
@@ -203,7 +244,7 @@ class MeshAPI {
             lint[i + 13] +
             lint[i + 14] +
             lint[i + 15];
-        print(device);
+        // print(device);
         await _databaseService.insertDevice(device);
         // }
       }

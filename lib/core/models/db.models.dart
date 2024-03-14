@@ -391,13 +391,15 @@ class RpeNetwork {
 }
 
 class Cluster {
+  late int clusterId;
   late String clusterName;
   late String type;
   late String devices;
   late String description;
 
   Cluster(
-      {required this.clusterName,
+      {required this.clusterId,
+      required this.clusterName,
       required this.devices,
       required this.type,
       this.description = ''});
@@ -406,6 +408,7 @@ class Cluster {
   // columns in the database.
   Map<String, dynamic> toMap() {
     return {
+      'clusterId': clusterId,
       'clusterName': clusterName,
       'devices': devices,
       'type': type,
@@ -415,6 +418,7 @@ class Cluster {
 
   factory Cluster.fromMap(Map<String, dynamic> map) {
     return Cluster(
+      clusterId: map['clusterId'] ?? 0,
       clusterName: map['clusterName'] ?? "",
       type: map['type'] ?? "",
       devices: map['devices'] ?? "",
@@ -431,6 +435,6 @@ class Cluster {
   // each breed when using the print statement.
   @override
   String toString() =>
-      '''Cluster(clusterName: $clusterName, devices: $devices,  
+      '''Cluster(clusterName: ClusterId $clusterId,  $clusterName, devices: $devices,  
          description: $description )''';
 }
