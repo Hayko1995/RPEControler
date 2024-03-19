@@ -48,7 +48,7 @@ class MeshAPI {
     //todo add problem response failure situation
     if (singleNet) {
       String singleNetCommand = "01";
-      command = '9101';
+      command = '9100';
 
       String nodeNumber = "00";
       String clusterType = "00"; // need to understand
@@ -138,21 +138,22 @@ class MeshAPI {
 
     String command = "E1FF060001FA";
     List<String> lint = [];
+    late http.Response response;
     RpeNetwork network;
     for (network in networks) {
       final Uri uri = Uri.parse(network.url);
       int length = 0;
       try {
-        final http.Response response =
-            await client.post(uri, headers: headers, body: command);
+        response = await client.post(uri, headers: headers, body: command);
         final body = response.body;
         for (int i = 0; i < body.length; i = i + 2) {
           lint.add(body.substring(i, i + 2));
         }
-        if (response.body.length < 2) {
-          continue;
-        }
       } catch (e) {
+        continue;
+      }
+
+      if (response.body.length < 2) {
         continue;
       }
 
@@ -188,7 +189,7 @@ class MeshAPI {
 
       // RpeNetwork newNetwork = RpeNetwork(
       network.numOfNodes = int.parse(lint[3]);
-      network.domain = int.parse(lint[8]);
+      network.domain = int.parse("0x${lint[8]}");
       network.preSetDomain = lint[9];
       network.netId = netId;
       network.nTim = (int.parse(lint[12]) * 65536) +

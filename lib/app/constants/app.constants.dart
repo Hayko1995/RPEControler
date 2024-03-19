@@ -25,6 +25,22 @@ class AppConstants {
   static List<String> buttonSensor = ['06'];
   static List<String> dimmerSensor = ['06'];
 
+  static const Map<String, dynamic> activation = {
+    "On": "01",
+    "Off": "02",
+    "AllOn": "05",
+    "AllOff": "0A",
+    "Up": "10",
+    "Down": "20",
+    "AllUp": "50",
+    "AllDown": "A0",
+    "EnableActuation": "04",
+    "DisableActuation": "08",
+    "EnableAllActuation": "14",
+    "DisableAllActuation": "18",
+    "setDimmer": "1111"
+  };
+
   static const Map<String, dynamic> deviceTypes = {
     'devType': {
       1: {
