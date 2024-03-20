@@ -1,6 +1,7 @@
 //TODO fix designer responsive when kayboard come out
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rpe_c/app/constants/protocol/protocol.cluster.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
@@ -15,6 +16,7 @@ class ClustersScreen extends StatefulWidget {
 
 Widget widget(context, cluster, widgetKey) {
   final Function(bool?) toggleCheckboxState;
+  final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
 
   return GestureDetector(
     key: widgetKey,
@@ -24,7 +26,37 @@ Widget widget(context, cluster, widgetKey) {
         arguments: ClusterControlArgs(cluster: cluster),
       );
     },
-    onLongPress: () {},
+    onLongPress: () {
+      showMenu(
+        items: <PopupMenuEntry>[
+          PopupMenuItem(
+            //value: this._index,
+            child: Column(
+              children: [
+                InkWell(
+                  child: const Text("Delete"),
+                  onTap: () {
+                    MeshCluster meshCluster = MeshCluster();
+                    // print(cluster);
+                    // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
+                    String clusterId =  cluster.clusterId.toString();
+                    if (clusterId.length<2){
+                      clusterId = '0$clusterId';
+                    }
+
+                    String command = meshCluster.sendDeleteCluster(cluster.netNumber, clusterId);
+                    meshNotifier.sendCommand(command, cluster.netNumber);
+                  },
+                )
+                // OutlinedButton(onPressed: buttonCall, child: Text("data"))
+              ],
+            ),
+          )
+        ],
+        context: context,
+        position: _getRelativeRect(widgetKey),
+      );
+    },
     child: Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -32,7 +64,10 @@ Widget widget(context, cluster, widgetKey) {
           boxShadow: [
             BoxShadow(
                 offset: const Offset(0, 5),
-                color: Theme.of(context).primaryColor.withOpacity(.2),
+                color: Theme
+                    .of(context)
+                    .primaryColor
+                    .withOpacity(.2),
                 spreadRadius: 2,
                 blurRadius: 5)
           ]),
@@ -43,7 +78,7 @@ Widget widget(context, cluster, widgetKey) {
 
 class ClustersScreenState extends State<ClustersScreen> {
   final PageController _pageController =
-      PageController(viewportFraction: 0.8, initialPage: 0);
+  PageController(viewportFraction: 0.8, initialPage: 0);
   double _page = 0;
 
   Color caughtColor = Colors.grey;
@@ -68,7 +103,7 @@ class ClustersScreenState extends State<ClustersScreen> {
     super.initState();
   }
 
-  List<Widget> getSensors() {
+  List<Widget> getCluster() {
     List<Widget> sensorList = [];
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
     List<Cluster> data = meshNotifier.getAllClusters!;
@@ -85,8 +120,14 @@ class ClustersScreenState extends State<ClustersScreen> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
@@ -100,9 +141,22 @@ class ClustersScreenState extends State<ClustersScreen> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
-                  children: getSensors()))
+                  children: getCluster()))
         ],
       ),
     );
   }
+}
+
+RelativeRect _getRelativeRect(GlobalKey key) {
+  return RelativeRect.fromSize(_getWidgetGlobalRect(key), const Size(200, 200));
+}
+
+Rect _getWidgetGlobalRect(GlobalKey key) {
+  final RenderBox renderBox =
+  key.currentContext!.findRenderObject() as RenderBox;
+  var offset = renderBox.localToGlobal(Offset.zero);
+  debugPrint('Widget position: ${offset.dx} ${offset.dy}');
+  return Rect.fromLTWH(offset.dx / 3.1, offset.dy * 1.05, renderBox.size.width,
+      renderBox.size.height);
 }

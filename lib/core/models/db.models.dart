@@ -395,6 +395,7 @@ class Cluster {
   late String clusterName;
   late String type;
   late String devices;
+  late String netNumber;
   late String description;
 
   Cluster(
@@ -402,6 +403,7 @@ class Cluster {
       required this.clusterName,
       required this.devices,
       required this.type,
+      required this.netNumber,
       this.description = ''});
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
@@ -412,6 +414,7 @@ class Cluster {
       'clusterName': clusterName,
       'devices': devices,
       'type': type,
+      'netNumber': netNumber,
       'description': description,
     };
   }
@@ -422,6 +425,7 @@ class Cluster {
       clusterName: map['clusterName'] ?? "",
       type: map['type'] ?? "",
       devices: map['devices'] ?? "",
+      netNumber: map['netNumber'] ?? "",
       description: map['description'] ?? "",
     );
   }
@@ -436,5 +440,5 @@ class Cluster {
   @override
   String toString() =>
       '''Cluster(clusterName: ClusterId $clusterId,  $clusterName, devices: $devices,  
-         description: $description )''';
+         netNumber: $netNumber, description: $description )''';
 }

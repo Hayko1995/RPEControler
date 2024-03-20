@@ -159,6 +159,7 @@ void onStart(ServiceInstance service) async {
 
   // bring to foreground
 
+  initMesh();
   Timer.periodic(const Duration(milliseconds: AppConstants.uiUpdateInterval),
       (timer) async {
     if (service is AndroidServiceInstance) {
@@ -186,7 +187,7 @@ void onStart(ServiceInstance service) async {
         );
       }
     }
-    initMesh();
+
     // updateMesh();
     // Future<String> data1 = updateMesh();
     // Future<String> data = getData();

@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/app/constants/protocol/protocol.cluster.dart';
 import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
@@ -46,31 +47,18 @@ class MeshAPI {
       singleNet, netNumber, clusterId, String clusterNodes, url) async {
     String command = "";
     //todo add problem response failure situation
-    if (singleNet) {
-      String singleNetCommand = "01";
-      command = '9100';
-
-      String nodeNumber = "00";
-      String clusterType = "00"; // need to understand
-      String clusterStatus = "00"; //?
-      String multiClusterId = "00"; //?
-      double length = clusterNodes.length / 2.round();
-      String numberOfNodes = length.toInt().toRadixString(16);
-      length = (command.length + 2) / 2.round();
-      String messageLength = length.toInt().toRadixString(16); //todo fix
-
-      command = command +
-          messageLength +
-          nodeNumber +
-          netNumber +
-          singleNetCommand +
-          clusterId.toString() +
-          clusterType +
-          clusterStatus +
-          multiClusterId +
-          numberOfNodes +
-          clusterNodes;
-    }
+    // if (singleNet) {
+    // String singleNetCommand = "01";
+    // command = '9100';
+    //
+    String clusterType = "00"; // need to understand
+    String clusterStatus = "00"; //?
+    String multiClusterId = "0000"; //?
+    MeshCluster meshCluster = MeshCluster();
+    command = meshCluster.sendSetSingleNetCluster(netNumber, clusterId,
+        clusterType, clusterStatus, multiClusterId, clusterNodes);
+    logger.i(command);
+    // }
 
     final Uri uri = Uri.parse(url);
     try {
@@ -96,7 +84,7 @@ class MeshAPI {
     }
   }
 
-  Future sendToMesh(pktHdr) async {
+  Future sendToMesh(pktHdr, url) async {
     List<String> lint = [];
     // List<String> aa = [];
 
@@ -109,7 +97,7 @@ class MeshAPI {
     // }
     // var command = aa.join(" " );
     //todo add problem response failure situation
-    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
+    final Uri uri = Uri.parse(url);
 
     try {
       final http.Response response =
@@ -145,7 +133,9 @@ class MeshAPI {
       int length = 0;
       try {
         response = await client.post(uri, headers: headers, body: command);
-        final body = response.body;
+        var body = response.body;
+        body =
+            "e100500312345678ffffff000000000000120000000010ff00158d000797f455011a00000100010000158d0000506820021a00000100010000158d0000506830031a00000100010000158d000050683b".toUpperCase();
         for (int i = 0; i < body.length; i = i + 2) {
           lint.add(body.substring(i, i + 2));
         }
@@ -187,7 +177,7 @@ class MeshAPI {
       if (sec < 10) _sec = '0$sec';
       netId = lint[10];
 
-      // RpeNetwork newNetwork = RpeNetwork(
+
       network.numOfNodes = int.parse(lint[3]);
       network.domain = int.parse("0x${lint[8]}");
       network.preSetDomain = lint[9];
@@ -196,11 +186,11 @@ class MeshAPI {
           (int.parse(lint[13]) * 256) +
           int.parse(lint[14]);
       network.ipAddr = network.url;
-      // );
       await _databaseService.updateNetwork(network);
 
       int number;
-      for (int i = 16; i <= length - 33; i = i + 16) {
+
+      for (int i = 32; i <= length - 16; i = i + 16) {
         number = (i / 16).round();
         RpeDevice device = RpeDevice();
         device.dNetNum = netNum;
@@ -314,8 +304,8 @@ class MeshAPI {
           device.status = nodeStatus;
           await _databaseService.updateDevice(device);
         }
-      } catch (e) {
-        logger.e(e);
+      } catch (e, stacktrace) {
+        logger.e(stacktrace);
         return Null;
       }
     }

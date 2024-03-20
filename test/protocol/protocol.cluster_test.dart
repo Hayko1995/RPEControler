@@ -54,12 +54,34 @@ void main() {
     expect(command, "91013101010101010101010101010101010101");
   });
 
-  test('sendSetTimer', () {
-    //TODO need to test
+  test('sendSetSingleNetCluster', () {
+    String singleNetActivationCommand = "9100";
+    String messageLengthFor2device = "0E";
+    String nodeNumber = "00";
 
-    String command = meshTimer.sendSetSingleNetCluster(
-        "01", "01", "01", "01", "01", "01", "01", "01", "01", "01", "01", "01");
-    expect(command, "91011601010001010101010101010101");
+    String singleNet = "01";
+    //TODO need to test
+    String networkNumber = "00";
+    String clusterId = '00';
+    String clusterType = '00';
+    String status = '00';
+    String multiClusterId = "0000";
+    String numberOfNodes = '02';
+    String clusterNodes = "0102";
+
+    String command = meshTimer.sendSetSingleNetCluster(networkNumber, clusterId,
+        clusterType, status, multiClusterId, clusterNodes);
+    expect(command.substring(0, 4), singleNetActivationCommand);
+    expect(command.substring(4, 6), messageLengthFor2device);
+    expect(command.substring(6, 8), nodeNumber);
+    expect(command.substring(8, 10), networkNumber);
+    expect(command.substring(10, 12), singleNet);
+    expect(command.substring(12, 14), clusterId);
+    expect(command.substring(14, 16), clusterType);
+    expect(command.substring(16, 18), status);
+    expect(command.substring(18, 22), multiClusterId);
+    expect(command.substring(22, 24), numberOfNodes);
+    expect(command.substring(24, 28), clusterNodes);
   });
 
   test('sendTimerCommandCuster', () {
@@ -70,11 +92,11 @@ void main() {
     expect(command, "9192220101010101010101010101010101");
   });
 
-  test('sendSetTimer', () {
+  test('sendSetMultinetCluster', () {
     //TODO need to test
 
     String command = meshTimer.sendSetMultinetCluster(
-        "01", "01", "01", "01", "01", "01", "01", "01", "01", "01", "01", "01");
-    expect(command, "91011601010001010101010101010101");
+        "01", "01", "01", "01", "01", "01", "01", "01");
+    expect(command, "91011601010201010101010101");
   });
 }

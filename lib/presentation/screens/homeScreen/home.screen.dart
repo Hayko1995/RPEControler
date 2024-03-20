@@ -61,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .insertNetwork(RpeNetwork(url: ApiRoutes.esp32Url, preDef: 1));
 
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+    meshNotifier.sendE1();
     meshNotifier.getNetworks();
     Future.delayed(const Duration(milliseconds: 3000), () {
       devices = meshNotifier.networks!;

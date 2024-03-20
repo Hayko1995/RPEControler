@@ -9,8 +9,9 @@ class MeshCluster {
   final deleteCluster = "40";
   final deleteAllCluster = "C0";
   final syncClusters = "08";
+  final nodeNumber = '00';
 
-  String sendEnableAllClusters(nodeNumber, networkNumber, {clusterId = '00'}) {
+  String sendEnableAllClusters(networkNumber, {clusterId = '00'}) {
     String messageLength = "06";
     String subcommand = '50';
     String command = cluster +
@@ -23,7 +24,7 @@ class MeshCluster {
     return command;
   }
 
-  String sendDisableAllCluster(nodeNumber, networkNumber, {clusterId = '00'}) {
+  String sendDisableAllCluster(networkNumber, {clusterId = '00'}) {
     String messageLength = "06";
     String subcommand = 'A0';
     String command = cluster +
@@ -35,7 +36,7 @@ class MeshCluster {
     return command;
   }
 
-  String sendDeleteAllCluster(nodeNumber, networkNumber, {clusterId = '00'}) {
+  String sendDeleteAllCluster(networkNumber, {clusterId = '00'}) {
     String messageLength = "06";
     String deleteAllTimers = "C0";
     String command = cluster +
@@ -47,7 +48,7 @@ class MeshCluster {
     return command;
   }
 
-  String sendSyncClusters(nodeNumber, networkNumber, {clusterId = '00'}) {
+  String sendSyncClusters(networkNumber, {clusterId = '00'}) {
     String messageLength = "06";
     String subcommand = "08";
     String command = cluster +
@@ -59,7 +60,7 @@ class MeshCluster {
     return command;
   }
 
-  String sendEnableCluster(nodeNumber, networkNumber, clusterId) {
+  String sendEnableCluster(networkNumber, clusterId) {
     String messageLength = "06";
     String enableTimer = "10";
     String command = cluster +
@@ -71,7 +72,7 @@ class MeshCluster {
     return command;
   }
 
-  String sendDisableCluster(nodeNumber, networkNumber, clusterId) {
+  String sendDisableCluster(networkNumber, clusterId) {
     String messageLength = "20";
     String subcommand = "10";
     String command = cluster +
@@ -84,7 +85,6 @@ class MeshCluster {
   }
 
   String sendDeleteCluster(
-    nodeNumber,
     networkNumber,
     clusterId,
   ) {
@@ -100,7 +100,6 @@ class MeshCluster {
   }
 
   String sendClusterOn(
-    nodeNumber,
     networkNumber,
     clusterId,
   ) {
@@ -116,7 +115,6 @@ class MeshCluster {
   }
 
   String sendClusterOff(
-    nodeNumber,
     networkNumber,
     clusterId,
   ) {
@@ -133,82 +131,76 @@ class MeshCluster {
 
   String sendSetSingleNetCluster(
       //TODO need to understand set Cluster
-      nodeNumber,
       networkNumber,
-      timerId,
-      param1,
-      param2,
-      timerType,
-      actionType,
-      sensorActionNumber,
-      weekDay,
       clusterId,
-      assocThreshold,
+      clusterType,
       status,
-      {reserved = "00"}) {
-    String subcommand = "01";
-    String messageLength = "16";
+      multiClusterId,
+      clusterNodes) {
+    String subcommand = "00";
+    // String messageLength = "16";
     String singleNet = '01';
+
+    //TODO  cluster id FIX
+    //TODO node Number error  Error
+
+    int length = (clusterNodes.length / 2).round();
+    String numberOfNodes =
+        ((clusterNodes.length / 2).round()).toRadixString(16);
+    if (numberOfNodes.length < 2) {
+      numberOfNodes = "0$numberOfNodes";
+    }
+    int len = 12 + length;
+    String messageLength = len.toRadixString(16).toUpperCase();
+    if (messageLength.length < 2) {
+      messageLength = "0$messageLength";
+    }
 
     String command = cluster +
         subcommand +
-        messageLength +
+        messageLength + //TODO need to fix
         nodeNumber +
         networkNumber +
-        reserved +
-        timerId +
-        param1 +
-        param2 +
-        timerType +
-        actionType +
-        sensorActionNumber +
-        weekDay +
+        singleNet +
         clusterId +
-        assocThreshold +
-        status;
+        clusterType +
+        status +
+        multiClusterId +
+        numberOfNodes +
+        clusterNodes;
     return command;
   }
 
   String sendSetMultinetCluster(
       //TODO need to understand set Cluster
-      nodeNumber,
       networkNumber,
-      timerId,
-      param1,
-      param2,
-      timerType,
-      actionType,
-      sensorActionNumber,
-      weekDay,
       clusterId,
-      assocThreshold,
+      clusterType,
       status,
-      {reserved = "00"}) {
+      multiClusterId,
+      numberOfNodes,
+      clusterNodes) {
     String subcommand = "01";
     String messageLength = "16";
-    String singleNet = '01';
+    String singleNet = '02';
 
     String command = cluster +
         subcommand +
         messageLength +
         nodeNumber +
         networkNumber +
-        reserved +
-        timerId +
-        param1 +
-        param2 +
-        timerType +
-        actionType +
-        sensorActionNumber +
-        weekDay +
+        singleNet +
+        clusterType +
         clusterId +
-        assocThreshold +
-        status;
+        clusterType +
+        status +
+        multiClusterId +
+        numberOfNodes +
+        clusterNodes;
     return command;
   }
 
   String sendSetThresholdCluster(
-      nodeNumber,
       networkNumber,
       thresholdSubCommand,
       thresholdId,
@@ -250,7 +242,6 @@ class MeshCluster {
   }
 
   String sendTimerCommandCuster(
-    nodeNumber,
     networkNumber,
     timerSubCommand,
     timerId,

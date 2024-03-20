@@ -106,27 +106,37 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                               clusterItems.add(item.macAddress);
                               clusterNodes = clusterNodes + item.nodeNumber;
                             }
+                            String netNumber = _people[0].items[0].netId;
                             //todo change to multi network
                             bool singleNet = true;
                             List<Cluster> allClusters =
                                 meshNotifier.getAllClusters!;
-                            int clusterId = 0;
-                            if (allClusters.length == 0) {
-                              clusterId = 0;
+                            int _clusterId = 0;
+                            if (allClusters.isEmpty) {
+                              _clusterId = 0;
                             } else {
-                              clusterId = allClusters.last.clusterId;
+                              _clusterId = allClusters.last.clusterId;
                             }
-                            clusterId = clusterId + 1;
+                            _clusterId = _clusterId + 1;
+                            String clusterId = '';
+                            if (_clusterId > 9) {
+                              clusterId = _clusterId.toString();
+                            } else {
+                              clusterId = '0$_clusterId';
+                            }
 
                             meshNotifier.sendClusterCommand(
                                 singleNet,
                                 _people[0].items[0].netId,
                                 clusterId,
                                 clusterNodes);
+
+                            //TODO Add Response chaker
                             meshNotifier.insertCluster(
-                                clusterId,
+                                _clusterId,
                                 newClusterName,
                                 'unknown',
+                                netNumber,
                                 clusterItems.join(","));
                             setState(() {
                               newClusterName = '';

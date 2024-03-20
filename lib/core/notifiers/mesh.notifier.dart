@@ -37,6 +37,7 @@ class MeshNotifier with ChangeNotifier {
   List<RpeDevice>? _allDevices = [];
 
   List<RpeDevice>? get allDevices => _allDevices;
+  final MeshAPI meshAPI = MeshAPI();
 
   MeshNotifier() {
     Timer.periodic(const Duration(milliseconds: AppConstants.uiUpdateInterval),
@@ -57,8 +58,7 @@ class MeshNotifier with ChangeNotifier {
     _clusters = await _databaseService.getAllClusters();
   }
 
-  Future sendClusterCommand(
-      singleNet, netId, clusterId, clusterNodes) async {
+  Future sendClusterCommand(singleNet, netId, clusterId, clusterNodes) async {
     //todo add cluster command
 
     final MeshAPI meshAPI = MeshAPI();
@@ -67,8 +67,14 @@ class MeshNotifier with ChangeNotifier {
         singleNet, netId, clusterId, clusterNodes, url); //todo Ask Harry
   }
 
-  Future sendActivationCommand(command, netId) async {
+  Future sendE1() async {
+    //todo add cluster command
+
     final MeshAPI meshAPI = MeshAPI();
+    meshAPI.meshE1();
+  }
+
+  Future sendActivationCommand(command, netId) async {
     String url = await _databaseService.getUrlByNetId([netId]);
     meshAPI.sendActivationCommand(command, url);
   }
@@ -95,11 +101,18 @@ class MeshNotifier with ChangeNotifier {
     _databaseService.updateDevice(device);
   }
 
-  insertCluster(clusterId, clusterName, type, items) async {
+  Future sendCommand(String command, String netId) async {
+    String url = await _databaseService.getUrlByNetId([netId]);
+    print(url);
+    meshAPI.sendToMesh(command, url);
+  }
+
+  insertCluster(clusterId, clusterName, type, netNumber, items) async {
     await _databaseService.insertCluster(Cluster(
         clusterId: clusterId,
         clusterName: clusterName,
         type: type,
+        netNumber: netNumber,
         devices: items));
   }
 }
