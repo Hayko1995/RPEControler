@@ -98,7 +98,7 @@ Widget widget(context, cluster, widgetKey) {
     },
     child: Container(
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: cluster.status== 1 ? Colors.white: Colors.grey,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
