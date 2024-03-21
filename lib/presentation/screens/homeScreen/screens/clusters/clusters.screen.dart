@@ -43,7 +43,6 @@ Widget widget(context, cluster, widgetKey) {
                     if (clusterId.length < 2) {
                       clusterId = '0$clusterId';
                     }
-
                     String command = meshCluster.sendDeleteCluster(
                         cluster.netNumber, clusterId);
                     bool response =
@@ -98,7 +97,7 @@ Widget widget(context, cluster, widgetKey) {
     },
     child: Container(
       decoration: BoxDecoration(
-          color: cluster.status== 1 ? Colors.white: Colors.grey,
+          color: cluster.status == 1 ? Colors.white : Colors.grey,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -115,11 +114,18 @@ Widget widget(context, cluster, widgetKey) {
 class ClustersScreenState extends State<ClustersScreen> {
   final PageController _pageController =
       PageController(viewportFraction: 0.8, initialPage: 0);
+
   double _page = 0;
+  bool openDelete = false;
+  bool openDisable = false;
+  bool openEnable = false;
+
+  List networkIds = [];
 
   Color caughtColor = Colors.grey;
 
   List<String> data = [];
+  String dropdownValue = '';
 
   @override
   void initState() {
@@ -139,22 +145,183 @@ class ClustersScreenState extends State<ClustersScreen> {
     super.initState();
   }
 
-  List<Widget> getCluster() {
-    List<Widget> sensorList = [];
-    final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
-    List<Cluster> data = meshNotifier.getAllClusters!;
-    // logger.i(data);
-    for (var i = 0; i < data.length; i++) {
-      sensorList.add(widget(context, data.elementAt(i), GlobalKey()));
-
-      // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
+  List getClusterNetworks(clusters) {
+    networkIds = [];
+    for (Cluster cluster in clusters) {
+      bool res = networkIds.contains(cluster.netNumber);
+      if (!res) {
+        networkIds.add(cluster.netNumber);
+      }
     }
-    setState(() {});
-    return sensorList;
+
+    if (networkIds.length == 0) {
+      networkIds.add("None");
+    }
+
+    return networkIds;
   }
 
   @override
   Widget build(BuildContext context) {
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+    networkIds = getClusterNetworks(meshNotifier.getAllClusters);
+    dropdownValue = networkIds.first;
+
+    List<Widget> getCluster() {
+      List<Widget> sensorList = [];
+      final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
+      List<Cluster> data = meshNotifier.getAllClusters!;
+      // logger.i(data);
+      for (var i = 0; i < data.length; i++) {
+        sensorList.add(widget(context, data.elementAt(i), GlobalKey()));
+
+        // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
+      }
+      setState(() {});
+      return sensorList;
+    }
+
+    Future<void> deleteAll() async {
+      MeshCluster meshCluster = MeshCluster();
+      String command = meshCluster.sendDeleteAllCluster(dropdownValue);
+      bool result = await meshNotifier.sendCommand(command, dropdownValue);
+      if (result) {
+        meshNotifier.deleteClusterViaNetId(dropdownValue);
+      }
+    }
+    Future<void> enableAll() async { //todo
+      MeshCluster meshCluster = MeshCluster();
+      String command = meshCluster.sendDeleteAllCluster(dropdownValue);
+      bool result = await meshNotifier.sendCommand(command, dropdownValue);
+      if (result) {
+        meshNotifier.deleteClusterViaNetId(dropdownValue);
+      }
+    }
+
+    Future<void> disableAll() async { //todo
+      MeshCluster meshCluster = MeshCluster();
+      String command = meshCluster.sendDeleteAllCluster(dropdownValue);
+      bool result = await meshNotifier.sendCommand(command, dropdownValue);
+      if (result) {
+        meshNotifier.deleteClusterViaNetId(dropdownValue);
+      }
+    }
+
+    void deleteAllView() {
+      openDelete = !openDelete;
+      if(openDelete){
+        openDisable = false;
+        openEnable = false;
+      }
+      setState(() {});
+    }
+
+    void disableAllView() {
+      openDisable = !openDisable;
+      if(openDisable){
+        openDelete = false;
+        openEnable = false;
+      }
+      setState(() {});
+    }
+    void enableAllView() {
+      openEnable = !openEnable;
+      if(openEnable){
+        openDelete = false;
+        openDisable = false;
+      }
+      setState(() {});
+    }
+
+    List<Widget> getControl() {
+      List<Widget> controlPage = [];
+      if (openDelete) {
+        controlPage = [];
+        controlPage.add(Row(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DropdownMenu<String>(
+                  initialSelection: networkIds.first,
+                  onSelected: (String? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                  },
+                  dropdownMenuEntries:
+                      networkIds.map<DropdownMenuEntry<String>>((value) {
+                    return DropdownMenuEntry<String>(
+                        value: value, label: value);
+                  }).toList(),
+                ),
+                OutlinedButton(
+                    onPressed: deleteAll, child: const Text("Delete All")),
+              ],
+            )
+          ],
+        ));
+      }
+      if (openEnable) {
+        controlPage = [];
+        controlPage.add(Row(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DropdownMenu<String>(
+                  initialSelection: networkIds.first,
+                  onSelected: (String? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                  },
+                  dropdownMenuEntries:
+                  networkIds.map<DropdownMenuEntry<String>>((value) {
+                    return DropdownMenuEntry<String>(
+                        value: value, label: value);
+                  }).toList(),
+                ),
+                OutlinedButton(
+                    onPressed: enableAll, child: const Text("Enable All")),
+              ],
+            )
+          ],
+        ));
+      }
+      if (openDisable) {
+        controlPage = [];
+        controlPage.add(Row(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DropdownMenu<String>(
+                  initialSelection: networkIds.first,
+                  onSelected: (String? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                  },
+                  dropdownMenuEntries:
+                  networkIds.map<DropdownMenuEntry<String>>((value) {
+                    return DropdownMenuEntry<String>(
+                        value: value, label: value);
+                  }).toList(),
+                ),
+                OutlinedButton(
+                    onPressed: disableAll, child: const Text("Disable All")),
+              ],
+            )
+          ],
+        ));
+      }
+      return controlPage;
+    }
+
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -163,6 +330,21 @@ class ClustersScreenState extends State<ClustersScreen> {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlinedButton(
+                  onPressed: deleteAllView, child: Text("Delete All")),
+              OutlinedButton(
+                  onPressed: disableAllView, child: Text("Disable All")),
+              OutlinedButton(
+                  onPressed: enableAllView, child: Text("Enable All")),
+            ],
+          ),
+          Row(
+            children: getControl(),
+          ),
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: GridView.count(

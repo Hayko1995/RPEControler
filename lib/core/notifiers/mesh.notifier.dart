@@ -126,4 +126,7 @@ class MeshNotifier with ChangeNotifier {
   enableCluster(clusterId) async {
     await _databaseService.enableCluster(clusterId);
   }
+  deleteClusterViaNetId(netId) async {
+    await _databaseService.deleteClusterViaNetId(netId);
+  }
 }

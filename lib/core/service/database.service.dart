@@ -290,6 +290,16 @@ class DatabaseService {
       whereArgs: [id],
     );
   }
+
+  Future<void> deleteClusterViaNetId(String netId) async {
+    final db = await _databaseService.database;
+    await db.delete(
+      AppConstants.clusterTable,
+      where: 'netNumber = ?',
+      whereArgs: [netId],
+    );
+  }
+
   Future<void> disableCluster(int id) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -316,6 +326,7 @@ class DatabaseService {
     await db.update(AppConstants.clusterTable, cluster.toMap(),
         where: 'clusterId = ?', whereArgs: [cluster.clusterId]);
   }
+
 
   // Future<CR> getCR(int id) async {
   //   final db = await _databaseService.database;
