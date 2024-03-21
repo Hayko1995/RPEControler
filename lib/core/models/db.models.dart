@@ -396,15 +396,18 @@ class Cluster {
   late String type;
   late String devices;
   late String netNumber;
+  late int status;
   late String description;
 
-  Cluster(
-      {required this.clusterId,
-      required this.clusterName,
-      required this.devices,
-      required this.type,
-      required this.netNumber,
-      this.description = ''});
+  Cluster({
+    required this.clusterId,
+    required this.clusterName,
+    required this.devices,
+    required this.type,
+    required this.netNumber,
+    this.description = '',
+    required this.status,
+  });
 
   // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
   // columns in the database.
@@ -416,6 +419,7 @@ class Cluster {
       'type': type,
       'netNumber': netNumber,
       'description': description,
+      'status': status,
     };
   }
 
@@ -427,6 +431,7 @@ class Cluster {
       devices: map['devices'] ?? "",
       netNumber: map['netNumber'] ?? "",
       description: map['description'] ?? "",
+      status: map['status'] ?? "",
     );
   }
 

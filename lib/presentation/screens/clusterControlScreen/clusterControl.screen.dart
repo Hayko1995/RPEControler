@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rpe_c/app/constants/protocol/protocol.cluster.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
@@ -64,14 +65,33 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
 
     List<Widget> getControl() {
       List<Widget> controlSet = [];
-      if (widget.clusterControlsArguments.cluster.type == 0.toString()) {
+      Cluster cluster = widget.clusterControlsArguments.cluster;
+      if (cluster.type == 0.toString()) {
         // buttonActivators
         controlSet.add(Switch(
           value: isSwitched,
-          onChanged: (value) {
-            setState(() {
-              isSwitched = value;
-            });
+          onChanged: (value) async {
+            MeshCluster meshCluster = MeshCluster();
+            print("aaaaaaaaaaaaaaaaa");
+            print(value);
+            String clusterId = cluster.clusterId.toString();
+            if (clusterId.length < 2) {
+              clusterId = '0$clusterId';
+            }
+            String command = '';
+            if (value) {
+              command = meshCluster.sendClusterOn(cluster.netNumber, clusterId);
+            } else {
+              command =
+                  meshCluster.sendClusterOff(cluster.netNumber, clusterId);
+            }
+            bool result = await meshNotifier.sendCommand(command, cluster.netNumber);
+            if (result ) {
+              setState(() {
+                isSwitched = value;
+              });
+            }
+            ;
           },
         ));
       }

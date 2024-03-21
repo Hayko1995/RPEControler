@@ -117,7 +117,7 @@ class DatabaseService {
 
     await db.execute(
       '''CREATE TABLE $clusterTable(
-        clusterId INTEGER PRIMARY KEY AUTOINCREMENT, clusterName TEXT, type TEXT, devices TEXT, netNumber TEXT, description TEXT)
+        clusterId INTEGER PRIMARY KEY AUTOINCREMENT, clusterName TEXT, type TEXT, devices TEXT, netNumber TEXT, description TEXT, status INTEGER)
     ''',
     );
   }
@@ -289,6 +289,32 @@ class DatabaseService {
       where: 'clusterId = ?',
       whereArgs: [id],
     );
+  }
+  Future<void> disableCluster(int id) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+        AppConstants.clusterTable,
+        where: 'clusterId = ?',
+        whereArgs: [id]);
+    Cluster cluster = List.generate(
+        maps.length, (index) => Cluster.fromMap(maps[index]))[0];
+
+    cluster.status = 0;
+    await db.update(AppConstants.clusterTable, cluster.toMap(),
+        where: 'clusterId = ?', whereArgs: [cluster.clusterId]);
+  }
+  Future<void> enableCluster(int id) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+        AppConstants.clusterTable,
+        where: 'clusterId = ?',
+        whereArgs: [id]);
+    Cluster cluster = List.generate(
+        maps.length, (index) => Cluster.fromMap(maps[index]))[0];
+
+    cluster.status = 1;
+    await db.update(AppConstants.clusterTable, cluster.toMap(),
+        where: 'clusterId = ?', whereArgs: [cluster.clusterId]);
   }
 
   // Future<CR> getCR(int id) async {

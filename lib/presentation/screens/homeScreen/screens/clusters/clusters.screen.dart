@@ -53,6 +53,39 @@ Widget widget(context, cluster, widgetKey) {
                     }
                     Navigator.pop(context);
                   },
+                ),
+                InkWell(
+                  child:
+                      cluster.status == 1 ? Text("Disable") : Text("Enabled"),
+                  onTap: () async {
+                    MeshCluster meshCluster = MeshCluster();
+                    // print(cluster);
+                    // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
+                    String clusterId = cluster.clusterId.toString();
+                    if (clusterId.length < 2) {
+                      clusterId = '0$clusterId';
+                    }
+                    String command = '';
+                    if (cluster.status == 1) {
+                      command = meshCluster.sendDisableCluster(
+                          cluster.netNumber, clusterId);
+                      bool response = await meshNotifier.sendCommand(
+                          command, cluster.netNumber);
+                      if (response) {
+                        meshNotifier.disableCluster(cluster.clusterId);
+                      }
+                    }
+                    if (cluster.status == 0) {
+                      command = meshCluster.sendEnableCluster(
+                          cluster.netNumber, clusterId);
+                      bool response = await meshNotifier.sendCommand(
+                          command, cluster.netNumber);
+                      if (response) {
+                        meshNotifier.enableCluster(cluster.clusterId);
+                      }
+                    }
+                    Navigator.pop(context);
+                  },
                 )
                 // OutlinedButton(onPressed: buttonCall, child: Text("data"))
               ],

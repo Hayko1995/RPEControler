@@ -107,17 +107,23 @@ class MeshNotifier with ChangeNotifier {
     return result;
   }
 
-  insertCluster(clusterId, clusterName, type, netNumber, items) async {
+  insertCluster(clusterId, clusterName, type, netNumber,  items, status) async {
     await _databaseService.insertCluster(Cluster(
         clusterId: clusterId,
         clusterName: clusterName,
         type: type,
         netNumber: netNumber,
-        devices: items));
+        devices: items,
+        status: status));
   }
 
   deleteCluster(clusterId) async {
     await _databaseService.deleteCluster(clusterId);
   }
-
+  disableCluster(clusterId) async {
+    await _databaseService.disableCluster(clusterId);
+  }
+  enableCluster(clusterId) async {
+    await _databaseService.enableCluster(clusterId);
+  }
 }

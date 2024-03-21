@@ -157,7 +157,8 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                                 newClusterName,
                                 clusterType.toString(),
                                 netNumber,
-                                clusterItems.join(","));
+                                clusterItems.join(","),
+                              1);
                             setState(() {
                               newClusterName = '';
                               _people[0].items = [];
