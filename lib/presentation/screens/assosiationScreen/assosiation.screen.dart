@@ -53,6 +53,7 @@ class AssociationScreenState extends State<AssociationScreen> {
         Item(
             name: devices[i].name,
             netId: devices[i].netId,
+            nodeType: devices[i].nodeType,
             nodeNumber: devices[i].nodeNumber,
             macAddress: devices[i].macAddress,
             imageProvider: AssetImage(devices[i].image)),

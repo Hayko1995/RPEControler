@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
@@ -52,6 +53,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
         items.add(Item(
             name: devices[i].name,
             netId: devices[i].netId,
+            nodeType: devices[i].nodeType,
             nodeNumber: devices[i].nodeNumber,
             macAddress: devices[i].macAddress,
             imageProvider: AssetImage(devices[i].image)));
@@ -131,15 +133,34 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                                 clusterId,
                                 clusterNodes);
 
+                            int clusterType = 0;
+                            if (AppConstants.buttonActivators
+                                .contains(_people[0].items[0].nodeType)) {
+                              clusterType = 0;
+                            }
+                            if (AppConstants.dimmerActivators
+                                .contains(_people[0].items[0].nodeType)) {
+                              clusterType = 1;
+                            }
+                            if (AppConstants.buttonSensor
+                                .contains(_people[0].items[0].nodeType)) {
+                              clusterType = 2;
+                            }
+                            if (AppConstants.dimmerSensor
+                                .contains(_people[0].items[0].nodeType)) {
+                              clusterType = 3;
+                            }
+
                             //TODO Add Response chaker
                             meshNotifier.insertCluster(
                                 _clusterId,
                                 newClusterName,
-                                'unknown',
+                                clusterType.toString(),
                                 netNumber,
                                 clusterItems.join(","));
                             setState(() {
                               newClusterName = '';
+                              _people[0].items = [];
                             });
                           },
                           child: const Text("Save"),

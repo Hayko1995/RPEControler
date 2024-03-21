@@ -85,34 +85,22 @@ class MeshAPI {
   }
 
   Future sendToMesh(pktHdr, url) async {
-    List<String> lint = [];
-    // List<String> aa = [];
-
-    // for (var i = 0; i < pktHdr.length; i += 2) {
-    //   result.add(int.parse(pktHdr.substring(i, i + 2), radix: 16));
-    // }
-    // print(result);
-    // for (int i = 0; i < result.length; i++) {
-    //   aa.add(result[i].toRadixString(16));
-    // }
-    // var command = aa.join(" " );
-    //todo add problem response failure situation
     final Uri uri = Uri.parse(url);
 
     try {
       final http.Response response =
           await client.post(uri, headers: headers, body: pktHdr);
       final body = response.body;
-
-      var stringList = body.split(' ');
-      stringList.removeLast();
-
-      for (int i = 0; i < stringList.length; i++) {
-        int _integerData = int.parse(stringList[i]);
-        lint.add(_integerData.toRadixString(16));
+      return true; // todo change
+      if (body == ""){
+        return true;
       }
-      // print(lint);
-      return body;
+      else {
+
+        return false;
+      }
+
+
     } catch (e) {
       print(" service = internet problem");
       return Null;

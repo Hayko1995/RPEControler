@@ -282,6 +282,14 @@ class DatabaseService {
       whereArgs: [id],
     );
   }
+  Future<void> deleteCluster(int id) async {
+    final db = await _databaseService.database;
+    await db.delete(
+      AppConstants.clusterTable,
+      where: 'clusterId = ?',
+      whereArgs: [id],
+    );
+  }
 
   // Future<CR> getCR(int id) async {
   //   final db = await _databaseService.database;

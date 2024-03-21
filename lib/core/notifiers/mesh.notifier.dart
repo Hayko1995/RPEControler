@@ -97,14 +97,14 @@ class MeshNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  Future updateDevice(device) async {
+  updateDevice(device) async {
     _databaseService.updateDevice(device);
   }
 
-  Future sendCommand(String command, String netId) async {
+  sendCommand(String command, String netId) async {
     String url = await _databaseService.getUrlByNetId([netId]);
-    print(url);
-    meshAPI.sendToMesh(command, url);
+    bool result = await meshAPI.sendToMesh(command, url);
+    return result;
   }
 
   insertCluster(clusterId, clusterName, type, netNumber, items) async {
@@ -115,4 +115,9 @@ class MeshNotifier with ChangeNotifier {
         netNumber: netNumber,
         devices: items));
   }
+
+  deleteCluster(clusterId) async {
+    await _databaseService.deleteCluster(clusterId);
+  }
+
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
@@ -64,6 +62,91 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
     dataDevices = meshNotifier.allDevices!;
 
+    List<Widget> getControl() {
+      List<Widget> controlSet = [];
+      if (widget.clusterControlsArguments.cluster.type == 0.toString()) {
+        // buttonActivators
+        controlSet.add(Switch(
+          value: isSwitched,
+          onChanged: (value) {
+            setState(() {
+              isSwitched = value;
+            });
+          },
+        ));
+      }
+      if (widget.clusterControlsArguments.cluster.type == 1.toString()) {
+        // dimmerActivators
+        controlSet.add(RangeSlider(
+          values: _currentRangeValues,
+          max: 100,
+          divisions: 5,
+          labels: RangeLabels(
+            _currentRangeValues.start.round().toString(),
+            _currentRangeValues.end.round().toString(),
+          ),
+          onChanged: (RangeValues values) {
+            setState(() {
+              _currentRangeValues = values;
+            });
+          },
+        ));
+      }
+      if (widget.clusterControlsArguments.cluster.type == 2.toString()) {
+        // dimmerActivators
+        controlSet.add(RangeSlider(
+          values: _currentRangeValues,
+          max: 100,
+          divisions: 5,
+          labels: RangeLabels(
+            _currentRangeValues.start.round().toString(),
+            _currentRangeValues.end.round().toString(),
+          ),
+          onChanged: (RangeValues values) {
+            setState(() {
+              _currentRangeValues = values;
+            });
+          },
+        ));
+      }
+      if (widget.clusterControlsArguments.cluster.type == 3.toString()) {
+        // dimmerActivators
+        controlSet.add(RangeSlider(
+          values: _currentRangeValues,
+          max: 100,
+          divisions: 5,
+          labels: RangeLabels(
+            _currentRangeValues.start.round().toString(),
+            _currentRangeValues.end.round().toString(),
+          ),
+          onChanged: (RangeValues values) {
+            setState(() {
+              _currentRangeValues = values;
+            });
+          },
+        ));
+      }
+      if (widget.clusterControlsArguments.cluster.type == 4.toString()) {
+        // dimmerActivators
+        controlSet.add(RangeSlider(
+          values: _currentRangeValues,
+          max: 100,
+          divisions: 5,
+          labels: RangeLabels(
+            _currentRangeValues.start.round().toString(),
+            _currentRangeValues.end.round().toString(),
+          ),
+          onChanged: (RangeValues values) {
+            setState(() {
+              _currentRangeValues = values;
+            });
+          },
+        ));
+      }
+
+      return controlSet;
+    }
+
     List<Widget> getSensors() {
       List<Widget> sensorList = [];
       Cluster data = widget.clusterControlsArguments.cluster;
@@ -97,7 +180,7 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Cluster name "),
+                const Text("Cluster type "),
                 Text(
                   widget.clusterControlsArguments.cluster.type,
                   style: const TextStyle(fontWeight: FontWeight.bold),
@@ -106,32 +189,8 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
             ),
             Center(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RangeSlider(
-                    values: _currentRangeValues,
-                    max: 100,
-                    divisions: 5,
-                    labels: RangeLabels(
-                      _currentRangeValues.start.round().toString(),
-                      _currentRangeValues.end.round().toString(),
-                    ),
-                    onChanged: (RangeValues values) {
-                      setState(() {
-                        _currentRangeValues = values;
-                      });
-                    },
-                  ),
-                  Switch(
-                    value: isSwitched,
-                    onChanged: (value) {
-                      setState(() {
-                        isSwitched = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: getControl()),
             ),
             SizedBox(
               child: Padding(
