@@ -447,3 +447,61 @@ class Cluster {
       '''Cluster(clusterName: ClusterId $clusterId,  $clusterName, devices: $devices,  
          netNumber: $netNumber, description: $description )''';
 }
+
+class Associations {
+  late int associationId;
+  late String associationName;
+  late String type;
+  late String fromDevices;
+  late String toDevices;
+  late String netNumber;
+  late int status;
+
+  Associations({
+    required this.associationId,
+    required this.associationName,
+    required this.fromDevices,
+    required this.toDevices,
+    required this.type,
+    required this.netNumber,
+    required this.status,
+  });
+
+  // Convert a Breed into a Map. The keys must correspond to the nodeNumbers of the
+  // columns in the database.
+  Map<String, dynamic> toMap() {
+    return {
+      'associationId': associationId,
+      'associationName': associationName,
+      'fromDevices': fromDevices,
+      'toDevices': toDevices,
+      'type': type,
+      'netNumber': netNumber,
+      'status': status,
+    };
+  }
+
+  factory Associations.fromMap(Map<String, dynamic> map) {
+    return Associations(
+      associationId: map['associationId'] ?? 0,
+      associationName: map['associationName'] ?? "",
+      type: map['type'] ?? "",
+      fromDevices: map['fromDevices'] ?? "",
+      toDevices: map['toDevices'] ?? "",
+      netNumber: map['netNumber'] ?? "",
+      status: map['status'] ?? "",
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Associations.fromJson(String source) =>
+      Associations.fromMap(json.decode(source));
+
+  // Implement toString to make it easier to see information about
+  // each breed when using the print statement.
+  @override
+  String toString() =>
+      '''Associations(clusterName: AssociationsId $associationId, associationName $associationName, fromDevices: $fromDevices,
+      toDevices: $toDevices, netNumber: $netNumber)''';
+}

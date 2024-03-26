@@ -1,30 +1,29 @@
 //TODO fix designer responsive when kayboard come out
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rpe_c/app/constants/protocol/protocol.accociation.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.cluster.dart';
-import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
-import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
 
-class ClustersScreen extends StatefulWidget {
-  const ClustersScreen({super.key});
+class AssociationsScreen extends StatefulWidget {
+  const AssociationsScreen({super.key});
 
   @override
-  ClustersScreenState createState() => ClustersScreenState();
+  AssociationsScreenState createState() => AssociationsScreenState();
 }
 
-Widget widget(context, cluster, widgetKey) {
+Widget widget(context, association, widgetKey) {
   final Function(bool?) toggleCheckboxState;
   final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
-
   return GestureDetector(
     key: widgetKey,
     onTap: () {
-      Navigator.of(context).pushNamed(
-        AppRouter.clusterControlRouter,
-        arguments: ClusterControlArgs(cluster: cluster),
-      );
+      // Navigator.of(context).pushNamed(
+      //   AppRouter.clusterControlRouter,
+      //   arguments: ClusterControlArgs(cluster: cluster),
+      // );
     },
     onLongPress: () {
       showMenu(
@@ -36,51 +35,52 @@ Widget widget(context, cluster, widgetKey) {
                 InkWell(
                   child: const Text("Delete"),
                   onTap: () {
-                    MeshCluster meshCluster = MeshCluster();
+                    MeshAssociation meshAssociation = MeshAssociation();
                     // print(cluster);
                     // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
-                    String clusterId = cluster.clusterId.toString();
-                    if (clusterId.length < 2) {
-                      clusterId = '0$clusterId';
+                    String associationId = association.associationId.toString();
+                    if (associationId.length < 2) {
+                      associationId = '0$associationId';
                     }
-                    String command = meshCluster.sendDeleteCluster(
-                        cluster.netNumber, clusterId);
-                    bool response =
-                        meshNotifier.sendCommand(command, cluster.netNumber);
+                    String command = meshAssociation.sendDeleteAssociation(
+                        association.netNumber, associationId);
+                    // bool response =
+                    //     meshNotifier.sendCommand(command, association.netNumber);
+                    bool response= false;
                     if (response) {
-                      meshNotifier.deleteCluster(cluster.clusterId);
+                      meshNotifier.deleteAssociation(association.associationId);
                     }
                     Navigator.pop(context);
                   },
                 ),
                 InkWell(
                   child:
-                      cluster.status == 1 ? Text("Disable") : Text("Enabled"),
+                  association.status == 1 ? Text("Disable") : Text("Enabled"),
                   onTap: () async {
                     MeshCluster meshCluster = MeshCluster();
                     // print(cluster);
                     // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
-                    String clusterId = cluster.clusterId.toString();
+                    String clusterId = association.associationId.toString();
                     if (clusterId.length < 2) {
                       clusterId = '0$clusterId';
                     }
                     String command = '';
-                    if (cluster.status == 1) {
+                    if (association.status == 1) {
                       command = meshCluster.sendDisableCluster(
-                          cluster.netNumber, clusterId);
+                          association.netNumber, clusterId);
                       bool response = await meshNotifier.sendCommand(
-                          command, cluster.netNumber);
+                          command, association.netNumber);
                       if (response) {
-                        meshNotifier.disableCluster(cluster.clusterId);
+                        meshNotifier.disableCluster(association.clusterId);
                       }
                     }
-                    if (cluster.status == 0) {
+                    if (association.status == 0) {
                       command = meshCluster.sendEnableCluster(
-                          cluster.netNumber, clusterId);
+                          association.netNumber, clusterId);
                       bool response = await meshNotifier.sendCommand(
-                          command, cluster.netNumber);
+                          command, association.netNumber);
                       if (response) {
-                        meshNotifier.enableCluster(cluster.clusterId);
+                        meshNotifier.enableCluster(association.associationId);
                       }
                     }
                     Navigator.pop(context);
@@ -97,7 +97,7 @@ Widget widget(context, cluster, widgetKey) {
     },
     child: Container(
       decoration: BoxDecoration(
-          color: cluster.status == 1 ? Colors.white : Colors.grey,
+          color: association.status == 1 ? Colors.white : Colors.grey,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -106,12 +106,12 @@ Widget widget(context, cluster, widgetKey) {
                 spreadRadius: 2,
                 blurRadius: 5)
           ]),
-      child: Center(child: Text(cluster.clusterName)),
+      child: Center(child: Text(association.associationName)),
     ),
   );
 }
 
-class ClustersScreenState extends State<ClustersScreen> {
+class AssociationsScreenState extends State<AssociationsScreen> {
   final PageController _pageController =
       PageController(viewportFraction: 0.8, initialPage: 0);
 
@@ -148,12 +148,12 @@ class ClustersScreenState extends State<ClustersScreen> {
     super.initState();
   }
 
-  List getClusterNetworks(clusters) {
+  List getAssociationsNetworks(associations) {
     networkIds = [];
-    for (Cluster cluster in clusters) {
-      bool res = networkIds.contains(cluster.netNumber);
+    for (Associations association in associations) {
+      bool res = networkIds.contains(association.netNumber);
       if (!res) {
-        networkIds.add(cluster.netNumber);
+        networkIds.add(association.netNumber);
       }
     }
 
@@ -166,21 +166,22 @@ class ClustersScreenState extends State<ClustersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
-    networkIds = getClusterNetworks(meshNotifier.getAllClusters);
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
+    networkIds = getAssociationsNetworks(meshNotifier.getAllAssociations);
+
     dropdownValue = networkIds.first;
 
-    List<Widget> getCluster() {
+    List<Widget> getAssociations() {
       List<Widget> sensorList = [];
-      final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
-      List<Cluster> data = meshNotifier.getAllClusters!;
-      // logger.i(data);
+      List<Associations> data = meshNotifier.getAllAssociations!;
+
       for (var i = 0; i < data.length; i++) {
         sensorList.add(widget(context, data.elementAt(i), GlobalKey()));
 
         // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
       }
-      setState(() {});
+      logger.i(sensorList.length);
+
       return sensorList;
     }
 
@@ -364,46 +365,48 @@ class ClustersScreenState extends State<ClustersScreen> {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OutlinedButton(
-                  onPressed: deleteAllView, child: Text("Delete All")),
-              OutlinedButton(
-                  onPressed: disableAllView, child: Text("Disable All")),
-              OutlinedButton(
-                  onPressed: enableAllView, child: Text("Enable All")),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OutlinedButton(onPressed: syncAll, child: Text("Sync All")),
-              OutlinedButton(
-                  onPressed: setThreshold, child: Text("Set Threshold")),
-              OutlinedButton(onPressed: setTimer, child: Text("Set Timer")),
-            ],
-          ),
-          Row(
-            children: getControl(),
-          ),
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: GridView.count(
-                  shrinkWrap: true,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  children: getCluster()))
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton(
+                    onPressed: deleteAllView, child: Text("Delete All")),
+                OutlinedButton(
+                    onPressed: disableAllView, child: Text("Disable All")),
+                OutlinedButton(
+                    onPressed: enableAllView, child: Text("Enable All")),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton(onPressed: syncAll, child: Text("Sync All")),
+                OutlinedButton(
+                    onPressed: setThreshold, child: Text("Set Threshold")),
+                OutlinedButton(onPressed: setTimer, child: Text("Set Timer")),
+              ],
+            ),
+            Row(
+              children: getControl(),
+            ),
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: GridView.count(
+                    shrinkWrap: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    crossAxisCount: 1,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    children: getAssociations()))
+          ],
+        ),
       ),
     );
   }

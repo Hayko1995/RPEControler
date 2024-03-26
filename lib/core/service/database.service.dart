@@ -35,6 +35,7 @@ class DatabaseService {
     String networkTable = AppConstants.networkTable;
     String deviceTable = AppConstants.deviceTable;
     String clusterTable = AppConstants.clusterTable;
+    String associationTable = AppConstants.associationTable;
     await db.execute(
       'CREATE TABLE $networkTable ('
       'url TEXT NOT NULL UNIQUE PRIMARY KEY,'
@@ -120,6 +121,12 @@ class DatabaseService {
         clusterId INTEGER PRIMARY KEY AUTOINCREMENT, clusterName TEXT, type TEXT, devices TEXT, netNumber TEXT, description TEXT, status INTEGER)
     ''',
     );
+
+    await db.execute(
+      '''CREATE TABLE $associationTable(
+        associationId INTEGER PRIMARY KEY AUTOINCREMENT, associationName TEXT, type TEXT, fromDevices TEXT, toDevices TEXT, netNumber TEXT, status INTEGER)
+    ''',
+    );
   }
 
   Future<void> insertCluster(Cluster breed) async {
@@ -131,11 +138,28 @@ class DatabaseService {
     );
   }
 
+  Future<void> insertAssociation(Associations breed) async {
+    final db = await _databaseService.database;
+    await db.insert(
+      AppConstants.associationTable,
+      breed.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
   Future<List<Cluster>> getAllClusters() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.clusterTable);
     return List.generate(maps.length, (index) => Cluster.fromMap(maps[index]));
+  }
+
+  Future<List<Associations>> getAllAssociations() async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps =
+        await db.query(AppConstants.associationTable);
+    return List.generate(
+        maps.length, (index) => Associations.fromMap(maps[index]));
   }
 
   Future<List<Cluster>> getClusterByName(List<String> clusterName) async {
@@ -282,11 +306,21 @@ class DatabaseService {
       whereArgs: [id],
     );
   }
+
   Future<void> deleteCluster(int id) async {
     final db = await _databaseService.database;
     await db.delete(
       AppConstants.clusterTable,
       where: 'clusterId = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> deleteAssociation(int id) async {
+    final db = await _databaseService.database;
+    await db.delete(
+      AppConstants.associationTable,
+      where: 'associationId = ?',
       whereArgs: [id],
     );
   }
@@ -306,27 +340,27 @@ class DatabaseService {
         AppConstants.clusterTable,
         where: 'clusterId = ?',
         whereArgs: [id]);
-    Cluster cluster = List.generate(
-        maps.length, (index) => Cluster.fromMap(maps[index]))[0];
+    Cluster cluster =
+        List.generate(maps.length, (index) => Cluster.fromMap(maps[index]))[0];
 
     cluster.status = 0;
     await db.update(AppConstants.clusterTable, cluster.toMap(),
         where: 'clusterId = ?', whereArgs: [cluster.clusterId]);
   }
+
   Future<void> enableCluster(int id) async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
         AppConstants.clusterTable,
         where: 'clusterId = ?',
         whereArgs: [id]);
-    Cluster cluster = List.generate(
-        maps.length, (index) => Cluster.fromMap(maps[index]))[0];
+    Cluster cluster =
+        List.generate(maps.length, (index) => Cluster.fromMap(maps[index]))[0];
 
     cluster.status = 1;
     await db.update(AppConstants.clusterTable, cluster.toMap(),
         where: 'clusterId = ?', whereArgs: [cluster.clusterId]);
   }
-
 
   // Future<CR> getCR(int id) async {
   //   final db = await _databaseService.database;

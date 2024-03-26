@@ -72,8 +72,6 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
           value: isSwitched,
           onChanged: (value) async {
             MeshCluster meshCluster = MeshCluster();
-            print("aaaaaaaaaaaaaaaaa");
-            print(value);
             String clusterId = cluster.clusterId.toString();
             if (clusterId.length < 2) {
               clusterId = '0$clusterId';
@@ -86,8 +84,9 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
                   meshCluster.sendClusterOff(cluster.netNumber, clusterId);
             }
             bool result = await meshNotifier.sendCommand(command, cluster.netNumber);
-            if (result ) {
+            if (result) {
               setState(() {
+                print(isSwitched);
                 isSwitched = value;
               });
             }

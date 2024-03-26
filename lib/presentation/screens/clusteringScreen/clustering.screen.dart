@@ -17,7 +17,7 @@ class ClusteringScreen extends StatefulWidget {
 }
 
 class _ClusteringScreenState extends State<ClusteringScreen> {
-  final List<ActiveArea> _people = [
+  final List<ActiveArea> activeAreas = [
     ActiveArea(),
   ];
   final GlobalKey _draggableKey = GlobalKey();
@@ -90,25 +90,16 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                         ),
                         FilledButton(
                           onPressed: () {
-                            Fluttertoast.showToast(
-                                msg: "Saved",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
-
                             fieldText.clear();
                             FocusScope.of(context).unfocus(); //hide kayboard
                             // logger.i(_people[0].items.length);
                             List<String> clusterItems = [];
                             String clusterNodes = '';
-                            for (var item in _people[0].items) {
+                            for (var item in activeAreas[0].items) {
                               clusterItems.add(item.macAddress);
                               clusterNodes = clusterNodes + item.nodeNumber;
                             }
-                            String netNumber = _people[0].items[0].netId;
+                            String netNumber = activeAreas[0].items[0].netId;
                             //todo change to multi network
                             bool singleNet = true;
                             List<Cluster> allClusters =
@@ -129,25 +120,25 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
 
                             meshNotifier.sendClusterCommand(
                                 singleNet,
-                                _people[0].items[0].netId,
+                                activeAreas[0].items[0].netId,
                                 clusterId,
                                 clusterNodes);
 
                             int clusterType = 0;
                             if (AppConstants.buttonActivators
-                                .contains(_people[0].items[0].nodeType)) {
+                                .contains(activeAreas[0].items[0].nodeType)) {
                               clusterType = 0;
                             }
                             if (AppConstants.dimmerActivators
-                                .contains(_people[0].items[0].nodeType)) {
+                                .contains(activeAreas[0].items[0].nodeType)) {
                               clusterType = 1;
                             }
                             if (AppConstants.buttonSensor
-                                .contains(_people[0].items[0].nodeType)) {
+                                .contains(activeAreas[0].items[0].nodeType)) {
                               clusterType = 2;
                             }
                             if (AppConstants.dimmerSensor
-                                .contains(_people[0].items[0].nodeType)) {
+                                .contains(activeAreas[0].items[0].nodeType)) {
                               clusterType = 3;
                             }
 
@@ -158,11 +149,20 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                                 clusterType.toString(),
                                 netNumber,
                                 clusterItems.join(","),
-                              1);
+                                1);
                             setState(() {
                               newClusterName = '';
-                              _people[0].items = [];
+                              activeAreas[0].items = [];
                             });
+
+                            Fluttertoast.showToast(
+                                msg: "Saved",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
                           },
                           child: const Text("Save"),
                         ),
@@ -266,7 +266,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
         }).toList(),
       ),
     );
-    manipulationWidgets.addAll(_people.map(_buildPersonWithDropZone).toList());
+    manipulationWidgets.addAll(activeAreas.map(_buildPersonWithDropZone).toList());
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 8,

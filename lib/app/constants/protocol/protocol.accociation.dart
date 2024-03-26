@@ -59,9 +59,10 @@ class MeshAssociation {
     return command;
   }
 
-  String sendDeleteAssociation(nodeNumber, networkNumber, association) {
+  String sendDeleteAssociation(networkNumber, association) {
     String subCommand = "40";
     String messageLength = "06";
+    String nodeNumber = '00';
     String command = association +
         subCommand +
         messageLength +
@@ -118,8 +119,6 @@ class MeshMultiAssociation {
   final deleteAssociation = "40";
   final deleteAllAssociation = "C0";
   final syncAssociation = '08';
-
-  
 
   String sendEnableAssociation(nodeNumber, networkNumber, associationId) {
     String subCommand = "10";

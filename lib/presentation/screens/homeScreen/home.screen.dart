@@ -8,6 +8,7 @@ import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
+import 'package:rpe_c/presentation/screens/homeScreen/screens/associations/associations.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/screens/clusters/clusters.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/widget/menu.widget.dart';
@@ -31,7 +32,7 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
   ),
   SalomonBottomBarItem(
     icon: const Icon(Icons.widgets),
-    title: const Text("Widgets"),
+    title: const Text("Associations"),
     selectedColor: Colors.blue,
   ),
 ];
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final screens = [
       const DashboardScreen(),
       const ClustersScreen(),
-      const DashboardScreen()
+      const AssociationsScreen()
     ];
 
     //TODO change

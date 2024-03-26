@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/api/mesh.api.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 
@@ -32,6 +33,10 @@ class MeshNotifier with ChangeNotifier {
 
   List<Cluster>? get getAllClusters => _clusters;
 
+  List<Associations> _assotiations = [];
+
+  List<Associations>? get getAllAssociations => _assotiations;
+
   RpeDevice? get getDevice => _device;
 
   List<RpeDevice>? _allDevices = [];
@@ -46,6 +51,7 @@ class MeshNotifier with ChangeNotifier {
       getNetworks();
       _getAllDevices();
       getClusters();
+      getAssociations();
     });
   }
 
@@ -56,6 +62,10 @@ class MeshNotifier with ChangeNotifier {
 
   Future getClusters() async {
     _clusters = await _databaseService.getAllClusters();
+  }
+
+  Future getAssociations() async {
+    _assotiations = await _databaseService.getAllAssociations();
   }
 
   Future sendClusterCommand(singleNet, netId, clusterId, clusterNodes) async {
@@ -104,10 +114,11 @@ class MeshNotifier with ChangeNotifier {
   sendCommand(String command, String netId) async {
     String url = await _databaseService.getUrlByNetId([netId]);
     bool result = await meshAPI.sendToMesh(command, url);
+    logger.i(result);
     return result;
   }
 
-  insertCluster(clusterId, clusterName, type, netNumber,  items, status) async {
+  insertCluster(clusterId, clusterName, type, netNumber, items, status) async {
     await _databaseService.insertCluster(Cluster(
         clusterId: clusterId,
         clusterName: clusterName,
@@ -117,15 +128,35 @@ class MeshNotifier with ChangeNotifier {
         status: status));
   }
 
+  insertAssociation(associationId, associationName, type, netNumber,
+      fromDevices, toDevices, status) async {
+    await _databaseService.insertAssociation(Associations(
+      associationId: associationId,
+      associationName: associationName,
+      type: type,
+      netNumber: netNumber,
+      fromDevices: fromDevices,
+      toDevices: toDevices,
+      status: status,
+    ));
+  }
+
   deleteCluster(clusterId) async {
     await _databaseService.deleteCluster(clusterId);
   }
+
+  deleteAssociation(associationId) async {
+    await _databaseService.deleteAssociation(associationId);
+  }
+
   disableCluster(clusterId) async {
     await _databaseService.disableCluster(clusterId);
   }
+
   enableCluster(clusterId) async {
     await _databaseService.enableCluster(clusterId);
   }
+
   deleteClusterViaNetId(netId) async {
     await _databaseService.deleteClusterViaNetId(netId);
   }
