@@ -1,21 +1,20 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rpe_c/app/constants/app.colors.dart';
 import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
-import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
+import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/screens/associations/associations.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/screens/clusters/clusters.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/widget/menu.widget.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
-import 'package:rpe_c/app/constants/app.colors.dart';
-import 'package:rpe_c/core/notifiers/theme.notifier.dart';
-import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 
 final List<SalomonBottomBarItem> bottomNavBarIcons = [
   SalomonBottomBarItem(
@@ -60,6 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //TODO change
     _databaseService
         .insertNetwork(RpeNetwork(url: ApiRoutes.esp32Url, preDef: 1));
+    // _databaseService
+    //     .insertNetwork(RpeNetwork(url: ApiRoutes.esp321Url, preDef: 1));
 
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     meshNotifier.sendE1();

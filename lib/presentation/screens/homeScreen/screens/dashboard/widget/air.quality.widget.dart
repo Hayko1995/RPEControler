@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
@@ -26,7 +23,9 @@ class ItemBuilder extends StatelessWidget {
         onTap: () => {
               Navigator.of(context).pushNamed(
                 AppRouter.sensorsRoute,
-                arguments: SensorArgs(mac: [devices[index].networkTableMAC]), //todo change
+                arguments: SensorArgs(
+                    mac: [devices[index].networkTableMAC],
+                    netId: devices[index].netId), //todo change
               )
             },
         child: Container(

@@ -160,4 +160,8 @@ class MeshNotifier with ChangeNotifier {
   deleteClusterViaNetId(netId) async {
     await _databaseService.deleteClusterViaNetId(netId);
   }
+  deleteAssociationViaNetId(netId) async {
+    // await _databaseService.deleteClusterViaNetId(netId);
+    await _databaseService.deleteAssociationViaNetId(netId);
+  }
 }

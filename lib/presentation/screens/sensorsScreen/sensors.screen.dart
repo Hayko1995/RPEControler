@@ -1,12 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
-import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/core/service/mesh.service.dart';
 import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/widget/device.widget.dart';
 
@@ -21,8 +17,6 @@ class Sensors extends StatefulWidget {
 
 class _SensorsState extends State<Sensors> {
   List<RpeDevice> dataDevices = <RpeDevice>[];
-
-
 
   @override
   void initState() {
@@ -41,7 +35,9 @@ class _SensorsState extends State<Sensors> {
       // List<Map<String, Object>> data = widget.sensorDetailsArguments.data;
       List<RpeDevice> data = dataDevices;
       for (var i = 0; i < data.length; i++) {
-        sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
+        if (data.elementAt(i).netId == widget.predefineSensorsArguments.netId) {
+          sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
+        }
       }
       return sensorList;
     }
@@ -98,6 +94,7 @@ class _SensorsState extends State<Sensors> {
 
 class SensorArgs {
   final List<String> mac;
+  final String netId;
 
-  const SensorArgs({required this.mac});
+  const SensorArgs({required this.mac, required this.netId});
 }

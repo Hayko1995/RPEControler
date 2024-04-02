@@ -46,10 +46,10 @@ class MeshAssociation {
     return command;
   }
 
-  String sendDisableAllAssociations(nodeNumber, networkNumber,
-      {associationId = '00'}) {
+  String sendDisableAllAssociations(networkNumber, {associationId = '00'}) {
     String subCommand = "A0";
     String messageLength = "06";
+    String nodeNumber = "00";
     String command = association +
         subCommand +
         messageLength +
@@ -72,10 +72,10 @@ class MeshAssociation {
     return command;
   }
 
-  String sendDeleteAllAssociations(nodeNumber, networkNumber,
-      {associationId = '00'}) {
+  String sendDeleteAllAssociations(networkNumber, {associationId = '00'}) {
     String subCommand = "C0";
     String messageLength = "06";
+    String nodeNumber = "00";
     String command = associationId +
         subCommand +
         messageLength +

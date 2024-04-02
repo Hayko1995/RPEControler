@@ -92,15 +92,11 @@ class MeshAPI {
           await client.post(uri, headers: headers, body: pktHdr);
       final body = response.body;
       return true; // todo change
-      if (body == ""){
+      if (body == "") {
         return true;
-      }
-      else {
-
+      } else {
         return false;
       }
-
-
     } catch (e) {
       print(" service = internet problem");
       return Null;
@@ -122,8 +118,6 @@ class MeshAPI {
       try {
         response = await client.post(uri, headers: headers, body: command);
         var body = response.body;
-        body =
-            "e100500312345678ffffff000000000000120000000010ff00158d000797f455011a00000100010000158d0000506820021a00000100010000158d0000506830031a00000100010000158d000050683b".toUpperCase();
         for (int i = 0; i < body.length; i = i + 2) {
           lint.add(body.substring(i, i + 2));
         }
@@ -164,7 +158,6 @@ class MeshAPI {
       if (min < 10) _min = '0$min';
       if (sec < 10) _sec = '0$sec';
       netId = lint[10];
-
 
       network.numOfNodes = int.parse(lint[3]);
       network.domain = int.parse("0x${lint[8]}");

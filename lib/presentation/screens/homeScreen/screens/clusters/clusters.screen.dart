@@ -33,58 +33,76 @@ Widget widget(context, cluster, widgetKey) {
             //value: this._index,
             child: Column(
               children: [
-                InkWell(
-                  child: const Text("Delete"),
-                  onTap: () {
-                    MeshCluster meshCluster = MeshCluster();
-                    // print(cluster);
-                    // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
-                    String clusterId = cluster.clusterId.toString();
-                    if (clusterId.length < 2) {
-                      clusterId = '0$clusterId';
-                    }
-                    String command = meshCluster.sendDeleteCluster(
-                        cluster.netNumber, clusterId);
-                    bool response =
-                        meshNotifier.sendCommand(command, cluster.netNumber);
-                    if (response) {
-                      meshNotifier.deleteCluster(cluster.clusterId);
-                    }
-                    Navigator.pop(context);
-                  },
+                SizedBox(
+                  height: 50,
+                  child: InkWell(
+                    child: Row(
+                      children: [
+                        const Text("Delete"),
+                      ],
+                    ),
+                    onTap: () async {
+                      MeshCluster meshCluster = MeshCluster();
+                      // print(cluster);
+                      // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
+                      String clusterId = cluster.clusterId.toString();
+                      if (clusterId.length < 2) {
+                        clusterId = '0$clusterId';
+                      }
+                      String command = meshCluster.sendDeleteCluster(
+                          cluster.netNumber, clusterId);
+                      bool response = await
+                          meshNotifier.sendCommand(command, cluster.netNumber);
+                      if (response) {
+                        meshNotifier.deleteCluster(cluster.clusterId);
+                      }
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-                InkWell(
-                  child:
-                      cluster.status == 1 ? Text("Disable") : Text("Enabled"),
-                  onTap: () async {
-                    MeshCluster meshCluster = MeshCluster();
-                    // print(cluster);
-                    // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
-                    String clusterId = cluster.clusterId.toString();
-                    if (clusterId.length < 2) {
-                      clusterId = '0$clusterId';
-                    }
-                    String command = '';
-                    if (cluster.status == 1) {
-                      command = meshCluster.sendDisableCluster(
-                          cluster.netNumber, clusterId);
-                      bool response = await meshNotifier.sendCommand(
-                          command, cluster.netNumber);
-                      if (response) {
-                        meshNotifier.disableCluster(cluster.clusterId);
+                SizedBox(
+                  height: 50,
+                  child: InkWell(
+                    child:
+                        cluster.status == 1 ? Row(
+                          children: [
+                            Text("Disable"),
+                          ],
+                        ) : Row(
+                          children: [
+                            Text("Enabled"),
+                          ],
+                        ),
+                    onTap: () async {
+                      MeshCluster meshCluster = MeshCluster();
+                      // print(cluster);
+                      // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
+                      String clusterId = cluster.clusterId.toString();
+                      if (clusterId.length < 2) {
+                        clusterId = '0$clusterId';
                       }
-                    }
-                    if (cluster.status == 0) {
-                      command = meshCluster.sendEnableCluster(
-                          cluster.netNumber, clusterId);
-                      bool response = await meshNotifier.sendCommand(
-                          command, cluster.netNumber);
-                      if (response) {
-                        meshNotifier.enableCluster(cluster.clusterId);
+                      String command = '';
+                      if (cluster.status == 1) {
+                        command = meshCluster.sendDisableCluster(
+                            cluster.netNumber, clusterId);
+                        bool response = await meshNotifier.sendCommand(
+                            command, cluster.netNumber);
+                        if (response) {
+                          meshNotifier.disableCluster(cluster.clusterId);
+                        }
                       }
-                    }
-                    Navigator.pop(context);
-                  },
+                      if (cluster.status == 0) {
+                        command = meshCluster.sendEnableCluster(
+                            cluster.netNumber, clusterId);
+                        bool response = await meshNotifier.sendCommand(
+                            command, cluster.netNumber);
+                        if (response) {
+                          meshNotifier.enableCluster(cluster.clusterId);
+                        }
+                      }
+                      Navigator.pop(context);
+                    },
+                  ),
                 )
                 // OutlinedButton(onPressed: buttonCall, child: Text("data"))
               ],
@@ -195,12 +213,12 @@ class ClustersScreenState extends State<ClustersScreen> {
 
     Future<void> enableAll() async {
       //todo
-      // MeshCluster meshCluster = MeshCluster();
-      // String command = meshCluster.sendDeleteAllCluster(dropdownValue);
-      // bool result = await meshNotifier.sendCommand(command, dropdownValue);
-      // if (result) {
-      //   meshNotifier.deleteClusterViaNetId(dropdownValue);
-      // }
+      MeshCluster meshCluster = MeshCluster();
+      String command = meshCluster.sendEnableAllClusters(dropdownValue);
+      bool result = await meshNotifier.sendCommand(command, dropdownValue);
+      if (result) {
+        // meshNotifier.enableAllClusters(clusterId); //todo 
+      }
     }
 
     Future<void> disableAll() async {

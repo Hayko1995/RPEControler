@@ -46,7 +46,7 @@ Widget widget(context, association, widgetKey) {
                         association.netNumber, associationId);
                     // bool response =
                     //     meshNotifier.sendCommand(command, association.netNumber);
-                    bool response= false;
+                    bool response = false;
                     if (response) {
                       meshNotifier.deleteAssociation(association.associationId);
                     }
@@ -54,8 +54,9 @@ Widget widget(context, association, widgetKey) {
                   },
                 ),
                 InkWell(
-                  child:
-                  association.status == 1 ? Text("Disable") : Text("Enabled"),
+                  child: association.status == 1
+                      ? Text("Disable")
+                      : Text("Enabled"),
                   onTap: () async {
                     MeshCluster meshCluster = MeshCluster();
                     // print(cluster);
@@ -186,8 +187,8 @@ class AssociationsScreenState extends State<AssociationsScreen> {
     }
 
     Future<void> deleteAll() async {
-      MeshCluster meshCluster = MeshCluster();
-      String command = meshCluster.sendDeleteAllCluster(dropdownValue);
+      MeshAssociation meshAssociation = MeshAssociation();
+      String command = meshAssociation.sendDeleteAllAssociations(dropdownValue);
       bool result = await meshNotifier.sendCommand(command, dropdownValue);
       if (result) {
         meshNotifier.deleteClusterViaNetId(dropdownValue);
@@ -195,7 +196,7 @@ class AssociationsScreenState extends State<AssociationsScreen> {
     }
 
     Future<void> enableAll() async {
-      //todo
+      //todo Ask to Harry
       // MeshCluster meshCluster = MeshCluster();
       // String command = meshCluster.sendDeleteAllCluster(dropdownValue);
       // bool result = await meshNotifier.sendCommand(command, dropdownValue);
@@ -205,7 +206,7 @@ class AssociationsScreenState extends State<AssociationsScreen> {
     }
 
     Future<void> disableAll() async {
-      //todo
+      //todo Ask to Harry
       MeshCluster meshCluster = MeshCluster();
       // String command = meshCluster.sendDeleteAllCluster(dropdownValue);
       // bool result = await meshNotifier.sendCommand(command, dropdownValue);
@@ -388,16 +389,17 @@ class AssociationsScreenState extends State<AssociationsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlinedButton(onPressed: syncAll, child: Text("Sync All")),
-                OutlinedButton(
-                    onPressed: setThreshold, child: Text("Set Threshold")),
-                OutlinedButton(onPressed: setTimer, child: Text("Set Timer")),
+                // OutlinedButton(
+                //     onPressed: setThreshold, child: Text("Set Threshold")),
+                // OutlinedButton(onPressed: setTimer, child: Text("Set Timer")),
               ],
             ),
             Row(
               children: getControl(),
             ),
             Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: GridView.count(
                     shrinkWrap: true,
                     physics: const AlwaysScrollableScrollPhysics(),

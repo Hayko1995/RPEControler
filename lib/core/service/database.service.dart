@@ -65,9 +65,10 @@ class DatabaseService {
       ')',
     );
     await db.execute('CREATE TABLE $deviceTable('
-        'nodeNumber TEXT PRIMARY KEY, nodeType TEXT, nodeSubType TEXT,'
+        'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+        'nodeNumber TEXT, nodeType TEXT, nodeSubType TEXT,'
         'location TEXT, stackType TEXT, numChild TEXT, status TEXT,'
-        'parentNodeNum TEXT, macAddress TEXT, name TEXT, networkTableMAC TEXT, image TEXT,'
+        'parentNodeNum TEXT, macAddress TEXT UNIQUE, name TEXT, networkTableMAC TEXT, image TEXT,'
         'dName  TEXT,'
         'isActivation  INTEGER,'
         'dNetNum TEXT,'
@@ -189,6 +190,15 @@ class DatabaseService {
   }
 
   Future<void> insertDevice(RpeDevice breed) async {
+    final db = await _databaseService.database;
+    await db.insert(
+      AppConstants.deviceTable,
+      breed.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> addDevice(RpeDevice breed) async {
     final db = await _databaseService.database;
     await db.insert(
       AppConstants.deviceTable,
@@ -329,6 +339,15 @@ class DatabaseService {
     final db = await _databaseService.database;
     await db.delete(
       AppConstants.clusterTable,
+      where: 'netNumber = ?',
+      whereArgs: [netId],
+    );
+  }
+
+  Future<void> deleteAssociationViaNetId(String netId) async {
+    final db = await _databaseService.database;
+    await db.delete(
+      AppConstants.associationTable,
       where: 'netNumber = ?',
       whereArgs: [netId],
     );
