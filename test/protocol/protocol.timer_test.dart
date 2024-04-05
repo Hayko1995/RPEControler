@@ -40,7 +40,7 @@ void main() {
     //TODO need to test
     MeshTimer meshTimer = MeshTimer();
     String command = meshTimer.sendSetTimer(
-        "01", "01", "01", "01", "01", "01", "01", "01", "01", "01", "01", "01");
+        "01", "01", "01", "01", "01", "01", "01", "01", "01", "01", "01", '01');
     expect(command, "92011601010001010101010101010101");
   });
 }

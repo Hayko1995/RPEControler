@@ -29,7 +29,7 @@ import 'package:rpe_c/presentation/screens/signUpScreen/signup.screen.dart';
 import 'package:rpe_c/presentation/screens/splashScreen/splash.screen.dart';
 import 'package:rpe_c/presentation/screens/watcherScreen/watcher.screen.dart';
 import 'package:rpe_c/presentation/screens/qrScan/qrScan.screen.dart';
-import 'package:rpe_c/screens/device_screen.dart';
+import 'package:rpe_c/presentation/screens/bluetooth/device_screen.dart';
 
 class AppRouter {
   static const String splashRoute = "/splash";

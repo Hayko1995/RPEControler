@@ -56,20 +56,15 @@ class _HomeScreenState extends State<HomeScreen> {
       const AssociationsScreen()
     ];
 
-    //TODO change
-    _databaseService
-        .insertNetwork(RpeNetwork(url: ApiRoutes.esp32Url, preDef: 1));
-    // _databaseService
-    //     .insertNetwork(RpeNetwork(url: ApiRoutes.esp321Url, preDef: 1));
-
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     meshNotifier.sendE1();
     meshNotifier.getNetworks();
     Future.delayed(const Duration(milliseconds: 3000), () {
       devices = meshNotifier.networks!;
-      if (devices.isEmpty) {
-        Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
-      }
+      //TODO change
+      // if (devices.isEmpty) {
+      //   Navigator.of(context).pushNamed(AppRouter.qrScanRoute);
+      // }
     });
 
     // }

@@ -21,8 +21,8 @@ import 'package:rpe_c/core/notifiers/theme.notifier.dart';
 import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
 import 'package:esp_smartconfig/esp_smartconfig.dart';
 import 'package:network_info_plus/network_info_plus.dart';
-import 'package:rpe_c/screens/bluetooth_off_screen.dart';
-import 'package:rpe_c/screens/scan_screen.dart';
+import 'package:rpe_c/presentation/screens/bluetooth/bluetooth_off_screen.dart';
+import 'package:rpe_c/presentation/screens/bluetooth/scan_screen.dart';
 
 class ConfigureNetworkScreen extends StatefulWidget {
   const ConfigureNetworkScreen(

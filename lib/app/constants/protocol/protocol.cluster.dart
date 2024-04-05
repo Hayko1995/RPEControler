@@ -73,8 +73,8 @@ class MeshCluster {
   }
 
   String sendDisableCluster(networkNumber, clusterId) {
-    String messageLength = "20";
-    String subcommand = "10";
+    String messageLength = "06";
+    String subcommand = "20";
     String command = cluster +
         subcommand +
         messageLength +

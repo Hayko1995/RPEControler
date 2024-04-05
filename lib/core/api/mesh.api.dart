@@ -104,6 +104,7 @@ class MeshAPI {
   }
 
   Future meshE1() async {
+    print("E111111111111111111111");
     //todo Remove from API and move to provider
     List<RpeNetwork> networks = await _databaseService.getAllNetworks();
     String netId = '';
@@ -113,7 +114,9 @@ class MeshAPI {
     late http.Response response;
     RpeNetwork network;
     for (network in networks) {
+
       final Uri uri = Uri.parse(network.url);
+      print(uri);
       int length = 0;
       try {
         response = await client.post(uri, headers: headers, body: command);
@@ -121,7 +124,9 @@ class MeshAPI {
         for (int i = 0; i < body.length; i = i + 2) {
           lint.add(body.substring(i, i + 2));
         }
+        print(lint);
       } catch (e) {
+        print(e);
         continue;
       }
 

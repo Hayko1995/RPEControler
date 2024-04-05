@@ -14,11 +14,11 @@ import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
-import '../widgets/service_tile.dart';
-import '../widgets/characteristic_tile.dart';
-import '../widgets/descriptor_tile.dart';
-import '../utils/snackbar.dart';
-import '../utils/extra.dart';
+import '../../../widgets/service_tile.dart';
+import '../../../widgets/characteristic_tile.dart';
+import '../../../widgets/descriptor_tile.dart';
+import '../../../utils/snackbar.dart';
+import '../../../utils/extra.dart';
 
 class DeviceScreen extends StatefulWidget {
   final BleArgs bleArgs;

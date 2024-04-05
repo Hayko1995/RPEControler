@@ -1,14 +1,8 @@
-import 'dart:async';
-
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rpe_c/core/models/db.models.dart';
-import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
-import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.references.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.setThreshhold.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.setTimers.screen.dart';
+import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.setTimers1.screen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 final List<SalomonBottomBarItem> bottomNavBarIcons = [
@@ -25,11 +19,11 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
     selectedColor: Colors.blue,
   ),
 
-  // SalomonBottomBarItem(
-  //   icon: const Icon(Icons.timer),
-  //   title: const Text("Set Timer"),
-  //   selectedColor: Colors.blue,
-  // ),
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.timer),
+    title: const Text("Set Timer"),
+    selectedColor: Colors.blue,
+  ),
 ];
 
 class SensorDetailsScreen extends StatefulWidget {
@@ -60,7 +54,7 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
       SensorReferencesScreen(
         mac: widget.sensorDetailsArguments.mac,
       ),
-      SensorSetThresholdScreen(
+      SensorSetTImerScreen(
         mac: widget.sensorDetailsArguments.mac,
       ),
       SensorTimersScreen(
