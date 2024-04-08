@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.time.dart';
-import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/widget/widget.dart';
@@ -45,6 +44,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
   String actionType = '';
 
   final TextEditingController _startDate = new TextEditingController();
+  final TextEditingController _endDate = new TextEditingController();
   final TextEditingController _startTime = new TextEditingController();
   final TextEditingController _endTime = new TextEditingController();
   final TextEditingController _name = new TextEditingController();
@@ -71,6 +71,8 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
     String timeAndData = '';
     String hexStartTime = '';
     String command = "";
+    String secStartTime = "";
+    String secEndTime = "";
 
     var selectedIndexes = [];
     List<RpeDevice> data = meshNotifier.allDevices!;
@@ -124,6 +126,41 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           );
         },
       );
+    }
+
+    String hexPadding(num) {
+      if (num < 16777217) {
+        if (num < 65536) {
+          if (num < 4096) {
+            if (num < 256) {
+              num = num.toRadixString(16);
+              num = '0000' + num;
+            } else {
+              num = num.toRadixString(16);
+              num = '000' + num;
+            }
+          } else {
+            num = num.toRadixString(16);
+            num = '0000' + num;
+          }
+        } else {
+          if (num < 1048576) {
+            num = num.toRadixString(16);
+            num = '000' + num;
+          } else {
+            num = num.toRadixString(16);
+            num = '00' + num;
+          }
+        }
+      } else {
+        if (num < 268435456) {
+          num = num.toRadixString(16);
+          num = '0' + num;
+        } else {
+          num = num.toRadixString(16);
+        }
+      }
+      return num;
     }
 
     return SafeArea(
@@ -210,6 +247,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                         onChanged: (value) {
                                           setState(() {
                                             values[key] = value!;
+                                            print(values);
                                           });
                                         },
                                       ),
@@ -305,7 +343,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                             decoration: const InputDecoration(
                                                 //icon of text field
                                                 labelText:
-                                                    "Enter Date" //label text of field
+                                                    "Start Date" //label text of field
                                                 ),
                                             readOnly: true,
                                             onTap: () async {
@@ -333,6 +371,54 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
 
                                                   setState(() {
                                                     _startDate.text =
+                                                        "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
+                                                  });
+                                                } else {
+                                                  print("Date is not selected");
+                                                }
+                                              }
+                                            },
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      child: SizedBox(
+                                          width:
+                                              MediaQuery.sizeOf(context).width *
+                                                  0.4,
+                                          child: TextField(
+                                            controller: _endDate,
+                                            //editing controller of this TextField
+                                            decoration: const InputDecoration(
+                                                //icon of text field
+                                                labelText:
+                                                    "Enter Date" //label text of field
+                                                ),
+                                            readOnly: true,
+                                            onTap: () async {
+                                              DateTime? pickedDate =
+                                                  await showDatePicker(
+                                                      context: context,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      //get today's date
+                                                      firstDate: DateTime(2000),
+                                                      //DateTime.now() - not to allow to choose before today.
+                                                      lastDate: DateTime(2101));
+
+                                              if (pickedDate != null) {
+                                                TimeOfDay? pickeTime =
+                                                    await showTimePicker(
+                                                        context: context,
+                                                        initialTime:
+                                                            TimeOfDay.now());
+
+                                                if (pickeTime != null) {
+                                                  String formattedDate =
+                                                      DateFormat('dd:MM:yy').format(
+                                                          pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+
+                                                  setState(() {
+                                                    _endDate.text =
                                                         "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
                                                   });
                                                 } else {
@@ -427,11 +513,49 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                       int StartTimeInSec = d1t2 - 946713600;
                                       hexStartTime =
                                           StartTimeInSec.toRadixString(16);
-                                      print(hexStartTime);
-                                      print(d1);
+
                                       hexEndTimer = '00000000';
+                                      String timStatus = '';
+                                      if (timerStatus == "ON") {
+                                        timStatus = '01';
+                                      } else {
+                                        timStatus = '00';
+                                      }
+                                      if (actionType == "Off") {
+                                        timerType = '01';
+                                        secEndTime = '00000000';
+                                      } else {
+                                        String endDay =
+                                            _endDate.text.toString();
+                                        print(endDay);
+                                        int day =
+                                            int.parse((endDay.substring(0, 2)));
+
+                                        int mounts =
+                                            int.parse(endDay.substring(3, 5));
+                                        int year = int.parse(
+                                            "20" + endDay.substring(6, 8));
+                                        int hour =
+                                            int.parse(endDay.substring(9, 11));
+                                        int minute =
+                                            int.parse(endDay.substring(12));
+
+                                        var d2 = DateTime.now();
+                                        int dh =
+                                            d2.millisecondsSinceEpoch ~/ 1000;
+                                        var d1 = DateTime(
+                                            year, mounts, day, hour, minute);
+                                        var d1t2 =
+                                            d1.millisecondsSinceEpoch ~/ 1000;
+                                        int endTimeInSec = d1t2 - 946713600;
+                                        hexStartTime =
+                                            endTimeInSec.toRadixString(16);
+
+                                        timerType = '11';
+                                      }
+
                                       command = meshTimer.sendSetTimer(
-                                          dataDevice.dNum.toString(),
+                                          dataDevice.nodeNumber,
                                           dataDevice.netId,
                                           '01',
                                           hexStartTime,
@@ -442,7 +566,11 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                           hexEndTimer,
                                           'FF',
                                           'FF',
-                                          timerStatus);
+                                          timStatus);
+                                      print(command);
+                                      bool response =
+                                          await meshNotifier.sendCommand(
+                                              command, dataDevice.netId);
 
                                       if (timerType == "Off") {
                                         timerType = '01';
@@ -464,7 +592,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                           _startTime.text.toString();
 
                                       String inEndTime =
-                                          _startTime.text.toString();
+                                          _endTime.text.toString();
                                       int hStartTime = int.parse(
                                           (inStartTime.substring(0, 2)));
                                       int mStartTime =
@@ -472,8 +600,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                       int startTimeinSec = (3600 * hStartTime) +
                                           (60 * mStartTime);
 
-                                      String secStartTime =
-                                          MeshAPI.hexPadding(startTimeinSec);
+                                      secStartTime = hexPadding(startTimeinSec);
 
                                       int hEndTime = int.parse(
                                           (inEndTime.substring(0, 2)));
@@ -481,8 +608,9 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                           int.parse(inEndTime.substring(3));
                                       int endTimeinSec =
                                           (3600 * hEndTime) + (60 * mEndTime);
-                                      String secEndTime =
-                                          MeshAPI.hexPadding(endTimeinSec);
+                                      secEndTime = hexPadding(endTimeinSec);
+                                      print("secEndTime");
+                                      print(secEndTime);
 
                                       int suDay;
                                       int mDay;
@@ -491,37 +619,37 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                       int thDay;
                                       int fDay;
                                       int saDay;
-                                      if (values[0] == true) {
+                                      if (values['MA'] == true) {
                                         suDay = 1;
                                       } else {
                                         suDay = 0;
                                       }
-                                      if (values[1] == true) {
+                                      if (values["TU"] == true) {
                                         mDay = 2;
                                       } else {
                                         mDay = 0;
                                       }
-                                      if (values[2] == true) {
+                                      if (values['WE'] == true) {
                                         tDay = 4;
                                       } else {
                                         tDay = 0;
                                       }
-                                      if (values[3] == true) {
+                                      if (values['TH'] == true) {
                                         wDay = 8;
                                       } else {
                                         wDay = 0;
                                       }
-                                      if (values[4] == true) {
+                                      if (values['FR'] == true) {
                                         thDay = 16;
                                       } else {
                                         thDay = 0;
                                       }
-                                      if (values[5] == true) {
+                                      if (values['SA'] == true) {
                                         fDay = 32;
                                       } else {
                                         fDay = 0;
                                       }
-                                      if (values[6] == true) {
+                                      if (values['SU'] == true) {
                                         saDay = 64;
                                       } else {
                                         saDay = 0;
@@ -557,8 +685,14 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                       } else {
                                         timerType = '1' + inTimType;
                                       }
+                                      String timStatus = '';
+                                      if (timerStatus == "ON") {
+                                        timStatus = '01';
+                                      } else {
+                                        timStatus = '00';
+                                      }
                                       command = meshTimer.sendSetTimer(
-                                          dataDevice.dNum.toString(),
+                                          dataDevice.nodeNumber,
                                           dataDevice.netId,
                                           '01',
                                           secStartTime,
@@ -569,11 +703,12 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                           weekDays,
                                           'FF',
                                           'FF',
-                                          timerStatus);
+                                          timStatus);
+                                      print(command);
+                                      bool response =
+                                          await meshNotifier.sendCommand(
+                                              command, dataDevice.netId);
                                     }
-                                    print(command);
-                                    bool response = await meshNotifier
-                                        .sendCommand(command, dataDevice.netId);
                                   },
                                   child: const Text('Save')),
                             ],

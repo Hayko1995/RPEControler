@@ -104,7 +104,6 @@ class MeshAPI {
   }
 
   Future meshE1() async {
-    print("E111111111111111111111");
     //todo Remove from API and move to provider
     List<RpeNetwork> networks = await _databaseService.getAllNetworks();
     String netId = '';
@@ -334,6 +333,16 @@ class MeshAPI {
   Future meshTime() async {
     List<String> lint = [];
 
+    List<RpeNetwork> networks = await _databaseService.getAllNetworks();
+    String netId = '';
+    late Uri uri;
+    late http.Response response;
+    RpeNetwork network;
+    for (network in networks) {
+      uri = Uri.parse(network.url);
+      print(uri);
+    }
+
     var cmd = '38';
     var cmdSub = '00';
     var msgLen = '10';
@@ -367,20 +376,20 @@ class MeshAPI {
         weekday +
         daySecCount;
     //todo add problem response failure situation
-    final Uri uri = Uri.parse(ApiRoutes.esp32Url);
+    // final Uri uri = Uri.parse(ApiRoutes.esp32Url);
 
     try {
       final http.Response response =
           await client.post(uri, headers: headers, body: timePkt);
-      final body = response.body;
-      var stringList = body.split(' ');
-      stringList.removeLast();
-      for (int i = 0; i < stringList.length; i++) {
-        int integerData = int.parse(stringList[i]);
-        lint.add(integerData.toRadixString(16));
-      }
+      // final body = response.body;
+      // var stringList = body.split(' ');
+      // stringList.removeLast();
+      // for (int i = 0; i < stringList.length; i++) {
+      //   int integerData = int.parse(stringList[i]);
+      //   lint.add(integerData.toRadixString(16));
+      // }
 
-      return body;
+      // return body;
     } catch (e) {
       print(" service = internet problem");
       return Null;

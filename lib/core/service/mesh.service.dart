@@ -106,6 +106,7 @@ Future<String> getData() async {
 Future initMesh() async {
   final MeshAPI meshAPI = MeshAPI();
   await meshAPI.meshE1();
+  // await meshAPI.meshTime();
   // logger.i("send E1");
 }
 

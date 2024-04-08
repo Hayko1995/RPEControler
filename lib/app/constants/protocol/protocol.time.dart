@@ -100,7 +100,7 @@ class MeshTimer {
       clusterId,
       assocThreshold,
       status,
-      {reserved = "00"}) {
+      {reserved = "FF"}) {
     String messageLength = "16";
     String setTimer = '01';
 

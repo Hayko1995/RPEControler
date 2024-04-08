@@ -90,7 +90,7 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
                 isSwitched = value;
               });
             }
-            ;
+
           },
         ));
       }

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
-import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
-
 
 Widget sensorWidget(context, data, widgetKey) {
   final Function(bool?) toggleCheckboxState;
@@ -16,51 +13,37 @@ Widget sensorWidget(context, data, widgetKey) {
 
   final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
 
-  void checkBoxCallBack(bool? checkBoxState) {
-    if (checkBoxState != null) {
-      String command;
-      if (checkBoxState) {
-        command = "94" + "01" + "05" + data.nodeNumber + data.netId;
-      }
-      else {
-        command = "94" + "02" + "05" + data.nodeNumber + data.netId;
-      }
-      meshNotifier.sendActivationCommand(command, data.netId);
+  void changeState() {
+    String status = data.status;
+    print("aaaaaaaaaaa");
+    String command;
+    if (status == "ON") {
+      data.status = "OFF";
+      command = "94" + "01" + "05" + data.nodeNumber + data.netId;
+    } else {
+      data.status = "ON";
+      command = "94" + "02" + "05" + data.nodeNumber + data.netId;
     }
-  }
+    // meshNotifier.sendActivationCommand(command, data.netId);
 
+    meshNotifier.updateDevice(data);
+    print("////////");
+    print(data);
+  }
 
   return GestureDetector(
       key: widgetKey,
       onTap: () {
+        changeState();
+        if (data.deviceType == 0) {
+          changeState();
+        }
+      },
+      onLongPress: () {
         Navigator.of(context).pushNamed(
           AppRouter.sensorDetailsRoute,
           arguments: SensorDetailsArgs(mac: data.macAddress),
         );
-      },
-      onLongPress: () {
-        if (data.deviceType == 0) {
-          showMenu(
-            items: <PopupMenuEntry>[
-              PopupMenuItem(
-                //value: this._index,
-                child: Column(
-                  children: [
-                    GFToggle(
-                      value: true,
-                      enabledThumbColor: Colors.blue,
-                      enabledTrackColor: Colors.green,
-                      type: GFToggleType.custom,
-                      onChanged: checkBoxCallBack,
-                    )
-                  ],
-                ),
-              )
-            ],
-            context: context,
-            position: _getRelativeRect(widgetKey),
-          );
-        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -68,15 +51,12 @@ Widget sensorWidget(context, data, widgetKey) {
               image: AssetImage(data.image),
               fit: BoxFit.fill,
             ),
-            color: Colors.white,
+            color: data.status == "ON" ? Colors.green : Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
                   offset: const Offset(0, 5),
-                  color: Theme
-                      .of(context)
-                      .primaryColor
-                      .withOpacity(.2),
+                  color: Theme.of(context).primaryColor.withOpacity(.2),
                   spreadRadius: 2,
                   blurRadius: 5)
             ]),
@@ -85,15 +65,9 @@ Widget sensorWidget(context, data, widgetKey) {
           children: [
             const SizedBox(height: 3),
             Text(data.name.toString().toUpperCase(),
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .titleMedium),
+                style: Theme.of(context).textTheme.titleMedium),
             Text(value[0].toString().toUpperCase(),
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .titleMedium)
+                style: Theme.of(context).textTheme.titleMedium)
           ],
         ),
       ));
@@ -106,7 +80,7 @@ RelativeRect _getRelativeRect(GlobalKey key) {
 
 Rect _getWidgetGlobalRect(GlobalKey key) {
   final RenderBox renderBox =
-  key.currentContext!.findRenderObject() as RenderBox;
+      key.currentContext!.findRenderObject() as RenderBox;
   var offset = renderBox.localToGlobal(Offset.zero);
   debugPrint('Widget position: ${offset.dx} ${offset.dy}');
   return Rect.fromLTWH(offset.dx / 3.1, offset.dy * 1.05, renderBox.size.width,

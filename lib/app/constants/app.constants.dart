@@ -17,7 +17,7 @@ class AppConstants {
     "0B": "assets/images/icons/air-quality-sensor.png",
     "15": "assets/images/icons/Temperature.jpg",
     "40": "assets/images/icons/Relay.jpg",
-    "1A": "assets/images/icons/buzzer.jpg",
+    "1A": "assets/images/icons/buzzer.png",
     "00": "assets/images/icons/air-quality-sensor.png",
   };
 
