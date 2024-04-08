@@ -114,7 +114,6 @@ class MeshAPI {
     late http.Response response;
     RpeNetwork network;
     for (network in networks) {
-
       final Uri uri = Uri.parse(network.url);
       print(uri);
       int length = 0;
@@ -297,7 +296,7 @@ class MeshAPI {
     }
   }
 
-  String hexPadding(num) {
+  static String hexPadding(num) {
     if (num < 16777217) {
       if (num < 65536) {
         if (num < 4096) {
