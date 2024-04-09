@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.time.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
@@ -24,6 +26,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
   late List<RpeDevice> allDevices;
   late List<Cluster> allClusters = [];
   List<String> typeOfTimer = <String>['One Time', "Periodic"];
+
   List<String> typeOfControl = <String>["ON", "Off", "Up", "Down"];
   List<String> stateOfTimer = <String>['ON', "Off"];
   List<String> types = <String>['Devices', 'Clusters'];
@@ -42,6 +45,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
   String controlType = '';
   String timerStatus = '';
   String actionType = '';
+  String timerId = '01';
 
   final TextEditingController _startDate = new TextEditingController();
   final TextEditingController _endDate = new TextEditingController();
@@ -61,7 +65,23 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
   @override
   Widget build(BuildContext context) {
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+
+    CacheManagerUtils.conditionalCache(
+      key: AppKeys.timerId,
+      valueType: ValueType.StringValue,
+      actionIfNull: () {
+        WriteCache.setString(key: AppKeys.timerId, value: '00');
+        timerId = "00";
+      },
+      actionIfNotNull: () async {
+        timerId = await ReadCache.getString(key: AppKeys.timerId);
+      },
+    );
+
     dataDevice = meshNotifier.getDeviceByMac(widget.mac);
+    if (dataDevice.isActivation == 1) {
+      typeOfControl = ["ON", "Off"];
+    }
     allClusters == meshNotifier.getAllClusters;
     timerType = typeOfTimer.first;
 
@@ -557,7 +577,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                       command = meshTimer.sendSetTimer(
                                           dataDevice.nodeNumber,
                                           dataDevice.netId,
-                                          '01',
+                                          timerId,
                                           hexStartTime,
                                           hexEndTimer,
                                           timerType,
@@ -691,10 +711,12 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                       } else {
                                         timStatus = '00';
                                       }
+                                      print("aaaaaaaaaaaaaaaaa");
+                                      print(timerId);
                                       command = meshTimer.sendSetTimer(
                                           dataDevice.nodeNumber,
                                           dataDevice.netId,
-                                          '01',
+                                          timerId,
                                           secStartTime,
                                           secEndTime,
                                           timerType,
@@ -709,6 +731,18 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                           await meshNotifier.sendCommand(
                                               command, dataDevice.netId);
                                     }
+                                    int intTimerId = int.parse(timerId);
+                                    intTimerId = intTimerId + 1;
+                                    if (intTimerId < 9) {
+                                      print(intTimerId);
+                                      timerId = "0$intTimerId";
+                                    } else {
+                                      timerId = intTimerId.toString();
+                                    }
+                                    print("////////////");
+                                    print(timerId);
+                                    WriteCache.setString(
+                                        key: AppKeys.timerId, value: timerId);
                                   },
                                   child: const Text('Save')),
                             ],

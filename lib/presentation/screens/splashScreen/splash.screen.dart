@@ -3,7 +3,6 @@ import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
-import 'package:rpe_c/app/constants/app.fonts.dart';
 import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
