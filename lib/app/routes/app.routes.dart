@@ -3,33 +3,31 @@
 import 'package:concentric_transition/concentric_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:rpe_c/presentation/screens/assosiationScreen/assosiation.screen.dart';
+import 'package:rpe_c/presentation/screens/bluetooth/device_screen.dart';
 import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
 import 'package:rpe_c/presentation/screens/clusteringScreen/clustering.screen.dart';
-import 'package:rpe_c/presentation/screens/esp32/esp32.view.dart';
-import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
-import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
 import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
+import 'package:rpe_c/presentation/screens/esp32/esp32.view.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
+import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
 import 'package:rpe_c/presentation/screens/ipScanScreen/ipScan.screen.dart';
 import 'package:rpe_c/presentation/screens/loginScreen/login.view.dart';
+import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
 import 'package:rpe_c/presentation/screens/notificationsScreen/notifications.screen.dart';
-
 import 'package:rpe_c/presentation/screens/onBoardingScreen/onBoarding.screen.dart';
-import 'package:rpe_c/presentation/screens/preDefinesScreen/preDefines.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/accountInformationScreen/account.information.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/appSettingsScreen/app.setting.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/changePasswordScreen/change.password.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/editProfileScreen/edit.profile.screen.dart';
 import 'package:rpe_c/presentation/screens/profileScreens/mainProfileScreen/profile.screen.dart';
 import 'package:rpe_c/presentation/screens/qrScan/configureNetwork.dart';
+import 'package:rpe_c/presentation/screens/qrScan/qrScan.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 import 'package:rpe_c/presentation/screens/settings/settings.screen.dart';
 import 'package:rpe_c/presentation/screens/signUpScreen/signup.screen.dart';
 import 'package:rpe_c/presentation/screens/splashScreen/splash.screen.dart';
 import 'package:rpe_c/presentation/screens/watcherScreen/watcher.screen.dart';
-import 'package:rpe_c/presentation/screens/qrScan/qrScan.screen.dart';
-import 'package:rpe_c/presentation/screens/bluetooth/device_screen.dart';
 
 class AppRouter {
   static const String splashRoute = "/splash";
@@ -46,7 +44,6 @@ class AppRouter {
   static const String accountInfo = "/accountInfo";
   static const String categoryRoute = "/category";
   static const String sensorDetailsRoute = "/sensorDetails";
-  static const String preDefinesRoute = "/preDefine";
   static const String manipulationsRoute = "/manipulation";
   static const String sensorsRoute = "/sensor";
   static const String editProfileRoute = "/editProfile";
@@ -86,8 +83,7 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (context) => DeviceScreen(
-              bleArgs:
-              ModalRoute.of(context)!.settings.arguments as BleArgs,
+              bleArgs: ModalRoute.of(context)!.settings.arguments as BleArgs,
             ),
             settings: settings,
           );
@@ -108,16 +104,6 @@ class AppRouter {
             builder: (context) => AssociationScreen(
               associationArguments:
                   ModalRoute.of(context)!.settings.arguments as AssociationArgs,
-            ),
-            settings: settings,
-          );
-        }
-      case preDefinesRoute:
-        {
-          return MaterialPageRoute(
-            builder: (context) => PredefineScreen(
-              predefineArguments:
-                  ModalRoute.of(context)!.settings.arguments as PreDefineArgs,
             ),
             settings: settings,
           );

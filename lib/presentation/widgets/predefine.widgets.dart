@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
-import 'package:rpe_c/presentation/screens/preDefinesScreen/preDefines.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 
@@ -22,11 +21,6 @@ Widget airQualityWidget(context, device, index, place, count, widgetKey) {
     key: widgetKey,
     onTap: () {
       if (place == "dashboard") {
-        Navigator.of(context).pushNamed(
-          AppRouter.preDefinesRoute,
-          arguments: const PreDefineArgs(preDef: 1),
-        );
-      } else {
         Navigator.of(context).pushNamed(
           AppRouter.sensorsRoute,
           arguments: SensorArgs(mac: [device.name], netId: device.netId),

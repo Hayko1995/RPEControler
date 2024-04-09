@@ -51,11 +51,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         airQualityNumber++;
       }
       // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
-    }
-    if (airQualityNumber > 0) {
       sensorList.add(airQualityWidget(context, data.elementAt(0), 0,
           "dashboard", airQualityNumber, GlobalKey()));
     }
+
     setState(() {});
     return sensorList;
   }

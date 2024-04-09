@@ -19,6 +19,3 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-
-92011601FF00012da5fe100000000000010000000000FFFF01
-92011601FF00010000c3f00000c3f014010100FFFF00
