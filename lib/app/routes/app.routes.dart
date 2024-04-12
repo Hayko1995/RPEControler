@@ -15,11 +15,6 @@ import 'package:rpe_c/presentation/screens/loginScreen/login.view.dart';
 import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
 import 'package:rpe_c/presentation/screens/notificationsScreen/notifications.screen.dart';
 import 'package:rpe_c/presentation/screens/onBoardingScreen/onBoarding.screen.dart';
-import 'package:rpe_c/presentation/screens/profileScreens/accountInformationScreen/account.information.screen.dart';
-import 'package:rpe_c/presentation/screens/profileScreens/appSettingsScreen/app.setting.screen.dart';
-import 'package:rpe_c/presentation/screens/profileScreens/changePasswordScreen/change.password.screen.dart';
-import 'package:rpe_c/presentation/screens/profileScreens/editProfileScreen/edit.profile.screen.dart';
-import 'package:rpe_c/presentation/screens/profileScreens/mainProfileScreen/profile.screen.dart';
 import 'package:rpe_c/presentation/screens/qrScan/configureNetwork.dart';
 import 'package:rpe_c/presentation/screens/qrScan/qrScan.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
@@ -27,7 +22,6 @@ import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 import 'package:rpe_c/presentation/screens/settings/settings.screen.dart';
 import 'package:rpe_c/presentation/screens/signUpScreen/signup.screen.dart';
 import 'package:rpe_c/presentation/screens/splashScreen/splash.screen.dart';
-import 'package:rpe_c/presentation/screens/watcherScreen/watcher.screen.dart';
 
 class AppRouter {
   static const String splashRoute = "/splash";
@@ -62,12 +56,6 @@ class AppRouter {
 
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case editProfileRoute:
-        {
-          return MaterialPageRoute(
-            builder: (_) => EditProfileScreen(),
-          );
-        }
       case sensorDetailsRoute:
         {
           return MaterialPageRoute(
@@ -153,12 +141,6 @@ class AppRouter {
             builder: (_) => const ipScanScreen(),
           );
         }
-      case appSettingsRoute:
-        {
-          return MaterialPageRoute(
-            builder: (_) => const AppSettings(),
-          );
-        }
       case dashboardRoute:
         {
           return MaterialPageRoute(
@@ -192,12 +174,6 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => const ipScanScreen(),
-          );
-        }
-      case watcherRoute:
-        {
-          return MaterialPageRoute(
-            builder: (_) => const WatcherScreen(),
           );
         }
       case controllerRoute:
@@ -239,24 +215,6 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => SignUpScreen(),
-          );
-        }
-      case profileRoute:
-        {
-          return MaterialPageRoute(
-            builder: (_) => const ProfileScreen(),
-          );
-        }
-      case accountInfo:
-        {
-          return MaterialPageRoute(
-            builder: (_) => const AccountInformationScreen(),
-          );
-        }
-      case changePassRoute:
-        {
-          return MaterialPageRoute(
-            builder: (_) => ChangePasswordScreen(),
           );
         }
     }

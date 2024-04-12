@@ -152,6 +152,8 @@ class MeshThreshold {
       clusterId,
       accTimerIndex,
       status,
+      tparam1,
+      tparam2,
       weekday,
       {reserved = '00'}) {
     //todo need to understand
@@ -173,8 +175,8 @@ class MeshThreshold {
         clusterId +
         accTimerIndex +
         status +
-        param1 +
-        param2 +
+        tparam1 +
+        tparam2 +
         weekday;
     return command;
   }

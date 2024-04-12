@@ -3,24 +3,11 @@
 //TODO read mDNS https://pub.dev/documentation/nsd/latest/
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:provider/provider.dart';
-import 'package:rpe_c/app/constants/app.colors.dart';
-import 'package:rpe_c/app/routes/app.routes.dart';
-import 'package:rpe_c/core/logger/logger.dart';
-import 'package:rpe_c/core/models/db.models.dart';
-import 'package:rpe_c/core/notifiers/provisining.notifier.dart';
-import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/widgets/dimensions.widget.dart';
-import 'package:rpe_c/core/notifiers/theme.notifier.dart';
-import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
-import 'package:esp_smartconfig/esp_smartconfig.dart';
 import 'package:network_info_plus/network_info_plus.dart';
+import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/screens/bluetooth/bluetooth_off_screen.dart';
 import 'package:rpe_c/presentation/screens/bluetooth/scan_screen.dart';
 

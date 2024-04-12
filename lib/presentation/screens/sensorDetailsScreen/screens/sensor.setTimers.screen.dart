@@ -711,8 +711,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                       } else {
                                         timStatus = '00';
                                       }
-                                      print("aaaaaaaaaaaaaaaaa");
-                                      print(timerId);
                                       command = meshTimer.sendSetTimer(
                                           dataDevice.nodeNumber,
                                           dataDevice.netId,
@@ -739,8 +737,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                     } else {
                                       timerId = intTimerId.toString();
                                     }
-                                    print("////////////");
-                                    print(timerId);
                                     WriteCache.setString(
                                         key: AppKeys.timerId, value: timerId);
                                   },

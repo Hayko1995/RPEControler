@@ -23,7 +23,7 @@ Future<void> main() async {
       Permission.notification.request();
     }
   });
-  await initializeService(); // intilayze background service
+  // await initializeService(); // intilayze background service
   runApp(const Lava());
 }
 

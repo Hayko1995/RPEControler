@@ -2,7 +2,6 @@ import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.keys.dart';
-import 'package:rpe_c/core/notifiers/user.notifier.dart';
 
 class ControllerScreen extends StatefulWidget {
   const ControllerScreen({Key? key}) : super(key: key);
@@ -16,12 +15,6 @@ class _ControllerScreenState extends State<ControllerScreen> {
 
   @override
   void initState() {
-    final userNotifier = Provider.of<UserNotifier>(context, listen: false);
-    ReadCache.getString(key: AppKeys.userData).then(
-      (token) => {
-        userNotifier.getUserData(context: context, token: token),
-      },
-    );
     super.initState();
   }
 

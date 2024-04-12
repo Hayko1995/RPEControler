@@ -10,7 +10,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/api/mesh.api.dart';
-import 'package:rpe_c/core/models/mesh.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var logger = Logger(
@@ -92,16 +91,6 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   return true;
 }
 
-Future<String> getData() async {
-  final MeshAPI _meshAPI = MeshAPI();
-  var products = await _meshAPI.meshUpdate();
-  if (products != Null) {
-    var data = MeshModel.fromJson(jsonDecode(products)).data;
-    String jsonUser = jsonEncode(data);
-    return Future.value(jsonUser);
-  }
-  return Future.value("");
-}
 
 Future initMesh() async {
   final MeshAPI meshAPI = MeshAPI();

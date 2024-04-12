@@ -4,4 +4,5 @@ class AppKeys {
   static String razorKey = 'rzp_test_ImLClDOqMc2kc1';
   static String onBoardDone = 'onBoard';
   static String timerId = '';
+  static String thresholdId = '';
 }

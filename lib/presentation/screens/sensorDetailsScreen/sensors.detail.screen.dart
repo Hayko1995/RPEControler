@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.references.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.setTimers.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.setTimers1.screen.dart';
+import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.Threshold.screen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 final List<SalomonBottomBarItem> bottomNavBarIcons = [
@@ -57,7 +57,7 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
       SensorSetTImerScreen(
         mac: widget.sensorDetailsArguments.mac,
       ),
-      SensorTimersScreen(
+      SensorThresholdScreen(
         mac: widget.sensorDetailsArguments.mac,
       ),
     ];
