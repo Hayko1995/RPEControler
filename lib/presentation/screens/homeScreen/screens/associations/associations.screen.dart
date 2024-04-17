@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.accociation.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.cluster.dart';
+import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
+import 'package:rpe_c/presentation/screens/associationControlScreen/associationControl.screen.dart';
 
 class AssociationsScreen extends StatefulWidget {
   const AssociationsScreen({super.key});
@@ -20,10 +22,10 @@ Widget widget(context, association, widgetKey) {
   return GestureDetector(
     key: widgetKey,
     onTap: () {
-      // Navigator.of(context).pushNamed(
-      //   AppRouter.clusterControlRouter,
-      //   arguments: ClusterControlArgs(cluster: cluster),
-      // );
+      Navigator.of(context).pushNamed(
+        AppRouter.associationControlRouter,
+        arguments: AssociationControlArgs(association: association),
+      );
     },
     onLongPress: () {
       showMenu(
@@ -151,7 +153,7 @@ class AssociationsScreenState extends State<AssociationsScreen> {
 
   List getAssociationsNetworks(associations) {
     networkIds = [];
-    for (Associations association in associations) {
+    for (Association association in associations) {
       bool res = networkIds.contains(association.netNumber);
       if (!res) {
         networkIds.add(association.netNumber);
@@ -174,7 +176,7 @@ class AssociationsScreenState extends State<AssociationsScreen> {
 
     List<Widget> getAssociations() {
       List<Widget> sensorList = [];
-      List<Associations> data = meshNotifier.getAllAssociations!;
+      List<Association> data = meshNotifier.getAllAssociations!;
 
       for (var i = 0; i < data.length; i++) {
         sensorList.add(widget(context, data.elementAt(i), GlobalKey()));

@@ -33,9 +33,9 @@ class MeshNotifier with ChangeNotifier {
 
   List<Cluster>? get getAllClusters => _clusters;
 
-  List<Associations> _assotiations = [];
+  List<Association> _assotiations = [];
 
-  List<Associations>? get getAllAssociations => _assotiations;
+  List<Association>? get getAllAssociations => _assotiations;
 
   RpeDevice? get getDevice => _device;
 
@@ -139,7 +139,7 @@ class MeshNotifier with ChangeNotifier {
 
   insertAssociation(associationId, associationName, type, netNumber,
       fromDevices, toDevices, status) async {
-    await _databaseService.insertAssociation(Associations(
+    await _databaseService.insertAssociation(Association(
       associationId: associationId,
       associationName: associationName,
       type: type,

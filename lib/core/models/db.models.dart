@@ -448,7 +448,7 @@ class Cluster {
          netNumber: $netNumber, description: $description )''';
 }
 
-class Associations {
+class Association {
   late int associationId;
   late String associationName;
   late String type;
@@ -457,7 +457,7 @@ class Associations {
   late String netNumber;
   late int status;
 
-  Associations({
+  Association({
     required this.associationId,
     required this.associationName,
     required this.fromDevices,
@@ -481,8 +481,8 @@ class Associations {
     };
   }
 
-  factory Associations.fromMap(Map<String, dynamic> map) {
-    return Associations(
+  factory Association.fromMap(Map<String, dynamic> map) {
+    return Association(
       associationId: map['associationId'] ?? 0,
       associationName: map['associationName'] ?? "",
       type: map['type'] ?? "",
@@ -495,8 +495,8 @@ class Associations {
 
   String toJson() => json.encode(toMap());
 
-  factory Associations.fromJson(String source) =>
-      Associations.fromMap(json.decode(source));
+  factory Association.fromJson(String source) =>
+      Association.fromMap(json.decode(source));
 
   // Implement toString to make it easier to see information about
   // each breed when using the print statement.

@@ -46,6 +46,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   List<String> typeOfTimer = <String>['One Time', "Periodic"];
   List<String> boolActivation = <String>['ON', "OFF"];
   bool openCheckboxes = false;
+  bool needTimer = false;
   String sensorTypeValue = '00';
   String thresholdType = '';
   String setnotificationType = "";
@@ -127,7 +128,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
     sensorTypeValue = sensorType.first;
     thresholdType = typeOfThreshold.first;
     setnotificationType = stateOfNotifications.first;
-    print("aaaaaaaaaa");
     super.initState();
   }
 
@@ -191,7 +191,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                             sensorTypeValue = value!;
                             if (sensorTypeValue == "00") {
                               setState(() {
-                                typeOfThreshold = <String>["Below", "Above"];
+                                typeOfThreshold = <String>["ON", "OFF"];
                                 thresholdType = typeOfThreshold.first;
                               });
                             } else {
@@ -204,7 +204,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                 ];
                                 thresholdType = typeOfThreshold.first;
                               });
-
                             }
                           });
                         },
@@ -238,45 +237,34 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
             SizedBox(
               height: 10,
             ),
-            dataDevice.isActivation == 1 && sensorTypeValue == "00"
-                ? Center(
-                    child: Switch(
-                      value: isSwitched,
-                      onChanged: (value) async {
-                        setState(() {
-                          isSwitched = value;
-                        });
-                      },
-                    ),
-                  )
-                : Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(
-                        child: SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.4,
-                            child: NumberTextField(
-                              max: 100,
-                              min: 0,
-                              controller: _startValueController,
-                            )),
-                      ),
-                      if (thresholdType == "Inside" ||
-                          thresholdType == "Outside")
-                        SizedBox(
-                          child: SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.4,
-                              child: NumberTextField(
-                                max: 100,
-                                min: 0,
-                                controller: _endValueController,
-                                // onChanged: (value) {
-                                // _startValueController.value = value;
-                              )),
-                        )
-                    ],
+            if (sensorTypeValue != "00")
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    child: SizedBox(
+                        width: MediaQuery.sizeOf(context).width * 0.4,
+                        child: NumberTextField(
+                          max: 100,
+                          min: 0,
+                          controller: _startValueController,
+                        )),
                   ),
+                  if (thresholdType == "Inside" || thresholdType == "Outside")
+                    SizedBox(
+                      child: SizedBox(
+                          width: MediaQuery.sizeOf(context).width * 0.4,
+                          child: NumberTextField(
+                            max: 100,
+                            min: 0,
+                            controller: _endValueController,
+                            // onChanged: (value) {
+                            // _startValueController.value = value;
+                          )),
+                    )
+                ],
+              ),
             SizedBox(
               height: 20,
             ),
@@ -357,256 +345,286 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                          child: SizedBox(
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SizedBox(
-                                child: DropdownMenu<String>(
-                                  initialSelection: typeOfTimer.first,
-                                  onSelected: (String? value) {
-                                    // This is called when the user selects an item.
-                                    setState(() {
-                                      timerType = value!;
-                                      if (timerType == 'Periodic') {
-                                        oneTimeOrPereudic = true;
-                                      } else {
-                                        oneTimeOrPereudic = false;
-                                      }
-                                    });
-                                  },
-                                  label: const Text("Timer"),
-                                  dropdownMenuEntries: typeOfTimer
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList(),
-                                ),
-                              ),
-                            ]),
-                      )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      if (oneTimeOrPereudic)
-                        SizedBox(
-                          width: 300,
-                          height: 70,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: values.keys.map((String key) {
-                              return SizedBox(
-                                width: 40,
-                                child: Column(
-                                  children: [
-                                    Text(key),
-                                    Checkbox(
-                                      value: values[key],
-                                      onChanged: (value) {
-                                        setState(() {
-                                          values[key] = value!;
-                                          print(values);
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      oneTimeOrPereudic
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  child: SizedBox(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.4,
-                                      child: TextField(
-                                        controller: _startTime,
-                                        //editing controller of this TextField
-                                        decoration: const InputDecoration(
-                                            //icon of text field
-                                            labelText:
-                                                "Start Time" //label text of field
-                                            ),
-                                        readOnly: true,
-                                        onTap: () async {
-                                          TimeOfDay? pickeTime =
-                                              await showTimePicker(
-                                                  context: context,
-                                                  initialTime: TimeOfDay.now());
-
-                                          if (pickeTime != null) {
-                                            setState(() {
-                                              _startTime.text =
-                                                  "${pickeTime.hour}:${pickeTime.minute}";
-                                            });
-                                          } else {
-                                            print("Date is not selected");
-                                          }
-                                        },
-                                      )),
-                                ),
-                                SizedBox(
-                                  child: SizedBox(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.4,
-                                      child: TextField(
-                                        controller: _endTime,
-                                        //editing controller of this TextField
-                                        decoration: const InputDecoration(
-                                            //icon of text field
-                                            labelText:
-                                                "End Time" //label text of field
-                                            ),
-                                        readOnly: true,
-                                        onTap: () async {
-                                          TimeOfDay? pickeTime =
-                                              await showTimePicker(
-                                                  context: context,
-                                                  initialTime: TimeOfDay.now());
-
-                                          if (pickeTime != null) {
-                                            setState(() {
-                                              _endTime.text =
-                                                  "${pickeTime.hour}:${pickeTime.minute}";
-                                            });
-                                          } else {
-                                            print("Date is not selected");
-                                          }
-                                        },
-                                      )),
-                                ),
-                              ],
-                            )
-                          : Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                  SizedBox(
-                                    child: SizedBox(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.4,
-                                        child: TextField(
-                                          controller: _startDate,
-                                          //editing controller of this TextField
-                                          decoration: const InputDecoration(
-                                              //icon of text field
-                                              labelText:
-                                                  "Start Date" //label text of field
-                                              ),
-                                          readOnly: true,
-                                          onTap: () async {
-                                            DateTime? pickedDate =
-                                                await showDatePicker(
-                                                    context: context,
-                                                    initialDate: DateTime.now(),
-                                                    //get today's date
-                                                    firstDate: DateTime(2000),
-                                                    //DateTime.now() - not to allow to choose before today.
-                                                    lastDate: DateTime(2101));
-
-                                            if (pickedDate != null) {
-                                              TimeOfDay? pickeTime =
-                                                  await showTimePicker(
-                                                      context: context,
-                                                      initialTime:
-                                                          TimeOfDay.now());
-
-                                              if (pickeTime != null) {
-                                                String formattedDate =
-                                                    DateFormat('dd:MM:yy').format(
-                                                        pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
-
-                                                setState(() {
-                                                  _startDate.text =
-                                                      "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
-                                                });
-                                              } else {
-                                                print("Date is not selected");
-                                              }
-                                            }
-                                          },
-                                        )),
-                                  ),
-                                  SizedBox(
-                                    child: SizedBox(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.4,
-                                        child: TextField(
-                                          controller: _endDate,
-                                          //editing controller of this TextField
-                                          decoration: const InputDecoration(
-                                              //icon of text field
-                                              labelText:
-                                                  "Enter Date" //label text of field
-                                              ),
-                                          readOnly: true,
-                                          onTap: () async {
-                                            DateTime? pickedDate =
-                                                await showDatePicker(
-                                                    context: context,
-                                                    initialDate: DateTime.now(),
-                                                    //get today's date
-                                                    firstDate: DateTime(2000),
-                                                    //DateTime.now() - not to allow to choose before today.
-                                                    lastDate: DateTime(2101));
-
-                                            if (pickedDate != null) {
-                                              TimeOfDay? pickeTime =
-                                                  await showTimePicker(
-                                                      context: context,
-                                                      initialTime:
-                                                          TimeOfDay.now());
-
-                                              if (pickeTime != null) {
-                                                String formattedDate =
-                                                    DateFormat('dd:MM:yy').format(
-                                                        pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
-
-                                                setState(() {
-                                                  _endDate.text =
-                                                      "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
-                                                });
-                                              } else {
-                                                print("Date is not selected");
-                                              }
-                                            }
-                                          },
-                                        )),
-                                  ),
-                                ]),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text("need timer"),
                           SizedBox(
-                            child: DropdownMenu<String>(
-                              onSelected: (String? value) {
-                                // This is called when the user selects an item.
+                            child: Checkbox(
+                              value: needTimer,
+                              onChanged: (value) {
                                 setState(() {
-                                  thresholdStatus = value!;
+                                  needTimer = value!;
+                                  print(needTimer);
                                 });
                               },
-                              label: const Text("Status"),
-                              dropdownMenuEntries: stateOfthreshold
-                                  .map<DropdownMenuEntry<String>>(
-                                      (String value) {
-                                return DropdownMenuEntry<String>(
-                                    value: value, label: value);
-                              }).toList(),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      if (needTimer)
+                        SizedBox(
+                            child: SizedBox(
+                          child: Column(
+                            children: [
+                              Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    SizedBox(
+                                      child: DropdownMenu<String>(
+                                        initialSelection: typeOfTimer.first,
+                                        onSelected: (String? value) {
+                                          // This is called when the user selects an item.
+                                          setState(() {
+                                            timerType = value!;
+                                            if (timerType == 'Periodic') {
+                                              oneTimeOrPereudic = true;
+                                            } else {
+                                              oneTimeOrPereudic = false;
+                                            }
+                                          });
+                                        },
+                                        label: const Text("Timer"),
+                                        dropdownMenuEntries: typeOfTimer
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList(),
+                                      ),
+                                    ),
+
+
+
+
+
+                                  ]),
+
+                              SizedBox(
+                                height: 10,
+                              ),
+                              if (oneTimeOrPereudic)
+                                SizedBox(
+                                  width: 300,
+                                  height: 70,
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: values.keys.map((String key) {
+                                      return SizedBox(
+                                        width: 40,
+                                        child: Column(
+                                          children: [
+                                            Text(key),
+                                            Checkbox(
+                                              value: values[key],
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  values[key] = value!;
+                                                  print(values);
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              oneTimeOrPereudic
+                                  ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    child: SizedBox(
+                                        width: MediaQuery.sizeOf(context).width *
+                                            0.4,
+                                        child: TextField(
+                                          controller: _startTime,
+                                          //editing controller of this TextField
+                                          decoration: const InputDecoration(
+                                            //icon of text field
+                                              labelText:
+                                              "Start Time" //label text of field
+                                          ),
+                                          readOnly: true,
+                                          onTap: () async {
+                                            TimeOfDay? pickeTime =
+                                            await showTimePicker(
+                                                context: context,
+                                                initialTime: TimeOfDay.now());
+
+                                            if (pickeTime != null) {
+                                              setState(() {
+                                                _startTime.text =
+                                                "${pickeTime.hour}:${pickeTime.minute}";
+                                              });
+                                            } else {
+                                              print("Date is not selected");
+                                            }
+                                          },
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    child: SizedBox(
+                                        width: MediaQuery.sizeOf(context).width *
+                                            0.4,
+                                        child: TextField(
+                                          controller: _endTime,
+                                          //editing controller of this TextField
+                                          decoration: const InputDecoration(
+                                            //icon of text field
+                                              labelText:
+                                              "End Time" //label text of field
+                                          ),
+                                          readOnly: true,
+                                          onTap: () async {
+                                            TimeOfDay? pickeTime =
+                                            await showTimePicker(
+                                                context: context,
+                                                initialTime: TimeOfDay.now());
+
+                                            if (pickeTime != null) {
+                                              setState(() {
+                                                _endTime.text =
+                                                "${pickeTime.hour}:${pickeTime.minute}";
+                                              });
+                                            } else {
+                                              print("Date is not selected");
+                                            }
+                                          },
+                                        )),
+                                  ),
+                                ],
+                              )
+                                  : Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    SizedBox(
+                                      child: SizedBox(
+                                          width:
+                                          MediaQuery.sizeOf(context).width *
+                                              0.4,
+                                          child: TextField(
+                                            controller: _startDate,
+                                            //editing controller of this TextField
+                                            decoration: const InputDecoration(
+                                              //icon of text field
+                                                labelText:
+                                                "Start Date" //label text of field
+                                            ),
+                                            readOnly: true,
+                                            onTap: () async {
+                                              DateTime? pickedDate =
+                                              await showDatePicker(
+                                                  context: context,
+                                                  initialDate: DateTime.now(),
+                                                  //get today's date
+                                                  firstDate: DateTime(2000),
+                                                  //DateTime.now() - not to allow to choose before today.
+                                                  lastDate: DateTime(2101));
+
+                                              if (pickedDate != null) {
+                                                TimeOfDay? pickeTime =
+                                                await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                    TimeOfDay.now());
+
+                                                if (pickeTime != null) {
+                                                  String formattedDate =
+                                                  DateFormat('dd:MM:yy').format(
+                                                      pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+
+                                                  setState(() {
+                                                    _startDate.text =
+                                                    "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
+                                                  });
+                                                } else {
+                                                  print("Date is not selected");
+                                                }
+                                              }
+                                            },
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      child: SizedBox(
+                                          width:
+                                          MediaQuery.sizeOf(context).width *
+                                              0.4,
+                                          child: TextField(
+                                            controller: _endDate,
+                                            //editing controller of this TextField
+                                            decoration: const InputDecoration(
+                                              //icon of text field
+                                                labelText:
+                                                "Enter Date" //label text of field
+                                            ),
+                                            readOnly: true,
+                                            onTap: () async {
+                                              DateTime? pickedDate =
+                                              await showDatePicker(
+                                                  context: context,
+                                                  initialDate: DateTime.now(),
+                                                  //get today's date
+                                                  firstDate: DateTime(2000),
+                                                  //DateTime.now() - not to allow to choose before today.
+                                                  lastDate: DateTime(2101));
+
+                                              if (pickedDate != null) {
+                                                TimeOfDay? pickeTime =
+                                                await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                    TimeOfDay.now());
+
+                                                if (pickeTime != null) {
+                                                  String formattedDate =
+                                                  DateFormat('dd:MM:yy').format(
+                                                      pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+
+                                                  setState(() {
+                                                    _endDate.text =
+                                                    "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
+                                                  });
+                                                } else {
+                                                  print("Date is not selected");
+                                                }
+                                              }
+                                            },
+                                          )),
+                                    ),
+                                  ]),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    child: DropdownMenu<String>(
+                                      onSelected: (String? value) {
+                                        // This is called when the user selects an item.
+                                        setState(() {
+                                          thresholdStatus = value!;
+                                        });
+                                      },
+                                      label: const Text("Status"),
+                                      dropdownMenuEntries: stateOfthreshold
+                                          .map<DropdownMenuEntry<String>>(
+                                              (String value) {
+                                            return DropdownMenuEntry<String>(
+                                                value: value, label: value);
+                                          }).toList(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                        )),
+
+
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
                         child: Row(

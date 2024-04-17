@@ -41,7 +41,7 @@ void main() {
     //TODO need to test
 
     String command = meshThreshold.sendSetThreshold("01", "01", "01", "01",
-        "01", "01", "01", "01", "01", "01", "01", "01", '00');
+        "01", "01", "01", "01", "01", "01", "01", "01", "01", "01", "01");
     expect(command, "90013101010001010101010101010101010100");
   });
   test('sendSetAssocThreshold', () {

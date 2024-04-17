@@ -139,7 +139,7 @@ class DatabaseService {
     );
   }
 
-  Future<void> insertAssociation(Associations breed) async {
+  Future<void> insertAssociation(Association breed) async {
     final db = await _databaseService.database;
     await db.insert(
       AppConstants.associationTable,
@@ -155,12 +155,12 @@ class DatabaseService {
     return List.generate(maps.length, (index) => Cluster.fromMap(maps[index]));
   }
 
-  Future<List<Associations>> getAllAssociations() async {
+  Future<List<Association>> getAllAssociations() async {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps =
         await db.query(AppConstants.associationTable);
     return List.generate(
-        maps.length, (index) => Associations.fromMap(maps[index]));
+        maps.length, (index) => Association.fromMap(maps[index]));
   }
 
   Future<List<Cluster>> getClusterByName(List<String> clusterName) async {

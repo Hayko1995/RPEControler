@@ -120,7 +120,7 @@ class AssociationScreenState extends State<AssociationScreen> {
                       String netNumber = activeAreas[0].items[0].netId;
 
                       bool singleNet = true;
-                      List<Associations> allAssociations =
+                      List<Association> allAssociations =
                           meshNotifier.getAllAssociations!;
                       int _associationId = 0;
                       if (allAssociations.isEmpty) {

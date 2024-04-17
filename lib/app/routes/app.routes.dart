@@ -2,6 +2,7 @@
 
 import 'package:concentric_transition/concentric_transition.dart';
 import 'package:flutter/material.dart';
+import 'package:rpe_c/presentation/screens/associationControlScreen/associationControl.screen.dart';
 import 'package:rpe_c/presentation/screens/assosiationScreen/assosiation.screen.dart';
 import 'package:rpe_c/presentation/screens/bluetooth/device_screen.dart';
 import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
@@ -50,6 +51,7 @@ class AppRouter {
   static const String esp32Route = "/esp32";
   static const String networkConfigRouter = '/networkConfig';
   static const String clusterControlRouter = '/clusterControl';
+  static const String associationControlRouter = '/associationControl';
   static const String clusteringRouter = '/clustering';
   static const String associationsRouter = '/associations';
   static const String bleDeviceRouter = '/bleDevice';
@@ -103,6 +105,17 @@ class AppRouter {
               clusterControlsArguments: ModalRoute.of(context)!
                   .settings
                   .arguments as ClusterControlArgs,
+            ),
+            settings: settings,
+          );
+        }
+      case associationControlRouter:
+        {
+          return MaterialPageRoute(
+            builder: (context) => AssociationControlScreen(
+              associationControlArguments: ModalRoute.of(context)!
+                  .settings
+                  .arguments as AssociationControlArgs,
             ),
             settings: settings,
           );
