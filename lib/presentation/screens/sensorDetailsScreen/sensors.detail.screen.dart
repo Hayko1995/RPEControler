@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.references.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.setTimers.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.Threshold.screen.dart';
+import 'package:rpe_c/presentation/widgets/sensor.setTimers.widget.dart';
+import 'package:rpe_c/presentation/widgets/sensor.Threshold.widget.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 final List<SalomonBottomBarItem> bottomNavBarIcons = [

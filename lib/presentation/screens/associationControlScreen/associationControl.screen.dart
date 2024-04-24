@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.Threshold.screen.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.setTimers.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
+import 'package:rpe_c/presentation/widgets/sensor.Threshold.widget.dart';
+import 'package:rpe_c/presentation/widgets/sensor.setTimers.widget.dart';
 
 Widget sensorWidget(context, data, widgetKey) {
   final Function(bool?) toggleCheckboxState;
@@ -99,26 +99,7 @@ class _AssociationControlScreenState extends State<AssociationControlScreen> {
           context: context,
           barrierDismissible: false, // user must tap button!
           builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Choose your favourite programming language!'),
-              content: SingleChildScrollView(
-                child: SensorThresholdScreen(mac: "00158d0000506820"),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Abort'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Text('Confirm'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
+            return  SensorThresholdScreen(mac: "00158d0000506820");
           },
         );
 
@@ -126,26 +107,7 @@ class _AssociationControlScreenState extends State<AssociationControlScreen> {
           context: context,
           barrierDismissible: false, // user must tap button!
           builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Choose your favourite programming language!'),
-              content: SingleChildScrollView(
-                child: SensorSetTImerScreen(mac: "00158d0000506820"),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Abort'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Text('Confirm'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
+            return SensorSetTImerScreen(mac: "00158d0000506820");
           },
         );
 
