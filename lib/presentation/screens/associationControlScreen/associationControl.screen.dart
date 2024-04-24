@@ -146,11 +146,14 @@ class _AssociationControlScreenState extends State<AssociationControlScreen> {
             ],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               OutlinedButton(
-                  onPressed: setThreshold, child: const Text("Set Threshold")),
-              OutlinedButton(
                   onPressed: setTimer, child: const Text("Set Timer")),
+              OutlinedButton(
+                  onPressed: setThreshold, child: const Text("Set Threshold")),
+
             ],
           ),
           SizedBox(

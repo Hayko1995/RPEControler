@@ -5,6 +5,8 @@ import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
+import 'package:rpe_c/presentation/widgets/sensor.Threshold.widget.dart';
+import 'package:rpe_c/presentation/widgets/sensor.setTimers.widget.dart';
 
 Widget sensorWidget(context, data, widgetKey) {
   final Function(bool?) toggleCheckboxState;
@@ -179,6 +181,31 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
       return sensorList;
     }
 
+    void _showThresholdDialog() => showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return  SensorThresholdScreen(mac: "00158d0000506820");
+      },
+    );
+
+    void _showTimerDialog() => showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return SensorSetTImerScreen(mac: "00158d0000506820");
+      },
+    );
+
+    Future<void> setThreshold() async {
+      _showThresholdDialog();
+    }
+
+    Future<void> setTimer() async {
+      _showTimerDialog();
+    }
+
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Cluster Control'),
@@ -204,6 +231,27 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
                   widget.clusterControlsArguments.cluster.type,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Cluster type "),
+                Text(
+                  widget.clusterControlsArguments.cluster.type,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+
+                OutlinedButton(
+                    onPressed: setTimer, child: const Text("Set Timer")),
+                OutlinedButton(
+                    onPressed: setThreshold, child: const Text("Set Threshold")),
               ],
             ),
             Center(

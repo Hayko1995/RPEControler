@@ -265,28 +265,6 @@ class ClustersScreenState extends State<ClustersScreen> {
       setState(() {});
     }
 
-    void setThreshold() {
-      openThreshold = !openThreshold;
-      if (openThreshold) {
-        openEnable = false;
-        openDelete = false;
-        openDisable = false;
-        openSetTimer = false;
-      }
-      setState(() {});
-    }
-
-    void setTimer() {
-      openSetTimer = !openSetTimer;
-      if (openThreshold) {
-        openEnable = false;
-        openDelete = false;
-        openDisable = false;
-        openThreshold = false;
-      }
-      setState(() {});
-    }
-
     void syncAll() {
       setState(() {});
     }
@@ -405,9 +383,6 @@ class ClustersScreenState extends State<ClustersScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               OutlinedButton(onPressed: syncAll, child: Text("Sync All")),
-              OutlinedButton(
-                  onPressed: setThreshold, child: Text("Set Threshold")),
-              OutlinedButton(onPressed: setTimer, child: Text("Set Timer")),
             ],
           ),
           Row(

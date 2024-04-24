@@ -391,9 +391,6 @@ class AssociationsScreenState extends State<AssociationsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlinedButton(onPressed: syncAll, child: Text("Sync All")),
-                // OutlinedButton(
-                //     onPressed: setThreshold, child: Text("Set Threshold")),
-                // OutlinedButton(onPressed: setTimer, child: Text("Set Timer")),
               ],
             ),
             Row(
