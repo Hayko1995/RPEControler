@@ -60,6 +60,11 @@ class MeshNotifier with ChangeNotifier {
     return networks;
   }
 
+  Future getNetworkUrlByNetId(netId) async {
+    String url = await _databaseService.getUrlByNetId([netId]);
+    return url;
+  }
+
   Future getClusters() async {
     _clusters = await _databaseService.getAllClusters();
   }
@@ -77,7 +82,8 @@ class MeshNotifier with ChangeNotifier {
         singleNet, netId, clusterId, clusterNodes, url); //todo Ask Harry
   }
 
-  Future sendAssociationCommand(singleNet, netId, clusterId, clusterNodes) async {
+  Future sendAssociationCommand(
+      singleNet, netId, clusterId, clusterNodes) async {
     //todo add cluster command
 
     final MeshAPI meshAPI = MeshAPI();
@@ -111,6 +117,14 @@ class MeshNotifier with ChangeNotifier {
     }
   }
 
+  getNetworkByUrl(url) {
+    for (RpeNetwork network in networks!) {
+      if (network.url == url) {
+        return network;
+      }
+    }
+  }
+
   _getAllDevices() async {
     _allDevices = await _databaseService.getAllDevices();
     notifyListeners();
@@ -118,6 +132,10 @@ class MeshNotifier with ChangeNotifier {
 
   updateDevice(device) async {
     _databaseService.updateDevice(device);
+  }
+
+  updateNetwork(network) async {
+    _databaseService.updateNetwork(network);
   }
 
   sendCommand(String command, String netId) async {
@@ -169,6 +187,7 @@ class MeshNotifier with ChangeNotifier {
   deleteClusterViaNetId(netId) async {
     await _databaseService.deleteClusterViaNetId(netId);
   }
+
   deleteAssociationViaNetId(netId) async {
     // await _databaseService.deleteClusterViaNetId(netId);
     await _databaseService.deleteAssociationViaNetId(netId);

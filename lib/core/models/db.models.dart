@@ -22,6 +22,10 @@ class RpeDevice {
   //3 indicator button
   // indicator dimmer
   late String netId;
+  late String timers;
+  late String thresholds;
+  late String clusters;
+  late String associations;
 
   final int dNum;
   final int dType;
@@ -98,6 +102,10 @@ class RpeDevice {
       this.numOfSen = 0, // num of sensors
       this.numOfAssocSen = 0,
       this.sensorVal = "0,0,0,0,0,0,0,0,0,0,0",
+      this.timers = "{\"timers\":[]}",
+      this.thresholds = "{\"thresholds\":[]}",
+      this.clusters = "{\"clusters\":[]}",
+      this.associations = "{\"associations\":[]}",
       this.clTbl = "",
       this.aITbl = "", // assoc Initiator table
       this.aLTbl = "",
@@ -143,6 +151,10 @@ class RpeDevice {
       'name': name,
       'networkTableMAC': networkTableMAC,
       'image': image,
+      'timers': timers,
+      'thresholds': thresholds,
+      'clusters': clusters,
+      'associations': associations,
 
       'dName': dName,
       'dNetNum': dNetNum,
@@ -206,6 +218,10 @@ class RpeDevice {
         name: map['name'] ?? "",
         networkTableMAC: map['networkTableMAC'] ?? 0,
         image: map['image'] ?? "",
+        timers: map['timers'] ?? "",
+        thresholds: map['thresholds'] ?? "",
+        clusters: map['clusters'] ?? '',
+        associations: map['associations'] ?? '',
         dName: map['dName'] ?? "",
         dNetNum: map['dNetNum'] ?? "",
         dNum: map['dNum'] ?? 0,
@@ -262,7 +278,9 @@ class RpeDevice {
   isActivation: $isActivation, deviceType: $deviceType,  nodeType: $nodeType,  nodeSubType: $nodeSubType,
     location: $location, stackType $stackType, numChild $numChild,
          status $status, parentNodeNum $parentNodeNum, macAddress $macAddress,
-         name $name, networkTableMAC $networkTableMAC, image $image )''';
+         name $name, networkTableMAC $networkTableMAC, image $image )
+         'timers' $timers, 'thresholds $thresholds, 'clusters $clusters, associations $associations
+         ''';
 }
 
 class RpeNetwork {
@@ -276,16 +294,19 @@ class RpeNetwork {
   final String url;
   final String key;
   late int numOfNodes;
-  final int nRT; // num of RTs in networks
-  final int nRTCh; // num of children per RT (max 10 RT)
+  late String timers; // total of timers defined in a network
+  late String thresholds; // total of thresholds defined in a network
+  late String clusters; // number of clusters
+  late String associations;
+  late int numberRTDevices; // num of RTs in networks
+  late int numberRTChildren; // num of children per RT (max 10 RT)
   final int nEDs; // num of EDs in network
   final int netT; // network type
   late String netId; // network Id
   final int netPId; //TODO what is this
   final int netPT; //TODO what is this
-  late int nTim; // total of timers defined in a network
-  final int nThr; // total of thresholds defined in a network
-  final int nCl; // number of clusters
+
+  late int nTim;
   final int nMCl;
   final int nAso; // number of associations
   final int nMAso; // number of multi network associations
@@ -301,17 +322,19 @@ class RpeNetwork {
       this.ipAddr = "",
       this.url = "",
       this.key = '',
+      this.timers = "{\"timers\":[]}",
+      this.thresholds = "{\"thresholds\":[]}",
+      this.clusters = "{\"clusters\":[]}",
+      this.associations = "{\"associations\":[]}",
+      this.nTim = 0,
       this.numOfNodes = 0,
-      this.nRT = 0,
-      this.nRTCh = 0,
+      this.numberRTDevices = 0,
+      this.numberRTChildren = 0,
       this.nEDs = 0,
       this.netT = 0,
       this.netId = '',
       this.netPId = 0,
       this.netPT = 0,
-      this.nTim = 0,
-      this.nThr = 0,
-      this.nCl = 0,
       this.nMCl = 0,
       this.nAso = 0,
       this.nMAso = 0,
@@ -331,16 +354,18 @@ class RpeNetwork {
       'url': url,
       'key': key,
       'numOfNodes': numOfNodes,
-      'nRT': nRT,
-      'nRTCh': nRTCh,
+      'numberRTDevices': numberRTDevices,
+      'numberRTChildren': numberRTChildren,
       'nEDs': nEDs,
       'netT': netT,
       'netId': netId,
       'netPId': netPId,
       'netPT': netPT,
+      'timers': timers,
+      'thresholds': thresholds,
+      'clusters': clusters,
+      'associations': associations,
       'nTim': nTim,
-      'nThr': nThr,
-      'nCl': nCl,
       'nMCl': nMCl,
       'nAso': nAso,
       'nMAso': nMAso,
@@ -360,16 +385,18 @@ class RpeNetwork {
       url: map['url'] ?? "",
       key: map['key'] ?? "",
       numOfNodes: map['numOfNodes'] ?? "",
-      nRT: map['nRT'],
-      nRTCh: map['nRTCh'],
+      numberRTDevices: map['numberRTDevices'] ?? 0,
+      numberRTChildren: map['numberRTChildren'] ?? 0,
       nEDs: map['nEDs'],
       netT: map['netT'],
       netId: map['netId'] ?? '',
       netPId: map['netPId'],
       netPT: map['netPT'],
+      timers: map['timers'] ?? "",
+      thresholds: map['thresholds'] ?? '',
+      clusters: map['clusters'] ?? '',
+      associations: map['associations'] ?? '',
       nTim: map['nTim'],
-      nThr: map['nThr'],
-      nCl: map['nCl'],
       nMCl: map['nMCl'],
       nAso: map['nAso'],
       nMAso: map['nMAso'],
@@ -387,7 +414,9 @@ class RpeNetwork {
   //TODO add fields
   @override
   String toString() =>
-      '''RPEDevice(name: $name, ip: $num, type: $domain', netID: $netId, 'preSetDomain' $preSetDomain''';
+      '''RPEDevice(name: $name, ip: $num, type: $domain', netID: $netId, 'preSetDomain' $preSetDomain 
+      'timers' $timers, 'thresholds $thresholds, 'clusters $clusters, associations $associations
+      ''';
 }
 
 class Cluster {

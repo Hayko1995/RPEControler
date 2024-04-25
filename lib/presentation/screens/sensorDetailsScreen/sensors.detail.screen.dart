@@ -1,30 +1,15 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rpe_c/app/constants/protocol/protocol.threshold.dart';
+import 'package:rpe_c/app/constants/protocol/protocol.time.dart';
 import 'package:rpe_c/core/models/db.models.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/sensor.references.screen.dart';
-import 'package:rpe_c/presentation/widgets/sensor.setTimers.widget.dart';
+import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
+import 'package:rpe_c/core/service/database.service.dart';
 import 'package:rpe_c/presentation/widgets/sensor.Threshold.widget.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
-
-final List<SalomonBottomBarItem> bottomNavBarIcons = [
-  SalomonBottomBarItem(
-    icon: const Icon(Icons.info),
-    title: const Text("Device summary"),
-    selectedColor: Colors.blue,
-  ),
-
-  /// Search
-  SalomonBottomBarItem(
-    icon: const Icon(Icons.timer),
-    title: const Text("Config"),
-    selectedColor: Colors.blue,
-  ),
-
-  SalomonBottomBarItem(
-    icon: const Icon(Icons.timer),
-    title: const Text("Set Timer"),
-    selectedColor: Colors.blue,
-  ),
-];
+import 'package:rpe_c/presentation/widgets/sensor.setTimers.widget.dart';
 
 class SensorDetailsScreen extends StatefulWidget {
   final SensorDetailsArgs sensorDetailsArguments;
@@ -32,58 +17,458 @@ class SensorDetailsScreen extends StatefulWidget {
   const SensorDetailsScreen({super.key, required this.sensorDetailsArguments});
 
   @override
-  State<SensorDetailsScreen> createState() => _SensorDetailsScreenState();
+  _SensorDetailsScreenState createState() => _SensorDetailsScreenState();
 }
 
 class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
+  Color caughtColor = Colors.grey;
+  final DatabaseService _databaseService = DatabaseService();
+  MeshTimer meshTimer = MeshTimer();
+  MeshThreshold meshThreshold = MeshThreshold();
+  List<String> data = [];
   late RpeDevice dataDevice;
+  final TextEditingController deviceNameController = TextEditingController();
+  late bool editable = false;
+  late String newName = "";
+  late String newLocation = "";
+  late String location = "";
+  late String deviceName = "";
+  late bool timersOpen = false;
+  late bool thresholdOpen = false;
+  late bool zonesOpen = false;
+  late bool associationsOpen = false;
+  late bool deviceOpen = false;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
   }
 
-  var _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    // ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);
-    // var themeFlag = _themeNotifier.darkTheme;
+    final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
+    dataDevice = meshNotifier.getDeviceByMac(widget.sensorDetailsArguments.mac);
+    deviceName = dataDevice.name;
+    location = dataDevice.location;
+    List deviceTimersList;
+    List deviceThresholdList;
+    List deviceClusterList;
+    List deviceAssociationList;
+    try {
+      deviceTimersList = jsonDecode(dataDevice.timers)['timers'];
+    } catch (e) {
+      deviceTimersList = [];
+    }
+    try {
+      deviceThresholdList = jsonDecode(dataDevice.thresholds)['threshold'];
+    } catch (e) {
+      deviceThresholdList = [];
+    }
+    try {
+      deviceClusterList = jsonDecode(dataDevice.clusters)['cluster'];
+    } catch (e) {
+      deviceClusterList = [];
+    }
+    try {
+      deviceAssociationList =
+          jsonDecode(dataDevice.associations)['association'];
+    } catch (e) {
+      deviceAssociationList = [];
+    }
 
-    final screens = [
-      SensorReferencesScreen(
-        mac: widget.sensorDetailsArguments.mac,
-      ),
-      SensorSetTImerScreen(
-        mac: widget.sensorDetailsArguments.mac,
-      ),
-      SensorThresholdScreen(
-        mac: widget.sensorDetailsArguments.mac,
-      ),
-    ];
+    void _showThresholdDialog() => showDialog(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return SensorThresholdScreen(
+                mac: widget.sensorDetailsArguments.mac);
+          },
+        );
+
+    void _showTimerDialog() => showDialog(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return SensorSetTImerScreen(mac: widget.sensorDetailsArguments.mac);
+          },
+        );
+
+    Future<void> setThreshold() async {
+      _showThresholdDialog();
+    }
+
+    Future<void> setTimer() async {
+      _showTimerDialog();
+    }
+
+    void deleteTimer(RpeDevice device, data) async {
+      String command = meshTimer.sendDeleteTimer(
+          device.nodeNumber, device.netId, data['timerId']);
+      bool response = await meshNotifier.sendCommand(command, device.netId);
+      response = true; //todo
+      if (response) {
+        print(data);
+        deviceTimersList.remove(data);
+        print(deviceTimersList);
+        print(dataDevice.timers);
+        Map<String, dynamic> _json = {
+          'timers': deviceTimersList,
+        };
+        dataDevice.timers = jsonEncode(_json);
+        meshNotifier.updateDevice(dataDevice);
+      }
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Sensor details"),
-        backgroundColor: Colors.blue,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            screens[_currentIndex],
-          ],
+        appBar: AppBar(
+          title: const Text("Sensor details"),
+          backgroundColor: Colors.blue,
         ),
-      ),
-      bottomNavigationBar: SalomonBottomBar(
-        currentIndex: _currentIndex,
-        onTap: (i) => setState(() => _currentIndex = i),
-        items: bottomNavBarIcons,
-      ),
-    );
-  }
+        body: SingleChildScrollView(
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FilledButton(
+                          onPressed: () {
+                            setState(() {
+                              editable = !editable;
+                              if (editable == false) {
+                                if (newName != "") {
+                                  dataDevice.name = newName;
+                                  deviceName = newName;
+                                }
+                                if (newLocation != "") {
+                                  dataDevice.location = newLocation;
+                                  location = dataDevice.location;
+                                }
+                                meshNotifier.updateDevice(dataDevice);
+                              }
+                              // meshNotifier.
+                            });
+                          },
+                          child: editable
+                              ? const Text('Save')
+                              : const Text('Edit'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                      // width: MediaQuery.sizeOf(context).width,
+                      height: MediaQuery.sizeOf(context).height * 0.25,
+                      child: SizedBox(
+                        // width: MediaQuery.sizeOf(context).width ,
 
-  @override
-  void dispose() {
-    super.dispose();
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                  width: MediaQuery.sizeOf(context).width * 0.3,
+                                  child: Image.asset(dataDevice.image)),
+                              SizedBox(
+                                  width: MediaQuery.sizeOf(context).width * 0.6,
+                                  child: Column(children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            editable
+                                                ? SizedBox(
+                                                    width: 210,
+                                                    child: TextField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                          enabledBorder:
+                                                              UnderlineInputBorder(
+                                                            borderSide:
+                                                                const BorderSide(
+                                                                    width: 2,
+                                                                    color: Colors
+                                                                        .blue),
+                                                            //<-- SEE HERE
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        50.0),
+                                                          ),
+                                                        ),
+                                                        onChanged: (text) {
+                                                          newName = text;
+                                                        }),
+                                                  )
+                                                : Text(
+                                                    "Device Name $deviceName")
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        const Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text("Device Type"),
+                                            Text("Device Type"),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        const Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text("Network "),
+                                            Text("Network status"),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            editable
+                                                ? SizedBox(
+                                                    width: 210,
+                                                    child: TextField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                          enabledBorder:
+                                                              UnderlineInputBorder(
+                                                            borderSide:
+                                                                const BorderSide(
+                                                                    width: 2,
+                                                                    color: Colors
+                                                                        .blue),
+                                                            //<-- SEE HERE
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        50.0),
+                                                          ),
+                                                        ),
+                                                        onChanged: (text) {
+                                                          newLocation = text;
+                                                        }),
+                                                  )
+                                                : Text("location $location")
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        const Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text("status "),
+                                            Text("Network status"),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ]))
+                            ]),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    child: Column(
+                      children: [
+                        Container(
+                            decoration: BoxDecoration(border: Border.all()),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        setState(() {
+                                          timersOpen = !timersOpen;
+                                        });
+                                      },
+                                    ),
+                                    const Row(
+                                      children: [
+                                        Text("Assigned Timers "),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                if (timersOpen)
+                                  Column(
+                                    children: [
+                                      OutlinedButton(
+                                          onPressed: setTimer,
+                                          child: Text("Add timer")),
+                                      for (var timer in deviceTimersList)
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(timer['name'].toString()),
+                                            OutlinedButton(
+                                                onPressed: () {
+                                                  deleteTimer(
+                                                      dataDevice, timer);
+                                                },
+                                                child: Text("Delete")),
+                                          ],
+                                        )
+                                    ],
+                                  ),
+                              ],
+                            )),
+                        Container(
+                            decoration: BoxDecoration(border: Border.all()),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        setState(() {
+                                          thresholdOpen = !thresholdOpen;
+                                        });
+                                      },
+                                    ),
+                                    const Text("Assigned Thresholds "),
+                                  ],
+                                ),
+                                if (thresholdOpen)
+                                  Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          OutlinedButton(
+                                              onPressed: setThreshold,
+                                              child: Text("Add Threshold")),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            )),
+                        Container(
+                            decoration: BoxDecoration(border: Border.all()),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        setState(() {
+                                          zonesOpen = !zonesOpen;
+                                        });
+                                      },
+                                    ),
+                                    const Text("Zones/Clusters ")
+                                  ],
+                                ),
+                                if (zonesOpen)
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text("In zone 1"),
+                                          OutlinedButton(
+                                              onPressed: () {},
+                                              child: Text("delete")),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            )),
+                        Container(
+                            decoration: BoxDecoration(border: Border.all()),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        setState(() {
+                                          associationsOpen = !associationsOpen;
+                                        });
+                                      },
+                                    ),
+                                    const Text(
+                                        "Association with other Devices ")
+                                  ],
+                                ),
+                                if (associationsOpen)
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                              "have assosiation with vzgo 1  "),
+                                          OutlinedButton(
+                                              onPressed: () {},
+                                              child: Text("delete")),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            )),
+                        Container(
+                            decoration: BoxDecoration(border: Border.all()),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        setState(() {
+                                          deviceOpen = !deviceOpen;
+                                        });
+                                      },
+                                    ),
+                                    const Text("Device Preferences")
+                                  ],
+                                ),
+                                if (deviceOpen)
+                                  const Column(
+                                    children: [
+                                      Text(
+                                          "in this place will be device preferences :)"),
+                                    ],
+                                  ),
+                              ],
+                            )),
+                      ],
+                    ),
+                  )
+                ],
+              )),
+        ));
   }
 }
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,8 @@ import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.time.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
-import 'package:rpe_c/presentation/screens/sensorDetailsScreen/screens/widget/custom.widget.dart';
+
+import 'custom.widget.dart';
 
 class SensorSetTImerScreen extends StatefulWidget {
   final String mac;
@@ -23,6 +25,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
   Color caughtColor = Colors.grey;
   List<String> data = [];
   late RpeDevice dataDevice;
+  late RpeNetwork network;
   late List<RpeDevice> allDevices;
   late List<Cluster> allClusters = [];
   List<String> typeOfTimer = <String>['One Time', "Periodic"];
@@ -79,6 +82,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
     );
 
     dataDevice = meshNotifier.getDeviceByMac(widget.mac);
+
     if (dataDevice.isActivation == 1) {
       typeOfControl = ["ON", "Off"];
     }
@@ -240,7 +244,12 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
             int endTimeInSec = d1t2 - 946713600;
             hexStartTime = endTimeInSec.toRadixString(16);
 
-            timerType = '11';
+            if (timerType == "Off") {
+              timerType = '01';
+            } else {
+              timerType = '11';
+              sensorActionNumber = '00';
+            }
           }
 
           command = meshTimer.sendSetTimer(
@@ -258,13 +267,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
               timStatus);
           bool response =
               await meshNotifier.sendCommand(command, dataDevice.netId);
-
-          if (timerType == "Off") {
-            timerType = '01';
-          } else {
-            timerType = '11';
-            sensorActionNumber = '00';
-          }
         } else {
           timerType = "01";
           sensorActionNumber = '01';
@@ -377,19 +379,45 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
               'FF',
               'FF',
               timStatus);
-          print(command);
           bool response =
               await meshNotifier.sendCommand(command, dataDevice.netId);
         }
         int intTimerId = int.parse(timerId);
         intTimerId = intTimerId + 1;
         if (intTimerId < 9) {
-          print(intTimerId);
           timerId = "0$intTimerId";
         } else {
           timerId = intTimerId.toString();
         }
         WriteCache.setString(key: AppKeys.timerId, value: timerId);
+        // dataDevice
+        Map<String, dynamic> newTimer = {
+          'timerId': timerId,
+          'oneTime': oneTimeOrPereudic,
+          'weeks': values,
+          'control': controlType,
+          'startDate': _startDate.text,
+          'endDate': _endDate.text,
+          'name': _name.text,
+          'status': timerStatus,
+        };
+        var timers = jsonDecode(dataDevice.timers);
+        print(timers);
+        var timersArr = timers['timers'];
+        timersArr.add(newTimer);
+        timers['timers'] = timersArr;
+        dataDevice.timers = jsonEncode(timers);
+        meshNotifier.updateDevice(dataDevice);
+        String _url = await meshNotifier.getNetworkUrlByNetId(dataDevice.netId);
+        network = meshNotifier.getNetworkByUrl(_url);
+        var networkTimers = jsonDecode(network.timers);
+        var networkTimersArr = networkTimers['timers'];
+        networkTimersArr.add(_name.text);
+        networkTimers['timers'] = networkTimersArr;
+        network.timers = jsonEncode(networkTimers);
+        ;
+        print(network);
+        meshNotifier.updateNetwork(network);
       }
     }
 
@@ -398,7 +426,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           TextButton(
             child: const Text('Abort'),
             onPressed: () {
-              print("aaaaaaccccccccccwwwwwwwww");
               Navigator.of(context).pop();
             },
           ),
@@ -613,7 +640,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                                       initialDate:
                                                           DateTime.now(),
                                                       //get today's date
-                                                      firstDate: DateTime(2000),
+                                                      firstDate: DateTime(2024),
                                                       //DateTime.now() - not to allow to choose before today.
                                                       lastDate: DateTime(2101));
 
@@ -644,7 +671,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                       child: SizedBox(
                                           width:
                                               MediaQuery.sizeOf(context).width *
-                                                  0.4,
+                                                  0.6,
                                           child: TextField(
                                             controller: _endDate,
                                             //editing controller of this TextField

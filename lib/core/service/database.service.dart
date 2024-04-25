@@ -48,8 +48,12 @@ class DatabaseService {
       'ipAddr TEXT,'
       'key TEXT,'
       'numOfNodes INTEGER,'
-      'nRT INTEGER,'
-      'nRTCh INTEGER,'
+      'thresholds TEXT,'
+      'timers TEXT,'
+      'clusters TEXT,'
+      'associations TEXT,'
+      'numberRTDevices INTEGER,'
+      'numberRTChildren INTEGER,'
       'nEDs INTEGER,'
       'netT INTEGER,'
       'netId TEXT,'
@@ -90,6 +94,10 @@ class DatabaseService {
         'numOfSen INTEGER,'
         'numOfAssocSen INTEGER,'
         'sensorVal TEXT,'
+        'thresholds TEXT,'
+        'timers TEXT,'
+        'clusters TEXT,'
+        'associations TEXT,'
         'clTbl TEXT,'
         'aITbl TEXT,'
         'aLTbl TEXT,'
@@ -189,12 +197,21 @@ class DatabaseService {
         maps.length, (index) => RpeNetwork.fromMap(maps[index]));
   }
 
+  Future<List<RpeNetwork>> getNetwork(String url) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db
+        .query(AppConstants.networkTable, where: 'url = ?', whereArgs: [url]);
+    return List.generate(
+        maps.length, (index) => RpeNetwork.fromMap(maps[index]));
+  }
+
   Future<void> insertDevice(RpeDevice breed) async {
     final db = await _databaseService.database;
+
     await db.insert(
       AppConstants.deviceTable,
       breed.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 
