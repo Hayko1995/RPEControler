@@ -10,7 +10,7 @@ import 'package:rpe_c/app/constants/protocol/protocol.time.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 
-import 'custom.widget.dart';
+import '../custom.widget.dart';
 
 class SensorSetTImerScreen extends StatefulWidget {
   final String mac;

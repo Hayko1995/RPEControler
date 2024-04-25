@@ -8,8 +8,8 @@ import 'package:rpe_c/app/constants/protocol/protocol.time.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/presentation/widgets/sensor.Threshold.widget.dart';
-import 'package:rpe_c/presentation/widgets/sensor.setTimers.widget.dart';
+import 'package:rpe_c/presentation/widgets/utiles/sensor.Threshold.widget.dart';
+import 'package:rpe_c/presentation/widgets/utiles/sensor.setTimers.widget.dart';
 
 class SensorDetailsScreen extends StatefulWidget {
   final SensorDetailsArgs sensorDetailsArguments;

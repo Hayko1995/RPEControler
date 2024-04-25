@@ -51,8 +51,8 @@ Widget widget(context, cluster, widgetKey) {
                       }
                       String command = meshCluster.sendDeleteCluster(
                           cluster.netNumber, clusterId);
-                      bool response = await
-                          meshNotifier.sendCommand(command, cluster.netNumber);
+                      bool response = await meshNotifier.sendCommand(
+                          command, cluster.netNumber);
                       if (response) {
                         meshNotifier.deleteCluster(cluster.clusterId);
                       }
@@ -63,16 +63,17 @@ Widget widget(context, cluster, widgetKey) {
                 SizedBox(
                   height: 50,
                   child: InkWell(
-                    child:
-                        cluster.status == 1 ? Row(
-                          children: [
-                            Text("Disable"),
-                          ],
-                        ) : Row(
-                          children: [
-                            Text("Enabled"),
-                          ],
-                        ),
+                    child: cluster.status == 1
+                        ? Row(
+                            children: [
+                              Text("Disable"),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Text("Enabled"),
+                            ],
+                          ),
                     onTap: () async {
                       MeshCluster meshCluster = MeshCluster();
                       // print(cluster);
@@ -217,7 +218,7 @@ class ClustersScreenState extends State<ClustersScreen> {
       String command = meshCluster.sendEnableAllClusters(dropdownValue);
       bool result = await meshNotifier.sendCommand(command, dropdownValue);
       if (result) {
-        // meshNotifier.enableAllClusters(clusterId); //todo 
+        // meshNotifier.enableAllClusters(clusterId); //todo
       }
     }
 

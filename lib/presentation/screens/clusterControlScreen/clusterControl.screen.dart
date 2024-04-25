@@ -5,8 +5,8 @@ import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
-import 'package:rpe_c/presentation/widgets/sensor.Threshold.widget.dart';
-import 'package:rpe_c/presentation/widgets/sensor.setTimers.widget.dart';
+import 'package:rpe_c/presentation/widgets/utiles/sensor.Threshold.widget.dart';
+import 'package:rpe_c/presentation/widgets/utiles/sensor.setTimers.widget.dart';
 
 Widget sensorWidget(context, data, widgetKey) {
   final Function(bool?) toggleCheckboxState;
@@ -55,6 +55,7 @@ class ClusterControlScreen extends StatefulWidget {
 class _ClusterControlScreenState extends State<ClusterControlScreen> {
   List<RpeDevice> dataDevices = <RpeDevice>[];
   bool isSwitched = true;
+  List<String> clusterDeviceList = [];
 
   RangeValues _currentRangeValues = const RangeValues(40, 80);
 
@@ -85,14 +86,14 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
               command =
                   meshCluster.sendClusterOff(cluster.netNumber, clusterId);
             }
-            bool result = await meshNotifier.sendCommand(command, cluster.netNumber);
+            bool result =
+                await meshNotifier.sendCommand(command, cluster.netNumber);
             if (result) {
               setState(() {
                 print(isSwitched);
                 isSwitched = value;
               });
             }
-
           },
         ));
       }
@@ -171,7 +172,7 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
     List<Widget> getSensors() {
       List<Widget> sensorList = [];
       Cluster data = widget.clusterControlsArguments.cluster;
-      List<String> clusterDeviceList = data.devices.split(',');
+      clusterDeviceList = data.devices.split(',');
 
       for (var device in dataDevices) {
         if (clusterDeviceList.contains(device.macAddress)) {
@@ -182,20 +183,20 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
     }
 
     void _showThresholdDialog() => showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return  SensorThresholdScreen(mac: "00158d0000506820");
-      },
-    );
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return SensorThresholdScreen(mac: clusterDeviceList[0]);
+          },
+        );
 
     void _showTimerDialog() => showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return SensorSetTImerScreen(mac: "00158d0000506820");
-      },
-    );
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return SensorSetTImerScreen(mac: clusterDeviceList[0]);
+          },
+        );
 
     Future<void> setThreshold() async {
       _showThresholdDialog();
@@ -204,7 +205,6 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
     Future<void> setTimer() async {
       _showTimerDialog();
     }
-
 
     return Scaffold(
         appBar: AppBar(
@@ -247,11 +247,11 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
                 OutlinedButton(
                     onPressed: setTimer, child: const Text("Set Timer")),
                 OutlinedButton(
-                    onPressed: setThreshold, child: const Text("Set Threshold")),
+                    onPressed: setThreshold,
+                    child: const Text("Set Threshold")),
               ],
             ),
             Center(

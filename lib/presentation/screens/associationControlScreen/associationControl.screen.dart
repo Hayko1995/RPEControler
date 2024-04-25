@@ -4,8 +4,8 @@ import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
-import 'package:rpe_c/presentation/widgets/sensor.Threshold.widget.dart';
-import 'package:rpe_c/presentation/widgets/sensor.setTimers.widget.dart';
+import 'package:rpe_c/presentation/widgets/utiles/sensor.Threshold.widget.dart';
+import 'package:rpe_c/presentation/widgets/utiles/sensor.setTimers.widget.dart';
 
 Widget sensorWidget(context, data, widgetKey) {
   final Function(bool?) toggleCheckboxState;
@@ -59,7 +59,7 @@ class AssociationControlScreen extends StatefulWidget {
 class _AssociationControlScreenState extends State<AssociationControlScreen> {
   List<RpeDevice> dataDevices = <RpeDevice>[];
   bool isSwitched = true;
-
+  List<String> clusterDeviceList = [];
   RangeValues _currentRangeValues = const RangeValues(40, 80);
 
   @override
@@ -85,7 +85,7 @@ class _AssociationControlScreenState extends State<AssociationControlScreen> {
     List<Widget> getFromSensors() {
       List<Widget> fromSensorList = [];
       Association data = widget.associationControlArguments.association;
-      List<String> clusterDeviceList = data.toDevices.split(',');
+      clusterDeviceList = data.toDevices.split(',');
 
       for (var device in dataDevices) {
         if (clusterDeviceList.contains(device.macAddress)) {
@@ -99,7 +99,7 @@ class _AssociationControlScreenState extends State<AssociationControlScreen> {
           context: context,
           barrierDismissible: false, // user must tap button!
           builder: (BuildContext context) {
-            return  SensorThresholdScreen(mac: "00158d0000506820");
+            return  SensorThresholdScreen(mac: clusterDeviceList.elementAt(0));
           },
         );
 
@@ -107,7 +107,8 @@ class _AssociationControlScreenState extends State<AssociationControlScreen> {
           context: context,
           barrierDismissible: false, // user must tap button!
           builder: (BuildContext context) {
-            return SensorSetTImerScreen(mac: "00158d0000506820");
+
+            return SensorSetTImerScreen(mac: clusterDeviceList.elementAt(0));
           },
         );
 
