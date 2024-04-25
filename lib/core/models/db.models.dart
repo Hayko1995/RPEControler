@@ -284,7 +284,7 @@ class RpeDevice {
 }
 
 class RpeNetwork {
-  final String name;
+  late String name;
   final int num;
   late int domain;
   late String preSetDomain;
@@ -414,7 +414,7 @@ class RpeNetwork {
   //TODO add fields
   @override
   String toString() =>
-      '''RPEDevice(name: $name, ip: $num, type: $domain', netID: $netId, 'preSetDomain' $preSetDomain 
+      '''RPENetwork(name: $name, ip: $num, type: $domain', netID: $netId, 'preSetDomain' $preSetDomain 
       'timers' $timers, 'thresholds $thresholds, 'clusters $clusters, associations $associations
       ''';
 }

@@ -11,6 +11,7 @@ import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.da
 import 'package:rpe_c/presentation/screens/esp32/esp32.view.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
+import 'package:rpe_c/presentation/screens/homeScreen/screens/networkDetailsScreen/network.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/ipScanScreen/ipScan.screen.dart';
 import 'package:rpe_c/presentation/screens/loginScreen/login.view.dart';
 import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
@@ -55,6 +56,7 @@ class AppRouter {
   static const String clusteringRouter = '/clustering';
   static const String associationsRouter = '/associations';
   static const String bleDeviceRouter = '/bleDevice';
+  static const String networkDetailsRoute = '/networkDetails';
 
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -64,6 +66,17 @@ class AppRouter {
             builder: (context) => SensorDetailsScreen(
               sensorDetailsArguments: ModalRoute.of(context)!.settings.arguments
                   as SensorDetailsArgs,
+            ),
+            settings: settings,
+          );
+        }
+      case networkDetailsRoute:
+        {
+          return MaterialPageRoute(
+            builder: (context) => NetworkDetailsScreen(
+              networkDetailsArguments: ModalRoute.of(context)!
+                  .settings
+                  .arguments as NetworkDetailsArgs,
             ),
             settings: settings,
           );

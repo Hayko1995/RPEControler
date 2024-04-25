@@ -103,7 +103,7 @@ class AssociationScreenState extends State<AssociationScreen> {
                     ),
                   ),
                   FilledButton(
-                    onPressed: () {
+                    onPressed: () async {
                       fieldText.clear();
                       List<String> fromAssItems = [];
                       List<String> toAssItems = [];
@@ -181,6 +181,19 @@ class AssociationScreenState extends State<AssociationScreen> {
                         _dev.associations = jsonEncode(_json);
                         meshNotifier.updateDevice(_dev);
                       }
+
+                      RpeDevice dataDevice = meshNotifier
+                          .getDeviceByMac(activeAreas[0].items[0].macAddress);
+
+                      String _url = await meshNotifier
+                          .getNetworkUrlByNetId(dataDevice.netId);
+                      RpeNetwork network = meshNotifier.getNetworkByUrl(_url);
+                      var networkTimers = jsonDecode(network.associations);
+                      var networkTimersArr = networkTimers['associations'];
+                      networkTimersArr.add(newAssociationName);
+                      networkTimers['associations'] = networkTimersArr;
+                      network.associations = jsonEncode(networkTimers);
+                      meshNotifier.updateNetwork(network);
 
                       setState(() {
                         newAssociationName = '';

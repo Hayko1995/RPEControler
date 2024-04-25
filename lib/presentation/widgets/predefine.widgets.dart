@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/logger/logger.dart';
+import 'package:rpe_c/presentation/screens/homeScreen/screens/networkDetailsScreen/network.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 
@@ -14,7 +16,7 @@ void buttonCall() {
   print("object");
 }
 
-Widget airQualityWidget(context, device, index, place, count, widgetKey) {
+Widget airQualityWidget(context, network, index, place, count, widgetKey) {
   final Function(bool?) toggleCheckboxState;
 
   return GestureDetector(
@@ -23,11 +25,15 @@ Widget airQualityWidget(context, device, index, place, count, widgetKey) {
       if (place == "dashboard") {
         Navigator.of(context).pushNamed(
           AppRouter.sensorsRoute,
-          arguments: SensorArgs(mac: [device.name], netId: device.netId),
+          arguments: SensorArgs(mac: [network.name], netId: network.netId),
         );
       }
     },
     onLongPress: () {
+      Navigator.of(context).pushNamed(
+        AppRouter.networkDetailsRoute,
+        arguments: NetworkDetailsArgs(url: network.url),
+      );
       // showMenu(
       //   items: <PopupMenuEntry>[
       //     const PopupMenuItem(

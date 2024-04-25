@@ -415,7 +415,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
         networkTimersArr.add(_name.text);
         networkTimers['timers'] = networkTimersArr;
         network.timers = jsonEncode(networkTimers);
-        ;
         print(network);
         meshNotifier.updateNetwork(network);
       }

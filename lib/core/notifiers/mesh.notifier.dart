@@ -117,6 +117,16 @@ class MeshNotifier with ChangeNotifier {
     }
   }
 
+  getDeviceByNetId(netId) {
+    List<RpeDevice> _devices = [];
+    for (RpeDevice device in _allDevices!) {
+      if (device.netId == netId) {
+        _devices.add(device);
+      }
+    }
+    return _devices;
+  }
+
   getNetworkByUrl(url) {
     for (RpeNetwork network in networks!) {
       if (network.url == url) {

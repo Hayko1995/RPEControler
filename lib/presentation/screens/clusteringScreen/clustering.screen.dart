@@ -92,7 +92,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                           ),
                         ),
                         FilledButton(
-                          onPressed: () {
+                          onPressed: () async {
                             fieldText.clear();
                             FocusScope.of(context).unfocus(); //hide kayboard
                             // logger.i(_people[0].items.length);
@@ -169,6 +169,20 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                               _dev.clusters = jsonEncode(_json);
                               meshNotifier.updateDevice(_dev);
                             }
+
+                            RpeDevice dataDevice = meshNotifier.getDeviceByMac(
+                                activeAreas[0].items[0].macAddress);
+
+                            String _url = await meshNotifier
+                                .getNetworkUrlByNetId(dataDevice.netId);
+                            RpeNetwork network = meshNotifier.getNetworkByUrl(_url);
+                            var networkTimers = jsonDecode(network.clusters);
+                            var networkTimersArr = networkTimers['clusters'];
+                            networkTimersArr.add(newClusterName);
+                            networkTimers['clusters'] = networkTimersArr;
+                            network.clusters = jsonEncode(networkTimers);
+                            meshNotifier.updateNetwork(network);
+
                             Fluttertoast.showToast(
                                 msg: "Saved",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -181,7 +195,6 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                               newClusterName = '';
                               activeAreas[0].items = [];
                             });
-
                           },
                           child: const Text("Save"),
                         ),
