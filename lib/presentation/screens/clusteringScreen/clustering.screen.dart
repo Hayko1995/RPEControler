@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
@@ -150,11 +153,22 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                                 netNumber,
                                 clusterItems.join(","),
                                 1);
-                            setState(() {
-                              newClusterName = '';
-                              activeAreas[0].items = [];
-                            });
 
+                            for (var item in activeAreas[0].items) {
+                              RpeDevice _dev =
+                                  meshNotifier.getDeviceByMac(item.macAddress);
+                              List clusterNames =
+                                  jsonDecode(_dev.clusters)['clusters'];
+                              print(clusterNames);
+                              clusterNames.add(newClusterName);
+
+                              logger.i("clusterNames");
+                              Map<String, dynamic> _json = {
+                                'clusters': clusterNames,
+                              };
+                              _dev.clusters = jsonEncode(_json);
+                              meshNotifier.updateDevice(_dev);
+                            }
                             Fluttertoast.showToast(
                                 msg: "Saved",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -163,6 +177,11 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                                 backgroundColor: Colors.red,
                                 textColor: Colors.white,
                                 fontSize: 16.0);
+                            setState(() {
+                              newClusterName = '';
+                              activeAreas[0].items = [];
+                            });
+
                           },
                           child: const Text("Save"),
                         ),
@@ -266,7 +285,8 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
         }).toList(),
       ),
     );
-    manipulationWidgets.addAll(activeAreas.map(_buildPersonWithDropZone).toList());
+    manipulationWidgets
+        .addAll(activeAreas.map(_buildPersonWithDropZone).toList());
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 8,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cache_manager/core/cache_manager_utils.dart';
 import 'package:cache_manager/core/read_cache_service.dart';
 import 'package:cache_manager/core/write_cache_service.dart';
@@ -174,6 +176,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       int inEndThres = 0;
       String secEndTime = "";
       String secStartTime = "";
+      String weekDays;
       if (dataDevice.isActivation == 1) {
         if (boolActivation == "OFF") {
           threshParam1 = '00000000';
@@ -202,7 +205,11 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       }
 
       if (_thresholdType == 1 || _thresholdType == 2) {
-        inStartThresh = int.parse(_startValueController.text);
+        try {
+          inStartThresh = int.parse(_startValueController.text);
+        } catch (e) {
+          inStartThresh = 0;
+        }
 
         if (inStartThresh < 0) {
           int t2 = ~(inStartThresh) + 1;
@@ -215,7 +222,12 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         threshParam1 = hexPadding(inStartThresh);
         threshParam2 = "00000000";
       } else {
-        inStartThresh = int.parse(_startValueController.text);
+        try {
+          inStartThresh = int.parse(_startValueController.text);
+        } catch (e) {
+          inStartThresh = 0;
+        }
+
         if (inStartThresh < 0) {
           int t2 = ~(inStartThresh) + 1;
           if (t2 < 256) {
@@ -224,92 +236,102 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
             inStartThresh = 65536 + inStartThresh;
           }
         }
-
-        inEndThres = int.parse(_endValueController.text);
+        try {
+          inEndThres = int.parse(_endValueController.text);
+        } catch (e) {
+          inEndThres = 0;
+        }
         threshParam2 = hexPadding(inEndThres);
       }
-      String inStartTime = _startTime.text.toString();
 
-      String inEndTime = _endTime.text.toString();
-      int hStartTime = int.parse((inStartTime.substring(0, 2)));
-      int mStartTime = int.parse(inStartTime.substring(3));
-      int startTimeinSec = (3600 * hStartTime) + (60 * mStartTime);
+      if (needTimer) {
+        String inStartTime = _startTime.text.toString();
 
-      secStartTime = hexPadding(startTimeinSec);
+        String inEndTime = _endTime.text.toString();
+        int hStartTime = int.parse((inStartTime.substring(0, 2)));
+        int mStartTime = int.parse(inStartTime.substring(3));
+        int startTimeinSec = (3600 * hStartTime) + (60 * mStartTime);
 
-      int hEndTime = int.parse((inEndTime.substring(0, 2)));
-      int mEndTime = int.parse(inEndTime.substring(3));
-      int endTimeinSec = (3600 * hEndTime) + (60 * mEndTime);
-      secEndTime = hexPadding(endTimeinSec);
-      print("secEndTime");
-      print(secEndTime);
+        secStartTime = hexPadding(startTimeinSec);
 
-      int suDay;
-      int mDay;
-      int tDay;
-      int wDay;
-      int thDay;
-      int fDay;
-      int saDay;
-      if (values['MA'] == true) {
-        suDay = 1;
+        int hEndTime = int.parse((inEndTime.substring(0, 2)));
+        int mEndTime = int.parse(inEndTime.substring(3));
+        int endTimeinSec = (3600 * hEndTime) + (60 * mEndTime);
+        secEndTime = hexPadding(endTimeinSec);
+        print("secEndTime");
+        print(secEndTime);
+
+        int suDay;
+        int mDay;
+        int tDay;
+        int wDay;
+        int thDay;
+        int fDay;
+        int saDay;
+        if (values['MA'] == true) {
+          suDay = 1;
+        } else {
+          suDay = 0;
+        }
+        if (values["TU"] == true) {
+          mDay = 2;
+        } else {
+          mDay = 0;
+        }
+        if (values['WE'] == true) {
+          tDay = 4;
+        } else {
+          tDay = 0;
+        }
+        if (values['TH'] == true) {
+          wDay = 8;
+        } else {
+          wDay = 0;
+        }
+        if (values['FR'] == true) {
+          thDay = 16;
+        } else {
+          thDay = 0;
+        }
+        if (values['SA'] == true) {
+          fDay = 32;
+        } else {
+          fDay = 0;
+        }
+        if (values['SU'] == true) {
+          saDay = 64;
+        } else {
+          saDay = 0;
+        }
+        int days = suDay + mDay + tDay + wDay + thDay + fDay + saDay;
+        if (days == 0) {
+          print("days need to be not 0");
+        }
+
+        if (days < 16) {
+          weekDays = days.toRadixString(16);
+          weekDays = '0$weekDays';
+        } else {
+          weekDays = days.toRadixString(16);
+        }
+        String inTimType;
+        if (days == 127) {
+          // everyday of the week
+          inTimType = '2';
+        } else {
+          inTimType = '4';
+        }
+        if (controlType == 'Off') {
+          // off
+          timerType = '0' + inTimType;
+          secEndTime = '00000000';
+        } else {
+          timerType = '1' + inTimType;
+        }
       } else {
-        suDay = 0;
-      }
-      if (values["TU"] == true) {
-        mDay = 2;
-      } else {
-        mDay = 0;
-      }
-      if (values['WE'] == true) {
-        tDay = 4;
-      } else {
-        tDay = 0;
-      }
-      if (values['TH'] == true) {
-        wDay = 8;
-      } else {
-        wDay = 0;
-      }
-      if (values['FR'] == true) {
-        thDay = 16;
-      } else {
-        thDay = 0;
-      }
-      if (values['SA'] == true) {
-        fDay = 32;
-      } else {
-        fDay = 0;
-      }
-      if (values['SU'] == true) {
-        saDay = 64;
-      } else {
-        saDay = 0;
-      }
-      int days = suDay + mDay + tDay + wDay + thDay + fDay + saDay;
-      if (days == 0) {
-        print("days need to be not 0");
-      }
-      String weekDays;
-      if (days < 16) {
-        weekDays = days.toRadixString(16);
-        weekDays = '0$weekDays';
-      } else {
-        weekDays = days.toRadixString(16);
-      }
-      String inTimType;
-      if (days == 127) {
-        // everyday of the week
-        inTimType = '2';
-      } else {
-        inTimType = '4';
-      }
-      if (controlType == 'Off') {
-        // off
-        timerType = '0' + inTimType;
         secEndTime = '00000000';
-      } else {
-        timerType = '1' + inTimType;
+        secStartTime = '00000000';
+        weekDays = '0000';
       }
 
       String clusterId = "00";
@@ -324,7 +346,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
           "A8",
           //todo
           thresholdId,
-          sensorType,
+          sensorTypeValue,
           clusterId,
           accTimerIndex,
           thresholdStatus,
@@ -333,6 +355,42 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
           weekDays);
       logger.i(command);
       bool response = await meshNotifier.sendCommand(command, dataDevice.netId);
+      int intThresholdId = int.parse(thresholdId);
+      intThresholdId = intThresholdId + 1;
+      if (intThresholdId < 9) {
+        timerId = "0$intThresholdId";
+      } else {
+        timerId = intThresholdId.toString();
+      }
+      WriteCache.setString(key: AppKeys.timerId, value: timerId);
+
+      ////////////////////////
+      Map<String, dynamic> newThreshold = {
+        'sensorType': sensorTypeValue,
+        'thresholdType': thresholdType.toString(),
+        'thresholdId': thresholdId,
+        'oneTime': oneTimeOrPereudic,
+        'weeks': values,
+        'control': controlType,
+        'startDate': _startDate.text,
+        'endDate': _endDate.text,
+        'name': _trresholdName.text,
+        'status': threshodStatus,
+      };
+      var thresholds = jsonDecode(dataDevice.thresholds);
+      var thresholdsArr = thresholds['thresholds'];
+      thresholdsArr.add(newThreshold);
+      thresholds['timers'] = thresholdsArr;
+      dataDevice.thresholds = jsonEncode(thresholds);
+      meshNotifier.updateDevice(dataDevice);
+      String _url = await meshNotifier.getNetworkUrlByNetId(dataDevice.netId);
+      RpeNetwork network = meshNotifier.getNetworkByUrl(_url);
+      var networkThresholds = jsonDecode(network.thresholds);
+      var networkTimersArr = networkThresholds['thresholds'];
+      networkTimersArr.add(_trresholdName.text);
+      networkThresholds['thresholds'] = networkTimersArr;
+      network.thresholds = jsonEncode(networkThresholds);
+      meshNotifier.updateNetwork(network);
     }
 
     return AlertDialog(
@@ -556,14 +614,13 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                       child: Column(
                         children: [
                           Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 SizedBox(
                                   child: DropdownMenu<String>(
-                                    width: MediaQuery.sizeOf(context).width*0.6,
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 0.6,
                                     initialSelection: typeOfTimer.first,
                                     onSelected: (String? value) {
                                       // This is called when the user selects an item.
@@ -621,32 +678,28 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                             ),
                           oneTimeOrPereudic
                               ? Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SizedBox(
                                       child: SizedBox(
                                           width:
-                                              MediaQuery.sizeOf(context)
-                                                      .width *
+                                              MediaQuery.sizeOf(context).width *
                                                   0.6,
                                           child: TextField(
                                             controller: _startTime,
                                             //editing controller of this TextField
-                                            decoration:
-                                                const InputDecoration(
-                                                    //icon of text field
-                                                    labelText:
-                                                        "Start Time" //label text of field
-                                                    ),
+                                            decoration: const InputDecoration(
+                                                //icon of text field
+                                                labelText:
+                                                    "Start Time" //label text of field
+                                                ),
                                             readOnly: true,
                                             onTap: () async {
                                               TimeOfDay? pickeTime =
                                                   await showTimePicker(
                                                       context: context,
                                                       initialTime:
-                                                          TimeOfDay
-                                                              .now());
+                                                          TimeOfDay.now());
 
                                               if (pickeTime != null) {
                                                 setState(() {
@@ -654,8 +707,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                       "${pickeTime.hour}:${pickeTime.minute}";
                                                 });
                                               } else {
-                                                print(
-                                                    "Date is not selected");
+                                                print("Date is not selected");
                                               }
                                             },
                                           )),
@@ -663,26 +715,23 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                     SizedBox(
                                       child: SizedBox(
                                           width:
-                                              MediaQuery.sizeOf(context)
-                                                      .width *
+                                              MediaQuery.sizeOf(context).width *
                                                   0.6,
                                           child: TextField(
                                             controller: _endTime,
                                             //editing controller of this TextField
-                                            decoration:
-                                                const InputDecoration(
-                                                    //icon of text field
-                                                    labelText:
-                                                        "End Time" //label text of field
-                                                    ),
+                                            decoration: const InputDecoration(
+                                                //icon of text field
+                                                labelText:
+                                                    "End Time" //label text of field
+                                                ),
                                             readOnly: true,
                                             onTap: () async {
                                               TimeOfDay? pickeTime =
                                                   await showTimePicker(
                                                       context: context,
                                                       initialTime:
-                                                          TimeOfDay
-                                                              .now());
+                                                          TimeOfDay.now());
 
                                               if (pickeTime != null) {
                                                 setState(() {
@@ -690,8 +739,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                       "${pickeTime.hour}:${pickeTime.minute}";
                                                 });
                                               } else {
-                                                print(
-                                                    "Date is not selected");
+                                                print("Date is not selected");
                                               }
                                             },
                                           )),
@@ -699,56 +747,47 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                   ],
                                 )
                               : Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                       SizedBox(
                                         child: SizedBox(
-                                            width:
-                                                MediaQuery.sizeOf(context)
-                                                        .width *
-                                                    0.6,
+                                            width: MediaQuery.sizeOf(context)
+                                                    .width *
+                                                0.6,
                                             child: TextField(
                                               controller: _startDate,
                                               //editing controller of this TextField
-                                              decoration:
-                                                  const InputDecoration(
-                                                      //icon of text field
-                                                      labelText:
-                                                          "Start Date" //label text of field
-                                                      ),
+                                              decoration: const InputDecoration(
+                                                  //icon of text field
+                                                  labelText:
+                                                      "Start Date" //label text of field
+                                                  ),
                                               readOnly: true,
                                               onTap: () async {
                                                 DateTime? pickedDate =
                                                     await showDatePicker(
                                                         context: context,
                                                         initialDate:
-                                                            DateTime
-                                                                .now(),
+                                                            DateTime.now(),
                                                         //get today's date
                                                         firstDate:
-                                                            DateTime(
-                                                                2000),
+                                                            DateTime(2000),
                                                         //DateTime.now() - not to allow to choose before today.
                                                         lastDate:
-                                                            DateTime(
-                                                                2101));
+                                                            DateTime(2101));
 
                                                 if (pickedDate != null) {
                                                   TimeOfDay? pickeTime =
                                                       await showTimePicker(
-                                                          context:
-                                                              context,
+                                                          context: context,
                                                           initialTime:
-                                                              TimeOfDay
-                                                                  .now());
+                                                              TimeOfDay.now());
 
                                                   if (pickeTime != null) {
                                                     String formattedDate =
-                                                        DateFormat(
-                                                                'dd:MM:yy')
+                                                        DateFormat('dd:MM:yy')
                                                             .format(
                                                                 pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
 
@@ -766,49 +805,41 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                       ),
                                       SizedBox(
                                         child: SizedBox(
-                                            width:
-                                                MediaQuery.sizeOf(context)
-                                                        .width *
-                                                    0.6,
+                                            width: MediaQuery.sizeOf(context)
+                                                    .width *
+                                                0.6,
                                             child: TextField(
                                               controller: _endDate,
                                               //editing controller of this TextField
-                                              decoration:
-                                                  const InputDecoration(
-                                                      //icon of text field
-                                                      labelText:
-                                                          "Enter Date" //label text of field
-                                                      ),
+                                              decoration: const InputDecoration(
+                                                  //icon of text field
+                                                  labelText:
+                                                      "Enter Date" //label text of field
+                                                  ),
                                               readOnly: true,
                                               onTap: () async {
                                                 DateTime? pickedDate =
                                                     await showDatePicker(
                                                         context: context,
                                                         initialDate:
-                                                            DateTime
-                                                                .now(),
+                                                            DateTime.now(),
                                                         //get today's date
                                                         firstDate:
-                                                            DateTime(
-                                                                2000),
+                                                            DateTime(2000),
                                                         //DateTime.now() - not to allow to choose before today.
                                                         lastDate:
-                                                            DateTime(
-                                                                2101));
+                                                            DateTime(2101));
 
                                                 if (pickedDate != null) {
                                                   TimeOfDay? pickeTime =
                                                       await showTimePicker(
-                                                          context:
-                                                              context,
+                                                          context: context,
                                                           initialTime:
-                                                              TimeOfDay
-                                                                  .now());
+                                                              TimeOfDay.now());
 
                                                   if (pickeTime != null) {
                                                     String formattedDate =
-                                                        DateFormat(
-                                                                'dd:MM:yy')
+                                                        DateFormat('dd:MM:yy')
                                                             .format(
                                                                 pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
 
@@ -829,7 +860,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                             children: [
                               SizedBox(
                                 child: DropdownMenu<String>(
-                                  width: MediaQuery.sizeOf(context).width*0.6,
+                                  width: MediaQuery.sizeOf(context).width * 0.6,
                                   onSelected: (String? value) {
                                     // This is called when the user selects an item.
                                     setState(() {

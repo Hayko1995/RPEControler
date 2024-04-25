@@ -33,7 +33,7 @@ void main() {
   });
   test('sendDeleteThreshold', () {
     String command =
-        meshThreshold.sendDeleteThreshold("01", "01", thresholdId: '03');
+        meshThreshold.sendDeleteThreshold("01", "01", '03');
     expect(command, "904006010103");
   });
 

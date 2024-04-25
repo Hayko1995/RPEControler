@@ -74,7 +74,6 @@ Widget widget(context, cluster, widgetKey) {
                           ],
                         ),
                     onTap: () async {
-                      print(cluster.status);
                       MeshCluster meshCluster = MeshCluster();
                       // print(cluster);
                       // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,

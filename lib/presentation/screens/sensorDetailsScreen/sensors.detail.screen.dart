@@ -61,18 +61,18 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
       deviceTimersList = [];
     }
     try {
-      deviceThresholdList = jsonDecode(dataDevice.thresholds)['threshold'];
+      deviceThresholdList = jsonDecode(dataDevice.thresholds)['thresholds'];
     } catch (e) {
       deviceThresholdList = [];
     }
     try {
-      deviceClusterList = jsonDecode(dataDevice.clusters)['cluster'];
+      deviceClusterList = jsonDecode(dataDevice.clusters)['clusters'];
     } catch (e) {
       deviceClusterList = [];
     }
     try {
       deviceAssociationList =
-          jsonDecode(dataDevice.associations)['association'];
+          jsonDecode(dataDevice.associations)['associations'];
     } catch (e) {
       deviceAssociationList = [];
     }
@@ -100,6 +100,21 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
 
     Future<void> setTimer() async {
       _showTimerDialog();
+    }
+
+    void deleteThreshold(RpeDevice device, data) async {
+      String command = meshThreshold.sendDeleteThreshold(
+          device.nodeNumber, device.netId, data['thresholdId']);
+      bool response = await meshNotifier.sendCommand(command, device.netId);
+      response = true; //todo
+      if (response) {
+        deviceThresholdList.remove(data);
+        Map<String, dynamic> _json = {
+          'thresholds': deviceThresholdList,
+        };
+        dataDevice.thresholds = jsonEncode(_json);
+        meshNotifier.updateDevice(dataDevice);
+      }
     }
 
     void deleteTimer(RpeDevice device, data) async {
@@ -367,6 +382,20 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                                               child: Text("Add Threshold")),
                                         ],
                                       ),
+                                      for (var threshold in deviceThresholdList)
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(threshold['name'].toString()),
+                                            OutlinedButton(
+                                                onPressed: () {
+                                                  deleteThreshold(
+                                                      dataDevice, threshold);
+                                                },
+                                                child: Text("Delete")),
+                                          ],
+                                        )
                                     ],
                                   ),
                               ],
@@ -389,16 +418,10 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                                   ],
                                 ),
                                 if (zonesOpen)
-                                  Column(
+                                  Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Text("In zone 1"),
-                                          OutlinedButton(
-                                              onPressed: () {},
-                                              child: Text("delete")),
-                                        ],
-                                      ),
+                                      for (String cluster in deviceClusterList)
+                                        Text("$cluster, ")
                                     ],
                                   ),
                               ],
@@ -422,17 +445,11 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                                   ],
                                 ),
                                 if (associationsOpen)
-                                  Column(
+                                  Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                              "have assosiation with vzgo 1  "),
-                                          OutlinedButton(
-                                              onPressed: () {},
-                                              child: Text("delete")),
-                                        ],
-                                      ),
+                                      for (var association
+                                          in deviceAssociationList)
+                                        Text("$association, ")
                                     ],
                                   ),
                               ],

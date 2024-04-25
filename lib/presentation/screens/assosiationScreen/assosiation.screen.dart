@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/core/logger/logger.dart';
@@ -151,9 +153,39 @@ class AssociationScreenState extends State<AssociationScreen> {
                           fromAssItems.join(","),
                           toAssItems.join(","),
                           1);
+
+                      for (var item in activeAreas[0].items) {
+                        RpeDevice _dev =
+                            meshNotifier.getDeviceByMac(item.macAddress);
+                        List assosciationNames =
+                            jsonDecode(_dev.associations)['associations'];
+                        assosciationNames.add(newAssociationName);
+
+                        Map<String, dynamic> _json = {
+                          'associations': assosciationNames,
+                        };
+                        _dev.associations = jsonEncode(_json);
+                        meshNotifier.updateDevice(_dev);
+                      }
+
+                      for (var item in activeAreas[1].items) {
+                        RpeDevice _dev =
+                            meshNotifier.getDeviceByMac(item.macAddress);
+                        List assosciationNames =
+                            jsonDecode(_dev.associations)['associations'];
+                        assosciationNames.add(newAssociationName);
+
+                        Map<String, dynamic> _json = {
+                          'associations': assosciationNames,
+                        };
+                        _dev.associations = jsonEncode(_json);
+                        meshNotifier.updateDevice(_dev);
+                      }
+
                       setState(() {
                         newAssociationName = '';
                         activeAreas[0].items = [];
+                        activeAreas[1].items = [];
                       });
                     },
                     child: const Text("Save"),

@@ -107,10 +107,6 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
       _services.first.characteristics.first.onValueReceived.listen((value) {
         _value = value;
-        print("aaaaaaaaaaaaa1111");
-        print(value);
-        print("aaaaaaaaaaaaa1111");
-
         if (value.first == 123) {
           try {
             // logger.w(utf8.decode(value));

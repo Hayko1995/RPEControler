@@ -11,7 +11,7 @@ class MeshThreshold {
   final syncThreshold = '08';
   final setAssocThreshold = '02';
 
-  String sendDeleteThreshold(nodeNumber, networkNumber, {thresholdId = '00'}) {
+  String sendDeleteThreshold(nodeNumber, networkNumber, thresholdId) {
     String subCommand = "40";
     String messageLength = "06";
     String command = threshold +
