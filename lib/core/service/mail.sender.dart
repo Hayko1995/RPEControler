@@ -22,12 +22,12 @@ Future sendMail() async {
   // Create our message.
   final message = Message()
     ..from = Address(username, 'Your name')
-    ..recipients.add('haykhakobyan95@gmail.com')
+    ..recipients.add('harry.balian@rpecontrols.com')
     // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
     // ..bccRecipients.add(Address('bccAddress@example.com'))
     ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
     ..text = 'This is the plain text.\nThis is line 2 of the text part.'
-    ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
+    ..html = "<h1>Huston we have a problem</h1>\n<p>Huston we have a problem</p>";
 
   try {
     final sendReport = await send(message, smtpServer);

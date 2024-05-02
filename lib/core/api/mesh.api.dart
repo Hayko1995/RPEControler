@@ -5,7 +5,6 @@ import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
-import 'package:rpe_c/core/service/mail.sender.dart';
 
 class MeshAPI {
   final client = http.Client();
@@ -234,7 +233,7 @@ class MeshAPI {
     String command = "E3FF060001FA";
     List<String> lint = [];
     RpeNetwork network;
-    await sendMail();
+    // await sendMail();
     for (network in networks) {
       int length = 0;
       try {
@@ -266,8 +265,7 @@ class MeshAPI {
 
         length = int.parse("0x${lint[6]}");
 
-
-        for (int i = 0; i < length-1; i = i + 15) {
+        for (int i = 0; i < length - 1; i = i + 15) {
           String command = lint[i];
           print(lint);
           String nodeType = lint[i + 1];

@@ -5,4 +5,5 @@ class AppKeys {
   static String onBoardDone = 'onBoard';
   static String timerId = '';
   static String thresholdId = '';
+  static String emails = '';
 }
