@@ -5,6 +5,7 @@ import 'package:rpe_c/app/routes/api.routes.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/service/database.service.dart';
+import 'package:rpe_c/core/service/mail.sender.dart';
 
 class MeshAPI {
   final client = http.Client();
@@ -105,6 +106,7 @@ class MeshAPI {
 
   Future meshE1() async {
     //todo Remove from API and move to provider
+    logger.i("e1");
     List<RpeNetwork> networks = await _databaseService.getAllNetworks();
     String netId = '';
 
@@ -232,13 +234,14 @@ class MeshAPI {
     String command = "E3FF060001FA";
     List<String> lint = [];
     RpeNetwork network;
+    await sendMail();
     for (network in networks) {
       int length = 0;
-
       try {
         final http.Response response = await client.post(Uri.parse(network.url),
             headers: headers, body: command);
         final body = response.body;
+        logger.i(body);
         for (int i = 0; i < body.length; i = i + 2) {
           lint.add(body.substring(i, i + 2));
         }
@@ -261,26 +264,38 @@ class MeshAPI {
         // print(lint[11] + lint[12] + lint[13] + lint[14] + " rpe Net id ");
         // print(lint[15] + " rpe net id ");
 
-        length = int.parse("0x${lint[1]}${lint[2]}");
-        for (int i = 16; i <= length; i = i + 14) {
-          String nodeType = lint[i];
-          String nodeSubType = lint[i + 1];
-          String nodeNum = lint[i + 2];
-          String nodeStatus = lint[i + 3];
+        length = int.parse("0x${lint[6]}");
+
+
+        for (int i = 0; i < length-1; i = i + 15) {
+          String command = lint[i];
+          print(lint);
+          String nodeType = lint[i + 1];
+          String nodeSubType = lint[i + 2];
+          String nodeNum = lint[i + 3];
+          String netNum = lint[i + 4];
+          String nodeStatus = lint[i + 5];
           String nodeMsglen =
-              lint[i + 4]; //todo need to understand and integrate
-          String nodeTimeStamp = lint[i + 5] + //todo need to convert to time
-              lint[i + 6] +
-              lint[i + 7] +
-              lint[i + 8];
-          String uploadmsgType = lint[i + 9]; //todo understand
-          String messegeSubType = lint[i + 10]; //
-          int sensorType = int.parse(lint[i + 11]);
-          int sensorVal = int.parse("0x${lint[i + 12]}${lint[i + 13]}");
+              lint[i + 6]; //todo need to understand and integrate
+          String nodeTimeStamp = lint[i + 7] + //todo need to convert to time
+              lint[i + 8] +
+              lint[i + 9] +
+              lint[i + 10];
+          String uploadmsgType = lint[i + 11]; //todo understand
+          String messegeSubType = lint[i + 12]; //
+          int sensorType = int.parse(lint[i + 13]);
+          print(lint);
+          // print(nodeSubType);
+
+          int sensorVal = int.parse("0x${lint[i + 14]}${lint[i + 15]}");
+
+          print(nodeType);
+          print(nodeSubType);
+          print(nodeNum);
 
           RpeDevice device = await _databaseService.getDevicesByNodeNumType(
               nodeType, nodeSubType, nodeNum);
-          // logger.i(device);
+
           List<String> sensorVals = device.sensorVal.split(',');
           sensorVals[sensorType] = sensorVal.toString();
           device.sensorVal = sensorVals.join(',');

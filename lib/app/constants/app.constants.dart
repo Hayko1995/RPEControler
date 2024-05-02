@@ -10,6 +10,8 @@ class AppConstants {
   static const int uiUpdateInterval = 3000;
   static const String advName = 'Prov'; //TODO change
 
+  static const String adminMail = 'admin@rpecontrols.com';
+  static const String adminPass = '2023Admin';
   static const bool debug = true;
 
   static const Map<String, dynamic> images = {

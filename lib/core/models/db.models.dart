@@ -42,6 +42,9 @@ class RpeDevice {
   final int numOfSen; // num of sensors
   final int numOfAssocSen;
   late String sensorVal;
+  late int notify;
+  late String mail;
+  late String phoneNumber;
   final String
       clTbl; // table which holds if a given device is part of a cluster (0-9)
   final String aITbl; // assoc Initiator table
@@ -106,6 +109,9 @@ class RpeDevice {
       this.thresholds = "{\"thresholds\":[]}",
       this.clusters = "{\"clusters\":[]}",
       this.associations = "{\"associations\":[]}",
+      this.mail = '',
+      this.phoneNumber = '',
+      this.notify = 0,
       this.clTbl = "",
       this.aITbl = "", // assoc Initiator table
       this.aLTbl = "",
@@ -155,6 +161,9 @@ class RpeDevice {
       'thresholds': thresholds,
       'clusters': clusters,
       'associations': associations,
+      'notify': notify,
+      'mail': mail,
+      'phoneNumber': phoneNumber,
 
       'dName': dName,
       'dNetNum': dNetNum,
@@ -239,6 +248,9 @@ class RpeDevice {
         numOfSen: map['numOfSen'] ?? 0,
         numOfAssocSen: map['numOfAssocSen'] ?? 0,
         sensorVal: map['sensorVal'] ?? "",
+        notify: map['notify'] ?? 0,
+        mail: map['mail'] ?? '',
+        phoneNumber: map['phoneNumber'] ?? "",
         clTbl: map['clTbl'] ?? "",
         aITbl: map['aITbl'] ?? "",
         aLTbl: map['aLTbl'] ?? "",
@@ -276,7 +288,7 @@ class RpeDevice {
   @override
   String toString() => '''Device(nodeNumber: $nodeNumber, netId: $netId,
   isActivation: $isActivation, deviceType: $deviceType,  nodeType: $nodeType,  nodeSubType: $nodeSubType,
-    location: $location, stackType $stackType, numChild $numChild,
+    location: $location, notify $notify, phoneNumber $phoneNumber, mail $mail,  stackType $stackType, numChild $numChild,
          status $status, parentNodeNum $parentNodeNum, macAddress $macAddress,
          name $name, networkTableMAC $networkTableMAC, image $image )
          'timers' $timers, 'thresholds $thresholds, 'clusters $clusters, associations $associations
