@@ -3,7 +3,8 @@ class AppKeys {
   static String userData = 'jwt';
   static String razorKey = 'rzp_test_ImLClDOqMc2kc1';
   static String onBoardDone = 'onBoard';
-  static String timerId = '';
-  static String thresholdId = '';
-  static String emails = '';
+  static String timerId = 'timerId';
+  static String thresholdId = 'thresholdId';
+  static String emails = 'emails';
+  static String electricityPrice = 'electricityPrice';
 }

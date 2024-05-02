@@ -22,7 +22,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final DatabaseService _databaseService = DatabaseService();
   late String emailString = '';
   late List emails = [];
+  late double electricityPrice;
   final TextEditingController _email = new TextEditingController();
+  final TextEditingController _power = new TextEditingController();
 
   void _addEmail() => showDialog(
         context: context,
@@ -85,6 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _power.text = "0";
     CacheManagerUtils.conditionalCache(
       key: AppKeys.emails,
       valueType: ValueType.StringValue,
@@ -97,6 +100,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // List<String> servicesList = ["one", "Two", "Thee"];
         // print();
         emails = jsonDecode(emailString);
+      },
+    );
+    CacheManagerUtils.conditionalCache(
+      key: AppKeys.electricityPrice,
+      valueType: ValueType.DoubleValue,
+      actionIfNull: () {
+        WriteCache.setDouble(key: AppKeys.electricityPrice, value: 0);
+      },
+      actionIfNotNull: () async {
+        electricityPrice =
+            await ReadCache.getDouble(key: AppKeys.electricityPrice);
+        _power.text = electricityPrice.toString();
       },
     );
 
@@ -165,6 +180,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         _addEmail();
                       },
                       child: const Text("Add"),
+                    ),
+                  ]),
+              Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.7,
+                      child: TextField(
+                        controller: _power,
+                        //editing controller of this TextField
+                        decoration: const InputDecoration(
+                            //icon of text field
+                            labelText: "Add Power" //label text of field
+                            ),
+                        onTap: () {
+                          _power.text = '';
+                        },
+                      ),
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        double value = double.parse(_power.text);
+                        WriteCache.setDouble(
+                            key: AppKeys.electricityPrice, value: value);
+                        FocusScopeNode currentFocus = FocusScope.of(context);
+
+                        if (!currentFocus.hasPrimaryFocus) {
+                          currentFocus.unfocus();
+                        }
+                      },
+                      child: const Text("Save"),
                     ),
                   ]),
               const Divider(color: Colors.black54),
