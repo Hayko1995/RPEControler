@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.time.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 
@@ -62,12 +63,17 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
 
   @override
   void initState() {
+    var ttemp = DateTime.now();
+    ttemp.millisecondsSinceEpoch;
+    logger.i(ttemp.millisecondsSinceEpoch);
+    logger.i(ttemp.millisecondsSinceEpoch.toRadixString(16));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+
 
     CacheManagerUtils.conditionalCache(
       key: AppKeys.timerId,
@@ -214,7 +220,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           int dh = d2.millisecondsSinceEpoch ~/ 1000;
           var d1 = DateTime(year, mounts, day, hour, minute);
           var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
-          int StartTimeInSec = d1t2 - 946713600;
+          int StartTimeInSec = d1t2 ;
           hexStartTime = StartTimeInSec.toRadixString(16);
 
           String timStatus = '';
@@ -268,6 +274,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
               timStatus);
           bool response =
               await meshNotifier.sendCommand(command, dataDevice.netId);
+          logger.w(hexStartTime.toString());
         } else {
           timerType = "01";
           sensorActionNumber = '01';
@@ -286,6 +293,8 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           int startTimeinSec = (3600 * hStartTime) + (60 * mStartTime);
 
           secStartTime = hexPadding(startTimeinSec);
+          logger.w(secStartTime.toString());
+
 
           int hEndTime = int.parse((inEndTime.substring(0, 2)));
           int mEndTime = int.parse(inEndTime.substring(3));
@@ -418,6 +427,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
         network.timers = jsonEncode(networkTimers);
         print(network);
         meshNotifier.updateNetwork(network);
+
       }
     }
 
