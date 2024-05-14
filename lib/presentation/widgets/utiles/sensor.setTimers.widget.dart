@@ -217,7 +217,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           int StartTimeInSec = d1t2 - 946713600;
           hexStartTime = StartTimeInSec.toRadixString(16);
 
-          hexEndTimer = '00000000';
           String timStatus = '';
           if (timerStatus == "ON") {
             timStatus = '01';
@@ -229,21 +228,23 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
             secEndTime = '00000000';
           } else {
             String endDay = _endDate.text.toString();
-            print(endDay);
-            int day = int.parse((endDay.substring(0, 2)));
+            if (endDay == '') {
+              hexEndTimer = '00000000';
+            } else {
+              print(endDay);
+              int day = int.parse((endDay.substring(0, 2)));
 
-            int mounts = int.parse(endDay.substring(3, 5));
-            int year = int.parse("20" + endDay.substring(6, 8));
-            int hour = int.parse(endDay.substring(9, 11));
-            int minute = int.parse(endDay.substring(12));
+              int mounts = int.parse(endDay.substring(3, 5));
+              int year = int.parse("20" + endDay.substring(6, 8));
+              int hour = int.parse(endDay.substring(9, 11));
+              int minute = int.parse(endDay.substring(12));
 
-            var d2 = DateTime.now();
-            int dh = d2.millisecondsSinceEpoch ~/ 1000;
-            var d1 = DateTime(year, mounts, day, hour, minute);
-            var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
-            int endTimeInSec = d1t2 - 946713600;
-            hexStartTime = endTimeInSec.toRadixString(16);
+              var d1 = DateTime(year, mounts, day, hour, minute);
+              var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
+              int endTimeInSec = d1t2 - 946713600;
 
+              hexEndTimer = endTimeInSec.toRadixString(16);
+            }
             if (timerType == "Off") {
               timerType = '01';
             } else {

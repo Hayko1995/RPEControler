@@ -132,6 +132,17 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
         };
         dataDevice.timers = jsonEncode(_json);
         meshNotifier.updateDevice(dataDevice);
+
+        String _url = await meshNotifier.getNetworkUrlByNetId(dataDevice.netId);
+        var network = meshNotifier.getNetworkByUrl(_url);
+        var networkTimers = jsonDecode(network.timers);
+        var networkTimersArr = networkTimers['timers'];
+        networkTimersArr.remove(data['name']);
+        networkTimers['timers'] = networkTimersArr;
+        network.timers = jsonEncode(networkTimers);
+        print(network);
+        meshNotifier.updateNetwork(network);
+
       }
     }
 
