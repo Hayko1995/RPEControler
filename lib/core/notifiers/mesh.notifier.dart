@@ -142,6 +142,7 @@ class MeshNotifier with ChangeNotifier {
 
   updateDevice(device) async {
     _databaseService.updateDevice(device);
+    notifyListeners();
   }
 
   updateNetwork(network) async {

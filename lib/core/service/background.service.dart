@@ -16,37 +16,39 @@ var logger = Logger(
 );
 
 Future<void> initializeService() async {
-  final service = FlutterBackgroundService();
+  if (Platform.isAndroid && Platform.isIOS) {
+    final service = FlutterBackgroundService();
 
-  /// OPTIONAL, using custom notification channel id
+    /// OPTIONAL, using custom notification channel id
 
-  await service.configure(
-    androidConfiguration: AndroidConfiguration(
-      // this will be executed when app is in foreground or background in separated isolate
-      onStart: onStart,
+    await service.configure(
+      androidConfiguration: AndroidConfiguration(
+        // this will be executed when app is in foreground or background in separated isolate
+        onStart: onStart,
 
-      // auto start service
-      autoStart: true,
-      isForegroundMode: false,
+        // auto start service
+        autoStart: true,
+        isForegroundMode: false,
 
-      // notificationChannelId: 'my_foreground',
-      // initialNotificationTitle: 'AWESOME SERVICE',
-      // initialNotificationContent: 'Initializing',
-      // foregroundServiceNotificationId: 888,
-    ),
-    iosConfiguration: IosConfiguration(
-      // auto start service
-      autoStart: true,
+        // notificationChannelId: 'my_foreground',
+        // initialNotificationTitle: 'AWESOME SERVICE',
+        // initialNotificationContent: 'Initializing',
+        // foregroundServiceNotificationId: 888,
+      ),
+      iosConfiguration: IosConfiguration(
+        // auto start service
+        autoStart: true,
 
-      // this will be executed when app is in foreground in separated isolate
-      onForeground: onStart,
+        // this will be executed when app is in foreground in separated isolate
+        onForeground: onStart,
 
-      // you have to enable background fetch capability on xcode project
-      onBackground: onIosBackground,
-    ),
-  );
+        // you have to enable background fetch capability on xcode project
+        onBackground: onIosBackground,
+      ),
+    );
 
-  service.startService();
+    service.startService();
+  }
 }
 
 // to ensure this is executed

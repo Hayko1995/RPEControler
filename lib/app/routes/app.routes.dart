@@ -82,15 +82,15 @@ class AppRouter {
           );
         }
 
-      case bleDeviceRouter:
-        {
-          return MaterialPageRoute(
-            builder: (context) => DeviceScreen(
-              bleArgs: ModalRoute.of(context)!.settings.arguments as BleArgs,
-            ),
-            settings: settings,
-          );
-        }
+      // case bleDeviceRouter:
+      //   {
+      //     return MaterialPageRoute(
+      //       builder: (context) => DeviceScreen(
+      //         bleArgs: ModalRoute.of(context)!.settings.arguments as BleArgs,
+      //       ),
+      //       settings: settings,
+      //     );
+      //   }
       case clusteringRouter:
         {
           return MaterialPageRoute(
@@ -227,16 +227,16 @@ class AppRouter {
             builder: (_) => LoginScreen(),
           );
         }
-      case networkConfigRouter:
-        {
-          return MaterialPageRoute(
-            builder: (context) => ConfigureNetworkScreen(
-              networkConfigArguments: ModalRoute.of(context)!.settings.arguments
-                  as NetworkConfigArgs,
-            ),
-            settings: settings,
-          );
-        }
+      // case networkConfigRouter:
+      //   {
+      //     return MaterialPageRoute(
+      //       builder: (context) => ConfigureNetworkScreen(
+      //         networkConfigArguments: ModalRoute.of(context)!.settings.arguments
+      //             as NetworkConfigArgs,
+      //       ),
+      //       settings: settings,
+      //     );
+      //   }
       case signUpRoute:
         {
           return MaterialPageRoute(

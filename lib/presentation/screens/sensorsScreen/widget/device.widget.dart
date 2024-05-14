@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
 
@@ -9,32 +10,27 @@ Widget sensorWidget(context, data, widgetKey) {
 
   final value = data.sensorVal.split(',');
   int deviceType = data.deviceType;
-  // logger.i(data);
 
-  final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+  final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
 
   void changeState() {
     String status = data.status;
-    print("aaaaaaaaaaa");
     String command;
     if (status == "ON") {
       data.status = "OFF";
-      command = "94" + "01" + "05" + data.nodeNumber + data.netId;
+      command = "94" + "02" + "05" + data.nodeNumber + data.netId;
     } else {
       data.status = "ON";
-      command = "94" + "02" + "05" + data.nodeNumber + data.netId;
+      command = "94" + "01" + "05" + data.nodeNumber + data.netId;
     }
-    // meshNotifier.sendActivationCommand(command, data.netId);
-
+    meshNotifier.sendActivationCommand(command, data.netId);
     meshNotifier.updateDevice(data);
-    print("////////");
-    print(data);
   }
 
   return GestureDetector(
       key: widgetKey,
       onTap: () {
-        changeState();
+        // changeState();
         if (data.deviceType == 0) {
           changeState();
         }
@@ -49,7 +45,7 @@ Widget sensorWidget(context, data, widgetKey) {
         decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(data.image),
-              fit: BoxFit.fill,
+              fit: BoxFit.contain,
             ),
             color: data.status == "ON" ? Colors.green : Colors.white,
             borderRadius: BorderRadius.circular(10),

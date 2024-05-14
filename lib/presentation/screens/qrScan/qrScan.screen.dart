@@ -147,11 +147,11 @@ class _QRScanScreenState extends State<QRScanScreen> {
       // logger.w(password);
 
       controller.dispose();
-      Navigator.of(context).pushReplacementNamed(
-          // AppRouter.myHomeRoute
-          AppRouter.networkConfigRouter,
-          arguments: NetworkConfigArgs(
-              mac: ssid, url: "http://192.168.4.1", type: 1));
+      // Navigator.of(context).pushReplacementNamed(
+      //     // AppRouter.myHomeRoute
+      //     AppRouter.networkConfigRouter,
+      //     arguments: NetworkConfigArgs(
+      //         mac: ssid, url: "http://192.168.4.1", type: 1));
     });
     this.controller!.pauseCamera();
     this.controller!.resumeCamera();

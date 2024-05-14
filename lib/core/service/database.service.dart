@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -22,7 +23,7 @@ class DatabaseService {
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, AppConstants.dbName);
-
+    logger.w(path);
     return await openDatabase(
       path,
       onCreate: _onCreate,
