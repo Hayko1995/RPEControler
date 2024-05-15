@@ -269,6 +269,9 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           'FF',
           '08',
           timStatus);
+      logger.i(dataDevice.nodeNumber + " " + dataDevice.netId + " " + timerId);
+      logger.i(hexStartTime + " " + hexEndTimer);
+      logger.i("$timerType $actionType $sensorActionNumber $timStatus");
       bool response = await meshNotifier.sendCommand(command, dataDevice.netId);
     }
 
@@ -278,7 +281,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
 
       String inStartTime = _startTime.text.toString();
 
-      String inEndTime = _endTime.text.toString();
       int hStartTime = int.parse((inStartTime.substring(0, 2)));
       int mStartTime = int.parse(inStartTime.substring(3));
       int startTimeinSec = (3600 * hStartTime) + (60 * mStartTime);
@@ -286,10 +288,15 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
       secStartTime = hexPadding(startTimeinSec);
       logger.w(secStartTime.toString());
 
-      int hEndTime = int.parse((inEndTime.substring(0, 2)));
-      int mEndTime = int.parse(inEndTime.substring(3));
-      int endTimeinSec = (3600 * hEndTime) + (60 * mEndTime);
-      secEndTime = hexPadding(endTimeinSec);
+      String inEndTime = _endTime.text.toString();
+      if (inEndTime == '') {
+        secEndTime = '00000000';
+      } else {
+        int hEndTime = int.parse((inEndTime.substring(0, 2)));
+        int mEndTime = int.parse(inEndTime.substring(3));
+        int endTimeinSec = (3600 * hEndTime) + (60 * mEndTime);
+        secEndTime = hexPadding(endTimeinSec);
+      }
 
       int suDay;
       int mDay;
@@ -377,7 +384,14 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           'FF',
           'FF',
           timStatus);
-      logger.w(command);
+      logger.i("node config " +
+          dataDevice.nodeNumber +
+          " " +
+          dataDevice.netId +
+          " " +
+          timerId);
+      logger.i("timers $hexStartTime  $hexEndTimer");
+      logger.i("$timerType $actionType $sensorActionNumber $timStatus");
       bool response = await meshNotifier.sendCommand(command, dataDevice.netId);
     }
 
@@ -466,28 +480,32 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    DropdownMenu<String>(
+                                    SizedBox(
                                       width: MediaQuery.sizeOf(context).width *
                                           0.6,
-                                      initialSelection: typeOfTimer.first,
-                                      onSelected: (String? value) {
-                                        // This is called when the user selects an item.
-                                        setState(() {
-                                          timerType = value!;
-                                          if (timerType == 'Periodic') {
-                                            oneTimeOrPereudic = true;
-                                          } else {
-                                            oneTimeOrPereudic = false;
-                                          }
-                                        });
-                                      },
-                                      label: const Text("Timer"),
-                                      dropdownMenuEntries: typeOfTimer
-                                          .map<DropdownMenuEntry<String>>(
-                                              (String value) {
-                                        return DropdownMenuEntry<String>(
-                                            value: value, label: value);
-                                      }).toList(),
+                                      child: DropdownButton<String>(
+                                        value: typeOfTimer.first,
+                                        items: typeOfTimer.map((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            timerType = value!;
+                                            if (timerType == 'Periodic') {
+                                              oneTimeOrPereudic = true;
+                                            } else {
+                                              oneTimeOrPereudic = false;
+                                            }
+                                          });
+                                        },
+                                        isExpanded: true,
+                                        alignment: Alignment.center,
+
+
+                                      ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
