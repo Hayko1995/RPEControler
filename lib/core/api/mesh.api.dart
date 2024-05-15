@@ -98,14 +98,13 @@ class MeshAPI {
         return false;
       }
     } catch (e) {
-      print(" service = internet problem");
+      logger.e(" service = internet problem");
       return Null;
     }
   }
 
   Future meshE1() async {
     //todo Remove from API and move to provider
-    logger.i("e1");
     List<RpeNetwork> networks = await _databaseService.getAllNetworks();
     String netId = '';
 
@@ -115,7 +114,7 @@ class MeshAPI {
     RpeNetwork network;
     for (network in networks) {
       final Uri uri = Uri.parse(network.url);
-      print(uri);
+
       int length = 0;
       try {
         response = await client.post(uri, headers: headers, body: command);
@@ -123,9 +122,8 @@ class MeshAPI {
         for (int i = 0; i < body.length; i = i + 2) {
           lint.add(body.substring(i, i + 2));
         }
-        print(lint);
       } catch (e) {
-        print(e);
+        logger.e(e);
         continue;
       }
 
@@ -133,18 +131,6 @@ class MeshAPI {
         continue;
       }
 
-      // if (kDebugMode) {
-      // print(lint);
-      // print("${lint[0]} command type E1");
-      // print("${lint[1]}  ${lint[2]} data Langht");
-      // print("${lint[3]} number of nodes ");
-      // print("${lint[4]}${lint[5]}${lint[6]}${lint[7]} rpe net id ");
-      // print("${lint[8]} domain type ");
-      // print("${lint[9]} preset domain ");
-      // print("${lint[10]} network number ");
-      // print("${lint[11]}${lint[12]}${lint[13]}${lint[14]} CR reported time");
-      // print("${lint[15]} reserved ");
-      // }
       String netNum = lint[10];
       length = int.parse("0x${lint[1]}${lint[2]}");
 
@@ -220,7 +206,7 @@ class MeshAPI {
             lint[i + 13] +
             lint[i + 14] +
             lint[i + 15];
-        // print(device);
+
         await _databaseService.insertDevice(device);
         // }
       }
@@ -247,27 +233,11 @@ class MeshAPI {
         if (response.body.length < 2) {
           continue;
         }
-        // print(lint);
-        //
-        // print(lint[0] + " command type E3");
-        // print(lint[1] + lint[2] + " wifiPacketLen");
-        // print(lint[3] +
-        //     lint[4] +
-        //     lint[5] +
-        //     lint[6] +
-        //     lint[7] +
-        //     lint[8] +
-        //     lint[9] +
-        //     lint[10] +
-        //     " present nodes");
-        // print(lint[11] + lint[12] + lint[13] + lint[14] + " rpe Net id ");
-        // print(lint[15] + " rpe net id ");
-
         length = int.parse("0x${lint[6]}");
 
         for (int i = 0; i < length - 1; i = i + 15) {
           String command = lint[i];
-          print(lint);
+
           String nodeType = lint[i + 1];
           String nodeSubType = lint[i + 2];
           String nodeNum = lint[i + 3];
@@ -282,14 +252,8 @@ class MeshAPI {
           String uploadmsgType = lint[i + 11]; //todo understand
           String messegeSubType = lint[i + 12]; //
           int sensorType = int.parse(lint[i + 13]);
-          print(lint);
-          // print(nodeSubType);
 
           int sensorVal = int.parse("0x${lint[i + 14]}${lint[i + 15]}");
-
-          print(nodeType);
-          print(nodeSubType);
-          print(nodeNum);
 
           RpeDevice device = await _databaseService.getDevicesByNodeNumType(
               nodeType, nodeSubType, nodeNum);
@@ -353,7 +317,6 @@ class MeshAPI {
     RpeNetwork network;
     for (network in networks) {
       uri = Uri.parse(network.url);
-      print(uri);
     }
 
     var cmd = '38';
@@ -404,7 +367,8 @@ class MeshAPI {
 
       // return body;
     } catch (e) {
-      print(" service = internet problem");
+
+      logger.e('internet problem');
       return Null;
     }
   }
@@ -432,10 +396,9 @@ class MeshAPI {
         int integerData = int.parse(stringList[i]);
         lint.add(integerData.toRadixString(16));
       }
-      // print(lint);
       return body;
     } catch (e) {
-      print(" service = internet problem");
+      logger.i(" service = internet problem");
       return Null;
     }
   }
@@ -463,10 +426,10 @@ class MeshAPI {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      // print(lint);
+
       return body;
     } catch (e) {
-      print(" service = internet problem");
+      logger.e(" service = internet problem");
       return Null;
     }
   }
@@ -490,10 +453,10 @@ class MeshAPI {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      // print(lint);
+
       return body;
     } catch (e) {
-      print(" service = internet problem");
+      logger.e(" service = internet problem");
       return Null;
     }
   }
@@ -521,10 +484,10 @@ class MeshAPI {
         int _integerData = int.parse(stringList[i]);
         lint.add(_integerData.toRadixString(16));
       }
-      // print(lint);
+
       return body;
     } catch (e) {
-      print(" service = internet problem");
+      logger.e(" service = internet problem");
       return Null;
     }
   }

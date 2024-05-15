@@ -1,6 +1,7 @@
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 
 Future sendMail() async {
   String username = AppConstants.adminMail;
@@ -23,19 +24,20 @@ Future sendMail() async {
   final message = Message()
     ..from = Address(username, 'Your name')
     ..recipients.add('harry.balian@rpecontrols.com')
-    // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
-    // ..bccRecipients.add(Address('bccAddress@example.com'))
+  // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+  // ..bccRecipients.add(Address('bccAddress@example.com'))
     ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
     ..text = 'This is the plain text.\nThis is line 2 of the text part.'
     ..html = "<h1>Huston we have a problem</h1>\n<p>Huston we have a problem</p>";
 
   try {
     final sendReport = await send(message, smtpServer);
-    print('Message sent: ' + sendReport.toString());
+
+    logger.i('Message sent: ' + sendReport.toString());
   } on MailerException catch (e) {
-    print('Message not sent.');
+    logger.i('Message not sent.');
     for (var p in e.problems) {
-      print('Problem: ${p.code}: ${p.msg}');
+      logger.i('Problem: ${p.code}: ${p.msg}');
     }
   }
 }

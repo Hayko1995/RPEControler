@@ -26,6 +26,8 @@ class RpeDevice {
   late String thresholds;
   late String clusters;
   late String associations;
+  late int timI; //timer: 0,
+  late int thI; //threshInd: 0,
 
   final int dNum;
   final int dType;
@@ -49,8 +51,8 @@ class RpeDevice {
       clTbl; // table which holds if a given device is part of a cluster (0-9)
   final String aITbl; // assoc Initiator table
   final String aLTbl;
-  final int timI; //timerInd: 0,
-  final int thI; //threshInd: 0,
+
+
   final String thP1;
   final String thP2;
   final String thTY; // threshold type
@@ -284,7 +286,7 @@ class RpeDevice {
       RpeDevice.fromMap(json.decode(source));
 
   // Implement toString to make it easier to see information about
-  // each breed when using the print statement.
+
   @override
   String toString() => '''Device(nodeNumber: $nodeNumber, netId: $netId,
   isActivation: $isActivation, deviceType: $deviceType,  nodeType: $nodeType,  nodeSubType: $nodeSubType,
@@ -422,7 +424,7 @@ class RpeNetwork {
       RpeNetwork.fromMap(json.decode(source));
 
   // Implement toString to make it easier to see information about
-  // each breed when using the print statement.
+
   //TODO add fields
   @override
   String toString() =>
@@ -482,7 +484,7 @@ class Cluster {
       Cluster.fromMap(json.decode(source));
 
   // Implement toString to make it easier to see information about
-  // each breed when using the print statement.
+
   @override
   String toString() =>
       '''Cluster(clusterName: ClusterId $clusterId,  $clusterName, devices: $devices,  
@@ -540,7 +542,7 @@ class Association {
       Association.fromMap(json.decode(source));
 
   // Implement toString to make it easier to see information about
-  // each breed when using the print statement.
+
   @override
   String toString() =>
       '''Associations(clusterName: AssociationsId $associationId, associationName $associationName, fromDevices: $fromDevices,

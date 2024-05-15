@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, recursive_getters
+
 
 import 'dart:async';
 import 'dart:convert';
@@ -8,16 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/api/authentication.api.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/utils/snackbar.util.dart';
-
 
 class AuthenticationNotifier with ChangeNotifier {
   final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
 
   String? _passwordLevel = "";
+
   String? get passwordLevel => _passwordLevel;
 
   String? _passwordEmoji = "";
+
   String? get passwordEmoji => _passwordEmoji;
 
   void checkPasswordStrength({required String password}) {
@@ -49,7 +51,6 @@ class AuthenticationNotifier with ChangeNotifier {
       var userData = await _authenticationAPI.createAccount(
           useremail: useremail, username: username, userpassword: userpassword);
 
-
       final Map<String, dynamic> parseData = await jsonDecode(userData);
       bool isAuthenticated = parseData['authentication'];
       dynamic authData = parseData['data'];
@@ -57,8 +58,8 @@ class AuthenticationNotifier with ChangeNotifier {
       if (isAuthenticated) {
         WriteCache.setString(key: AppKeys.userData, value: authData)
             .whenComplete(
-          () => Navigator.of(context).pushReplacementNamed(
-              AppRouter.homeRoute), //todo change to home
+          () => Navigator.of(context)
+              .pushReplacementNamed(AppRouter.homeRoute), //todo change to home
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -73,7 +74,7 @@ class AuthenticationNotifier with ChangeNotifier {
           text: 'Houston we have a problem', context: context));
       // handle timeout
     } catch (e) {
-      print(e);
+      logger.e(e);
     }
   }
 
@@ -90,8 +91,8 @@ class AuthenticationNotifier with ChangeNotifier {
     //       await _authenticationAPI.userLogin(email: email, password: password);
 
     //   final Map<String, dynamic> parseData = await jsonDecode(userData);
-    //   print(parseData);
-    //   print(parseData['authentication']);
+    //
+    //
     //   bool isAuthenticated = parseData['authentication'] as bool;
     //   String authData = parseData['data'];
 
@@ -116,7 +117,6 @@ class AuthenticationNotifier with ChangeNotifier {
     //       text: 'Houston we have a problem', context: context));
     //   // handle timeout
     // } catch (e) {
-    //   print(e);
     // }
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.cluster.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
@@ -43,7 +44,7 @@ Widget widget(context, cluster, widgetKey) {
                     ),
                     onTap: () async {
                       MeshCluster meshCluster = MeshCluster();
-                      // print(cluster);
+
                       // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
                       String clusterId = cluster.clusterId.toString();
                       if (clusterId.length < 2) {
@@ -76,7 +77,7 @@ Widget widget(context, cluster, widgetKey) {
                           ),
                     onTap: () async {
                       MeshCluster meshCluster = MeshCluster();
-                      // print(cluster);
+
                       // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
                       String clusterId = cluster.clusterId.toString();
                       if (clusterId.length < 2) {
@@ -408,7 +409,8 @@ Rect _getWidgetGlobalRect(GlobalKey key) {
   final RenderBox renderBox =
       key.currentContext!.findRenderObject() as RenderBox;
   var offset = renderBox.localToGlobal(Offset.zero);
-  debugPrint('Widget position: ${offset.dx} ${offset.dy}');
+  logger.i('Widget position: ${offset.dx} ${offset.dy}');
+
   return Rect.fromLTWH(offset.dx / 3.1, offset.dy * 1.05, renderBox.size.width,
       renderBox.size.height);
 }

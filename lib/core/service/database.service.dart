@@ -23,7 +23,6 @@ class DatabaseService {
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, AppConstants.dbName);
-    logger.w(path);
     return await openDatabase(
       path,
       onCreate: _onCreate,
@@ -431,7 +430,7 @@ class DatabaseService {
         try {
           tableNameList.add(maps[i]['name'].toString());
         } catch (e) {
-          print('Exeption : Cant get from db all names ');
+          logger.i('Exeption : Cant get from db all names ');
         }
       }
     }

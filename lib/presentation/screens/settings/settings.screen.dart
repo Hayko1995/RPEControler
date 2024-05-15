@@ -98,7 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       actionIfNotNull: () async {
         emailString = await ReadCache.getString(key: AppKeys.emails);
         // List<String> servicesList = ["one", "Two", "Thee"];
-        // print();
+
         emails = jsonDecode(emailString);
       },
     );

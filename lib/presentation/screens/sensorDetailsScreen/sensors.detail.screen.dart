@@ -122,7 +122,7 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
         networkTimersArr.remove(data['name']);
         networkTimers['thresholds'] = networkTimersArr;
         network.timers = jsonEncode(networkTimers);
-        print(network);
+
         meshNotifier.updateNetwork(network);
       }
     }
@@ -133,10 +133,7 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
       bool response = await meshNotifier.sendCommand(command, device.netId);
       response = true; //todo
       if (response) {
-        print(data);
         deviceTimersList.remove(data);
-        print(deviceTimersList);
-        print(dataDevice.timers);
         Map<String, dynamic> _json = {
           'timers': deviceTimersList,
         };
@@ -150,9 +147,7 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
         networkTimersArr.remove(data['name']);
         networkTimers['timers'] = networkTimersArr;
         network.timers = jsonEncode(networkTimers);
-        print(network);
         meshNotifier.updateNetwork(network);
-
       }
     }
 
@@ -333,23 +328,24 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                             decoration: BoxDecoration(border: Border.all()),
                             child: Column(
                               children: [
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.add),
-                                      onPressed: () {
-                                        setState(() {
-                                          timersOpen = !timersOpen;
-                                        });
-                                      },
-                                    ),
-                                    const Row(
-                                      children: [
-                                        Text("Assigned Timers "),
-                                      ],
-                                    )
-                                  ],
-                                ),
+                                if (dataDevice.deviceType < 3)
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.add),
+                                        onPressed: () {
+                                          setState(() {
+                                            timersOpen = !timersOpen;
+                                          });
+                                        },
+                                      ),
+                                      const Row(
+                                        children: [
+                                          Text("Assigned Timers "),
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 if (timersOpen)
                                   Column(
                                     children: [

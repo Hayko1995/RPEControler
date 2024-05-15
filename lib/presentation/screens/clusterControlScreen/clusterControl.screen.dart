@@ -90,7 +90,6 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
                 await meshNotifier.sendCommand(command, cluster.netNumber);
             if (result) {
               setState(() {
-                print(isSwitched);
                 isSwitched = value;
               });
             }

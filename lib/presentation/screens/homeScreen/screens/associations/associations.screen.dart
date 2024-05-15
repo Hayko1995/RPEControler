@@ -38,7 +38,7 @@ Widget widget(context, association, widgetKey) {
                   child: const Text("Delete"),
                   onTap: () {
                     MeshAssociation meshAssociation = MeshAssociation();
-                    // print(cluster);
+                    // logger.i(cluster);
                     // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
                     String associationId = association.associationId.toString();
                     if (associationId.length < 2) {
@@ -61,7 +61,7 @@ Widget widget(context, association, widgetKey) {
                       : Text("Enabled"),
                   onTap: () async {
                     MeshCluster meshCluster = MeshCluster();
-                    // print(cluster);
+                    // logger.i(cluster);
                     // Cluster(clusterName: ClusterId 1,  aa, devices: 00158D0000506820,00158D0000506830,00158D000050683B,
                     String clusterId = association.associationId.toString();
                     if (clusterId.length < 2) {
@@ -421,7 +421,7 @@ Rect _getWidgetGlobalRect(GlobalKey key) {
   final RenderBox renderBox =
       key.currentContext!.findRenderObject() as RenderBox;
   var offset = renderBox.localToGlobal(Offset.zero);
-  debugPrint('Widget position: ${offset.dx} ${offset.dy}');
+  logger.i('Widget position: ${offset.dx} ${offset.dy}');
   return Rect.fromLTWH(offset.dx / 3.1, offset.dy * 1.05, renderBox.size.width,
       renderBox.size.height);
 }

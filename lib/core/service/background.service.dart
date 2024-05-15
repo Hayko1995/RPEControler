@@ -6,14 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:logger/logger.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/api/mesh.api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-var logger = Logger(
-  printer: PrettyPrinter(),
-);
 
 Future<void> initializeService() async {
   if (Platform.isAndroid && Platform.isIOS) {
@@ -164,9 +160,7 @@ void onStart(ServiceInstance service) async {
   initMesh();
   Timer.periodic(const Duration(milliseconds: AppConstants.uiUpdateInterval),
       (timer) async {
-    if (service is AndroidServiceInstance) {
-      print("aaaaaaaaaa");
-    }
+    if (service is AndroidServiceInstance) {}
 
     updateMesh();
     // Future<String> data1 = updateMesh();

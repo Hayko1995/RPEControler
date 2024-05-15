@@ -152,7 +152,6 @@ class MeshNotifier with ChangeNotifier {
   sendCommand(String command, String netId) async {
     String url = await _databaseService.getUrlByNetId([netId]);
     bool result = await meshAPI.sendToMesh(command, url);
-    logger.i(result);
     return result;
   }
 

@@ -18,7 +18,7 @@ class ItemBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(devices[index].networkTableMAC);
+
     return GestureDetector(
         onTap: () => {
               Navigator.of(context).pushNamed(

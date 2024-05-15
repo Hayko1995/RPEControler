@@ -138,7 +138,7 @@
 // //                                 seconds: 20)); // todo add loading in ui
 // //                             provisioner.stop();
 // //                           } catch (e, s) {
-// //                             print(e);
+// //                             logger.e(e);
 // //                           }
 // //
 // //                           //TODO write host to db

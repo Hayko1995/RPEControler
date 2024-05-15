@@ -59,7 +59,7 @@
 //     });
 //
 //     _isScanningSubscription = FlutterBluePlus.isScanning.listen((state) {
-//       print(state);
+//       logger.i(state);
 //       _isScanning = state;
 //       if (mounted) {
 //         setState(() {});

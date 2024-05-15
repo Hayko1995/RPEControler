@@ -127,7 +127,7 @@
 //
 //             Navigator.of(context).push(route);
 //           } on Exception catch (_) {
-//             print('another time ');
+//             logger.i('another time ');
 //           }
 //         }
 //       });
@@ -233,7 +233,7 @@
 //           'Wifi Gateway: $wifiGatewayIP\n'
 //           'Wifi Submask: $wifiSubmask\n';
 //
-//       print(_connectionStatus);
+//       logger.i(_connectionStatus);
 //     });
 //   }
 //
@@ -428,7 +428,7 @@
 //
 //     await c.setNotifyValue(true);
 //
-//     print("notify");
+//     logger.i("notify");
 //     // Snackbar.show(ABC.c, "$op : Success", success: true);
 //     if (c.properties.read) {
 //       int i = 0;

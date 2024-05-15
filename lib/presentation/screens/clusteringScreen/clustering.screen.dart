@@ -159,7 +159,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                                   meshNotifier.getDeviceByMac(item.macAddress);
                               List clusterNames =
                                   jsonDecode(_dev.clusters)['clusters'];
-                              print(clusterNames);
+
                               clusterNames.add(newClusterName);
 
                               logger.i("clusterNames");

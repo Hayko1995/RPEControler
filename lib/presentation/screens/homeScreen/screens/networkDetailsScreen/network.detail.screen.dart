@@ -77,7 +77,7 @@ class _NetworkDetailsScreenState extends State<NetworkDetailsScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Sensor details"),
+          title: const Text("Network details"),
           backgroundColor: Colors.blue,
         ),
         body: SingleChildScrollView(

@@ -34,7 +34,7 @@ class AssociationScreenState extends State<AssociationScreen> {
     required Item item,
     required ActiveArea customer,
   }) {
-    print("item");
+
 
     setState(() {
       if (!customer.items.contains(item)) {

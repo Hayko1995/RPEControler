@@ -136,24 +136,24 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CacheManagerUtils.conditionalCache(
-      key: AppKeys.thresholdId,
-      valueType: ValueType.StringValue,
-      actionIfNull: () {
-        WriteCache.setString(key: AppKeys.thresholdId, value: '00');
-        thresholdId = "00";
-      },
-      actionIfNotNull: () async {
-        thresholdId = await ReadCache.getString(key: AppKeys.thresholdId);
-      },
-    );
+    // CacheManagerUtils.conditionalCache(
+    //   key: AppKeys.thresholdId,
+    //   valueType: ValueType.StringValue,
+    //   actionIfNull: () {
+    //     WriteCache.setString(key: AppKeys.thresholdId, value: '00');
+    //     thresholdId = "00";
+    //   },
+    //   actionIfNotNull: () async {
+    //     thresholdId = await ReadCache.getString(key: AppKeys.thresholdId);
+    //   },
+    // );
 
     void getSubSensors(dataDevice) {
       sensorType = [];
       if (dataDevice.isActivation == 1) {
         int deviceType = hex.decode(dataDevice.nodeType)[0];
         int subDeviceType = hex.decode(dataDevice.nodeSubType)[0];
-        print(subDeviceType);
+        logger.i(subDeviceType);
         var subSensorDict =
             AppConstants.deviceTypes[deviceType]['dSub'][subDeviceType]["senT"];
         for (var sensor in subSensorDict.values) {
@@ -167,6 +167,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
 
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     dataDevice = meshNotifier.getDeviceByMac(widget.mac);
+
+    thresholdId = dataDevice.thI.toRadixString(16);
+    dataDevice.thI = dataDevice.thI++;
     getSubSensors(dataDevice);
 
     Future<void> saveAction() async {
@@ -258,8 +261,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         int mEndTime = int.parse(inEndTime.substring(3));
         int endTimeinSec = (3600 * hEndTime) + (60 * mEndTime);
         secEndTime = hexPadding(endTimeinSec);
-        print("secEndTime");
-        print(secEndTime);
+        logger.i("secEndTime");
+        logger.i(secEndTime);
 
         int suDay;
         int mDay;
@@ -305,7 +308,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         }
         int days = suDay + mDay + tDay + wDay + thDay + fDay + saDay;
         if (days == 0) {
-          print("days need to be not 0");
+          logger.i("days need to be not 0");
         }
 
         if (days < 16) {
@@ -601,7 +604,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                           onChanged: (value) {
                             setState(() {
                               needTimer = value!;
-                              print(needTimer);
+                              logger.i(needTimer);
                             });
                           },
                         ),
@@ -665,7 +668,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                             onChanged: (value) {
                                               setState(() {
                                                 values[key] = value!;
-                                                print(values);
+                                                logger.i(values);
                                               });
                                             },
                                           ),
@@ -707,7 +710,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                       "${pickeTime.hour}:${pickeTime.minute}";
                                                 });
                                               } else {
-                                                print("Date is not selected");
+                                                logger.i("Date is not selected");
                                               }
                                             },
                                           )),
@@ -739,7 +742,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                       "${pickeTime.hour}:${pickeTime.minute}";
                                                 });
                                               } else {
-                                                print("Date is not selected");
+                                                logger.i("Date is not selected");
                                               }
                                             },
                                           )),
@@ -796,7 +799,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                           "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
                                                     });
                                                   } else {
-                                                    print(
+                                                    logger.i(
                                                         "Date is not selected");
                                                   }
                                                 }
@@ -848,7 +851,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                           "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
                                                     });
                                                   } else {
-                                                    print(
+                                                    logger.i(
                                                         "Date is not selected");
                                                   }
                                                 }

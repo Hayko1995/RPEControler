@@ -8,12 +8,12 @@ import 'package:rpe_c/presentation/screens/sensorsScreen/sensors.screen.dart';
 
 void checkBoxCallBack(bool? checkBoxState) {
   if (checkBoxState != null) {
-    print("object");
+    logger.i("object");
   }
 }
 
 void buttonCall() {
-  print("object");
+  logger.i("object");
 }
 
 Widget airQualityWidget(context, network, index, place, count, widgetKey) {

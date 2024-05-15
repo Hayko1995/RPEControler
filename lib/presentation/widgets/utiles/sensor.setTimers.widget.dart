@@ -33,6 +33,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
 
   List<String> typeOfControl = <String>["ON", "Off", "Up", "Down"];
   List<String> stateOfTimer = <String>['ON', "Off"];
+
   List<String> types = <String>['Devices', 'Clusters'];
   bool oneTimeOrPereudic = false;
   Map<String, bool> values = {
@@ -73,22 +74,28 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
   @override
   Widget build(BuildContext context) {
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
+    timerStatus = stateOfTimer.first;
+    controlType = typeOfControl.first;
 
-
-    CacheManagerUtils.conditionalCache(
-      key: AppKeys.timerId,
-      valueType: ValueType.StringValue,
-      actionIfNull: () {
-        WriteCache.setString(key: AppKeys.timerId, value: '00');
-        timerId = "00";
-      },
-      actionIfNotNull: () async {
-        timerId = await ReadCache.getString(key: AppKeys.timerId);
-      },
-    );
+    // CacheManagerUtils.conditionalCache(
+    //   key: AppKeys.timerId,
+    //   valueType: ValueType.StringValue,
+    //   actionIfNull: () {
+    //     WriteCache.setString(key: AppKeys.timerId, value: '00');
+    //     timerId = "00";
+    //   },
+    //   actionIfNotNull: () async {
+    //     timerId = await ReadCache.getString(key: AppKeys.timerId);
+    //   },
+    // );
 
     dataDevice = meshNotifier.getDeviceByMac(widget.mac);
-
+    timerId = dataDevice.timI.toRadixString(16);
+    if (int.parse(timerId) < 9) {
+      timerId = '0$timerId';
+    }
+    logger.i(timerId);
+    dataDevice.timI = dataDevice.timI++;
     if (dataDevice.isActivation == 1) {
       typeOfControl = ["ON", "Off"];
     }
@@ -138,7 +145,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                       });
                     },
                     dropdownMenuEntries:
-                        types.map<DropdownMenuEntry<String>>((String value) {
+                    types.map<DropdownMenuEntry<String>>((String value) {
                       return DropdownMenuEntry<String>(
                           value: value, label: value);
                     }).toList(),
@@ -196,19 +203,18 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
     Future<void> saveAction() async {
       {
         MeshTimer meshTimer = MeshTimer();
-        print(oneTimeOrPereudic);
+        logger.i(oneTimeOrPereudic);
         if (oneTimeOrPereudic == false) {
           timerType = "00";
           if (controlType == "ON") {
-            actionType = "01";
+            actionType = "81";
           } else {
             actionType = "00";
           }
 
-          String timerName = "timer"; //todo change
 
           String startDay = _startDate.text.toString();
-          print(startDay);
+          logger.i(startDay);
           int day = int.parse((startDay.substring(0, 2)));
 
           int mounts = int.parse(startDay.substring(3, 5));
@@ -220,7 +226,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           int dh = d2.millisecondsSinceEpoch ~/ 1000;
           var d1 = DateTime(year, mounts, day, hour, minute);
           var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
-          int StartTimeInSec = d1t2 ;
+          int StartTimeInSec = d1t2;
           hexStartTime = StartTimeInSec.toRadixString(16);
 
           String timStatus = '';
@@ -229,7 +235,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           } else {
             timStatus = '00';
           }
-          if (actionType == "Off") {
+          if (actionType == "00") {
             timerType = '01';
             secEndTime = '00000000';
           } else {
@@ -237,7 +243,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
             if (endDay == '') {
               hexEndTimer = '00000000';
             } else {
-              print(endDay);
+              logger.i(endDay);
               int day = int.parse((endDay.substring(0, 2)));
 
               int mounts = int.parse(endDay.substring(3, 5));
@@ -268,22 +274,15 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
               timerType,
               actionType,
               sensorActionNumber,
-              hexEndTimer,
+              "FF",
               'FF',
-              'FF',
+              '08',
               timStatus);
           bool response =
               await meshNotifier.sendCommand(command, dataDevice.netId);
-          logger.w(hexStartTime.toString());
         } else {
           timerType = "01";
           sensorActionNumber = '01';
-
-          if (timerStatus == "ON") {
-            timerStatus = '01';
-          } else {
-            timerStatus = '00';
-          }
 
           String inStartTime = _startTime.text.toString();
 
@@ -295,13 +294,10 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           secStartTime = hexPadding(startTimeinSec);
           logger.w(secStartTime.toString());
 
-
           int hEndTime = int.parse((inEndTime.substring(0, 2)));
           int mEndTime = int.parse(inEndTime.substring(3));
           int endTimeinSec = (3600 * hEndTime) + (60 * mEndTime);
           secEndTime = hexPadding(endTimeinSec);
-          print("secEndTime");
-          print(secEndTime);
 
           int suDay;
           int mDay;
@@ -347,7 +343,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           }
           int days = suDay + mDay + tDay + wDay + thDay + fDay + saDay;
           if (days == 0) {
-            print("days need to be not 0");
+            logger.i("days need to be not 0");
           }
           String weekDays;
           if (days < 16) {
@@ -389,6 +385,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
               'FF',
               'FF',
               timStatus);
+          logger.w(command);
           bool response =
               await meshNotifier.sendCommand(command, dataDevice.netId);
         }
@@ -399,7 +396,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
         } else {
           timerId = intTimerId.toString();
         }
-        WriteCache.setString(key: AppKeys.timerId, value: timerId);
+        // WriteCache.setString(key: AppKeys.timerId, value: timerId);
         // dataDevice
         Map<String, dynamic> newTimer = {
           'timerId': timerId,
@@ -412,7 +409,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           'status': timerStatus,
         };
         var timers = jsonDecode(dataDevice.timers);
-        print(timers);
+        // logger.i(timers);
         var timersArr = timers['timers'];
         timersArr.add(newTimer);
         timers['timers'] = timersArr;
@@ -425,9 +422,8 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
         networkTimersArr.add(_name.text);
         networkTimers['timers'] = networkTimersArr;
         network.timers = jsonEncode(networkTimers);
-        print(network);
+        // logger.i(network);
         meshNotifier.updateNetwork(network);
-
       }
     }
 
@@ -463,14 +459,18 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.5,
+                              width: MediaQuery
+                                  .sizeOf(context)
+                                  .width * 0.5,
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  MainAxisAlignment.spaceAround,
                                   children: [
                                     DropdownMenu<String>(
-                                      width: MediaQuery.sizeOf(context).width *
+                                      width: MediaQuery
+                                          .sizeOf(context)
+                                          .width *
                                           0.6,
                                       initialSelection: typeOfTimer.first,
                                       onSelected: (String? value) {
@@ -488,17 +488,20 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                       dropdownMenuEntries: typeOfTimer
                                           .map<DropdownMenuEntry<String>>(
                                               (String value) {
-                                        return DropdownMenuEntry<String>(
-                                            value: value, label: value);
-                                      }).toList(),
+                                            return DropdownMenuEntry<String>(
+                                                value: value, label: value);
+                                          }).toList(),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 20, 0, 0),
                                       child: DropdownMenu<String>(
                                         width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.6,
+                                        MediaQuery
+                                            .sizeOf(context)
+                                            .width *
+                                            0.6,
+                                        initialSelection: typeOfControl.first,
                                         onSelected: (String? value) {
                                           // This is called when the user selects an item.
                                           setState(() {
@@ -509,9 +512,9 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                         dropdownMenuEntries: typeOfControl
                                             .map<DropdownMenuEntry<String>>(
                                                 (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList(),
+                                              return DropdownMenuEntry<String>(
+                                                  value: value, label: value);
+                                            }).toList(),
                                       ),
                                     ),
                                   ]),
@@ -538,7 +541,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                               onChanged: (value) {
                                                 setState(() {
                                                   values[key] = value!;
-                                                  print(values);
+                                                  logger.i(values);
                                                 });
                                               },
                                             ),
@@ -555,68 +558,74 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                 children: [
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                    const EdgeInsets.fromLTRB(0, 20, 0, 0),
                                     child: SizedBox(
                                         width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.6,
+                                        MediaQuery
+                                            .sizeOf(context)
+                                            .width *
+                                            0.6,
                                         child: TextField(
                                           controller: _startTime,
                                           //editing controller of this TextField
                                           decoration: const InputDecoration(
-                                              //icon of text field
+                                            //icon of text field
                                               labelText:
-                                                  "Start Time" //label text of field
-                                              ),
+                                              "Start Time" //label text of field
+                                          ),
                                           readOnly: true,
                                           onTap: () async {
                                             TimeOfDay? pickeTime =
-                                                await showTimePicker(
-                                                    context: context,
-                                                    initialTime:
-                                                        TimeOfDay.now());
+                                            await showTimePicker(
+                                                context: context,
+                                                initialTime:
+                                                TimeOfDay.now());
 
                                             if (pickeTime != null) {
                                               setState(() {
                                                 _startTime.text =
-                                                    "${pickeTime.hour}:${pickeTime.minute}";
+                                                "${pickeTime.hour}:${pickeTime
+                                                    .minute}";
                                               });
                                             } else {
-                                              print("Date is not selected");
+                                              logger.i("Date is not selected");
                                             }
                                           },
                                         )),
                                   ),
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                    const EdgeInsets.fromLTRB(0, 20, 0, 20),
                                     child: SizedBox(
                                         width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.6,
+                                        MediaQuery
+                                            .sizeOf(context)
+                                            .width *
+                                            0.6,
                                         child: TextField(
                                           controller: _endTime,
                                           //editing controller of this TextField
                                           decoration: const InputDecoration(
-                                              //icon of text field
+                                            //icon of text field
                                               labelText:
-                                                  "End Time" //label text of field
-                                              ),
+                                              "End Time" //label text of field
+                                          ),
                                           readOnly: true,
                                           onTap: () async {
                                             TimeOfDay? pickeTime =
-                                                await showTimePicker(
-                                                    context: context,
-                                                    initialTime:
-                                                        TimeOfDay.now());
+                                            await showTimePicker(
+                                                context: context,
+                                                initialTime:
+                                                TimeOfDay.now());
 
                                             if (pickeTime != null) {
                                               setState(() {
                                                 _endTime.text =
-                                                    "${pickeTime.hour}:${pickeTime.minute}";
+                                                "${pickeTime.hour}:${pickeTime
+                                                    .minute}";
                                               });
                                             } else {
-                                              print("Date is not selected");
+                                              logger.i("Date is not selected");
                                             }
                                           },
                                         )),
@@ -627,51 +636,56 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  MainAxisAlignment.spaceAround,
                                   children: [
                                     SizedBox(
                                       child: SizedBox(
                                           width:
-                                              MediaQuery.sizeOf(context).width *
-                                                  0.6,
+                                          MediaQuery
+                                              .sizeOf(context)
+                                              .width *
+                                              0.6,
                                           child: TextField(
                                             controller: _startDate,
                                             //editing controller of this TextField
                                             decoration: const InputDecoration(
-                                                //icon of text field
+                                              //icon of text field
                                                 labelText:
-                                                    "Start Date" //label text of field
-                                                ),
+                                                "Start Date" //label text of field
+                                            ),
                                             readOnly: true,
                                             onTap: () async {
                                               DateTime? pickedDate =
-                                                  await showDatePicker(
-                                                      context: context,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      //get today's date
-                                                      firstDate: DateTime(2024),
-                                                      //DateTime.now() - not to allow to choose before today.
-                                                      lastDate: DateTime(2101));
+                                              await showDatePicker(
+                                                  context: context,
+                                                  initialDate:
+                                                  DateTime.now(),
+                                                  //get today's date
+                                                  firstDate: DateTime(2024),
+                                                  //DateTime.now() - not to allow to choose before today.
+                                                  lastDate: DateTime(2101));
 
                                               if (pickedDate != null) {
                                                 TimeOfDay? pickeTime =
-                                                    await showTimePicker(
-                                                        context: context,
-                                                        initialTime:
-                                                            TimeOfDay.now());
+                                                await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                    TimeOfDay.now());
 
                                                 if (pickeTime != null) {
                                                   String formattedDate =
-                                                      DateFormat('dd:MM:yy').format(
-                                                          pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                                                  DateFormat('dd:MM:yy').format(
+                                                      pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
 
                                                   setState(() {
                                                     _startDate.text =
-                                                        "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
+                                                    "$formattedDate ${pickeTime
+                                                        .hour}:${pickeTime
+                                                        .minute}"; //set foratted date to TextField value.
                                                   });
                                                 } else {
-                                                  print("Date is not selected");
+                                                  logger.i(
+                                                      "Date is not selected");
                                                 }
                                               }
                                             },
@@ -680,46 +694,51 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                     SizedBox(
                                       child: SizedBox(
                                           width:
-                                              MediaQuery.sizeOf(context).width *
-                                                  0.6,
+                                          MediaQuery
+                                              .sizeOf(context)
+                                              .width *
+                                              0.6,
                                           child: TextField(
                                             controller: _endDate,
                                             //editing controller of this TextField
                                             decoration: const InputDecoration(
-                                                //icon of text field
+                                              //icon of text field
                                                 labelText:
-                                                    "Enter Date" //label text of field
-                                                ),
+                                                "Enter Date" //label text of field
+                                            ),
                                             readOnly: true,
                                             onTap: () async {
                                               DateTime? pickedDate =
-                                                  await showDatePicker(
-                                                      context: context,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      //get today's date
-                                                      firstDate: DateTime(2000),
-                                                      //DateTime.now() - not to allow to choose before today.
-                                                      lastDate: DateTime(2101));
+                                              await showDatePicker(
+                                                  context: context,
+                                                  initialDate:
+                                                  DateTime.now(),
+                                                  //get today's date
+                                                  firstDate: DateTime(2000),
+                                                  //DateTime.now() - not to allow to choose before today.
+                                                  lastDate: DateTime(2101));
 
                                               if (pickedDate != null) {
                                                 TimeOfDay? pickeTime =
-                                                    await showTimePicker(
-                                                        context: context,
-                                                        initialTime:
-                                                            TimeOfDay.now());
+                                                await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                    TimeOfDay.now());
 
                                                 if (pickeTime != null) {
                                                   String formattedDate =
-                                                      DateFormat('dd:MM:yy').format(
-                                                          pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                                                  DateFormat('dd:MM:yy').format(
+                                                      pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
 
                                                   setState(() {
                                                     _endDate.text =
-                                                        "$formattedDate ${pickeTime.hour}:${pickeTime.minute}"; //set foratted date to TextField value.
+                                                    "$formattedDate ${pickeTime
+                                                        .hour}:${pickeTime
+                                                        .minute}"; //set foratted date to TextField value.
                                                   });
                                                 } else {
-                                                  print("Date is not selected");
+                                                  logger.i(
+                                                      "Date is not selected");
                                                 }
                                               }
                                             },
@@ -729,13 +748,15 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                MainAxisAlignment.spaceAround,
                                 children: [
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                    const EdgeInsets.fromLTRB(0, 20, 0, 20),
                                     child: SizedBox(
-                                      width: MediaQuery.sizeOf(context).width *
+                                      width: MediaQuery
+                                          .sizeOf(context)
+                                          .width *
                                           0.6,
                                       child: TextField(
                                         onChanged: (text) {
@@ -751,21 +772,25 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                   ),
                                   SizedBox(
                                     child: DropdownMenu<String>(
+                                      initialSelection: stateOfTimer.first,
                                       onSelected: (String? value) {
                                         // This is called when the user selects an item.
                                         setState(() {
                                           timerStatus = value!;
+                                          logger.i(timerStatus);
                                         });
                                       },
                                       label: const Text("Status"),
-                                      width: MediaQuery.sizeOf(context).width *
+                                      width: MediaQuery
+                                          .sizeOf(context)
+                                          .width *
                                           0.6,
                                       dropdownMenuEntries: stateOfTimer
                                           .map<DropdownMenuEntry<String>>(
                                               (String value) {
-                                        return DropdownMenuEntry<String>(
-                                            value: value, label: value);
-                                      }).toList(),
+                                            return DropdownMenuEntry<String>(
+                                                value: value, label: value);
+                                          }).toList(),
                                     ),
                                   ),
                                 ]),
