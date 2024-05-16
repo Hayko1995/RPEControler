@@ -222,7 +222,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
 
       String timStatus = '';
       if (timerStatus == "ON") {
-        timStatus = '01';
+        timStatus = '81';
       } else {
         timStatus = '00';
       }
@@ -286,7 +286,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
       int startTimeinSec = (3600 * hStartTime) + (60 * mStartTime);
 
       secStartTime = hexPadding(startTimeinSec);
-      logger.w(secStartTime.toString());
 
       String inEndTime = _endTime.text.toString();
       if (inEndTime == '') {
@@ -367,7 +366,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
       }
       String timStatus = '';
       if (timerStatus == "ON") {
-        timStatus = '01';
+        timStatus = '81';
       } else {
         timStatus = '00';
       }
@@ -390,8 +389,9 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           dataDevice.netId +
           " " +
           timerId);
-      logger.i("timers $hexStartTime  $hexEndTimer");
+      logger.i("timers $secStartTime  $secEndTime");
       logger.i("$timerType $actionType $sensorActionNumber $timStatus");
+      logger.i(command);
       bool response = await meshNotifier.sendCommand(command, dataDevice.netId);
     }
 
@@ -483,15 +483,19 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                     SizedBox(
                                       width: MediaQuery.sizeOf(context).width *
                                           0.6,
-                                      child: DropdownButton<String>(
-                                        value: typeOfTimer.first,
-                                        items: typeOfTimer.map((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
+                                      child: DropdownMenu<String>(
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.6,
+                                        initialSelection: typeOfTimer.first,
+                                        label: const Text("Timer Type"),
+                                        dropdownMenuEntries: typeOfTimer
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
                                         }).toList(),
-                                        onChanged: (String? value) {
+                                        onSelected: (String? value) {
                                           setState(() {
                                             timerType = value!;
                                             if (timerType == 'Periodic') {
@@ -501,10 +505,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                             }
                                           });
                                         },
-                                        isExpanded: true,
-                                        alignment: Alignment.center,
-
-
                                       ),
                                     ),
                                     Padding(

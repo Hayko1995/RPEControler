@@ -52,6 +52,7 @@ dependencies:
   full_screen_image: ^2.0.0
   mailer: ^6.1.0
   sqflite_common_ffi: ^2.3.3
+  bitsdojo_window: ^0.1.6
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -61,7 +62,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#42a5f5"
-  image:  "assets/images/logo/logo_big.png"
+  image: "assets/images/logo/logo_big.png"
   android: true
   ios: true
   web: true
