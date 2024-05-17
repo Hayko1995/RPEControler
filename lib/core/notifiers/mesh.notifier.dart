@@ -78,6 +78,7 @@ class MeshNotifier with ChangeNotifier {
 
     final MeshAPI meshAPI = MeshAPI();
     String url = await _databaseService.getUrlByNetId([netId]);
+    logger.w(clusterNodes);
     meshAPI.createCluster(
         singleNet, netId, clusterId, clusterNodes, url); //todo Ask Harry
   }

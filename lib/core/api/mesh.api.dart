@@ -53,7 +53,7 @@ class MeshAPI {
     //
     String clusterType = "00"; // need to understand
     String clusterStatus = "00"; //?
-    String multiClusterId = "0000"; //?
+    String multiClusterId = "00"; //?
     MeshCluster meshCluster = MeshCluster();
     command = meshCluster.sendSetSingleNetCluster(netNumber, clusterId,
         clusterType, clusterStatus, multiClusterId, clusterNodes);
@@ -65,6 +65,7 @@ class MeshAPI {
       final http.Response response =
           await client.post(uri, headers: headers, body: command);
       final body = response.body;
+      logger.w(body);
       return body;
     } catch (e) {
       return Null;
@@ -84,12 +85,30 @@ class MeshAPI {
     }
   }
 
-  Future sendToMesh(pktHdr, url) async {
+  Future sendToMeshDebug(command, url) async {
     final Uri uri = Uri.parse(url);
 
     try {
       final http.Response response =
-          await client.post(uri, headers: headers, body: pktHdr);
+      await client.post(uri, headers: headers, body: command);
+      final body = response.body;
+      return body; // todo change
+      if (body == "") {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      logger.e(" service = internet problem");
+      return Null;
+    }
+  }
+  Future sendToMesh(command, url) async {
+    final Uri uri = Uri.parse(url);
+
+    try {
+      final http.Response response =
+          await client.post(uri, headers: headers, body: command);
       final body = response.body;
       return true; // todo change
       if (body == "") {

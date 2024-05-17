@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.cluster.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
@@ -54,7 +55,7 @@ class ClusterControlScreen extends StatefulWidget {
 
 class _ClusterControlScreenState extends State<ClusterControlScreen> {
   List<RpeDevice> dataDevices = <RpeDevice>[];
-  bool isSwitched = true;
+  bool isSwitched = false;
   List<String> clusterDeviceList = [];
 
   RangeValues _currentRangeValues = const RangeValues(40, 80);
@@ -88,6 +89,7 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
             }
             bool result =
                 await meshNotifier.sendCommand(command, cluster.netNumber);
+            logger.i(command);
             if (result) {
               setState(() {
                 isSwitched = value;
@@ -258,15 +260,7 @@ class _ClusterControlScreenState extends State<ClusterControlScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: getControl()),
             ),
-            SizedBox(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [],
-                ),
-              ),
-            ),
+
             SizedBox(
               width: MediaQuery.sizeOf(context).width,
               height: MediaQuery.sizeOf(context).height * 0.7,

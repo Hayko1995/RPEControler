@@ -206,6 +206,11 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       if (thresholdType == "Outside") {
         _thresholdType = 4;
       }
+      if (threshodStatus == "ON") {
+        actionType = '81';
+      } else {
+        actionType = '00';
+      }
 
       if (_thresholdType == 1 || _thresholdType == 2) {
         try {
@@ -346,8 +351,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
           threshParam1,
           threshParam2,
           _thresholdType.toString(),
-          "A8",
-          //todo
+          actionType,
           thresholdId,
           sensorTypeValue,
           clusterId,
@@ -710,7 +714,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                       "${pickeTime.hour}:${pickeTime.minute}";
                                                 });
                                               } else {
-                                                logger.i("Date is not selected");
+                                                logger
+                                                    .i("Date is not selected");
                                               }
                                             },
                                           )),
@@ -742,7 +747,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                       "${pickeTime.hour}:${pickeTime.minute}";
                                                 });
                                               } else {
-                                                logger.i("Date is not selected");
+                                                logger
+                                                    .i("Date is not selected");
                                               }
                                             },
                                           )),

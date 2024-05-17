@@ -36,9 +36,9 @@ Future<void> main() async {
     // Initialize FFI
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
-    appWindow.size = const Size(600, 1000);
+    // appWindow.size = const Size(600, 1000);
     runApp(const Lava());
-    appWindow.show();
+    // appWindow.show();
 
     doWhenWindowReady(() {
       final win = appWindow;

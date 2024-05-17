@@ -8,6 +8,7 @@ import 'package:rpe_c/presentation/screens/bluetooth/device_screen.dart';
 import 'package:rpe_c/presentation/screens/clusterControlScreen/clusterControl.screen.dart';
 import 'package:rpe_c/presentation/screens/clusteringScreen/clustering.screen.dart';
 import 'package:rpe_c/presentation/screens/controllerScreen/controller.screen.dart';
+import 'package:rpe_c/presentation/screens/debug/debug.screen.dart';
 import 'package:rpe_c/presentation/screens/esp32/esp32.view.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
@@ -57,6 +58,7 @@ class AppRouter {
   static const String associationsRouter = '/associations';
   static const String bleDeviceRouter = '/bleDevice';
   static const String networkDetailsRoute = '/networkDetails';
+  static const String debugRoute = '/debug';
 
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -147,6 +149,12 @@ class AppRouter {
         {
           return MaterialPageRoute(
             builder: (_) => const SettingsScreen(),
+          );
+        }
+      case debugRoute:
+        {
+          return MaterialPageRoute(
+            builder: (_) => const Debug(),
           );
         }
       case notifications:

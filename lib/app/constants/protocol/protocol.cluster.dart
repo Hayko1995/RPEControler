@@ -1,3 +1,5 @@
+import 'package:rpe_c/core/logger/logger.dart';
+
 class MeshCluster {
   final cluster = "91";
   final setCluster = "00";
@@ -104,7 +106,7 @@ class MeshCluster {
     clusterId,
   ) {
     String messageLength = "06";
-    String subcommand = "0A";
+    String subcommand = "01";
     String command = cluster +
         subcommand +
         messageLength +
@@ -119,7 +121,7 @@ class MeshCluster {
     clusterId,
   ) {
     String messageLength = "06";
-    String subcommand = "0C";
+    String subcommand = "02";
     String command = cluster +
         subcommand +
         messageLength +
@@ -145,12 +147,13 @@ class MeshCluster {
     //TODO node Number error  Error
 
     int length = (clusterNodes.length / 2).round();
+    // logger.
     String numberOfNodes =
-        ((clusterNodes.length / 2).round()).toRadixString(16);
+        ((clusterNodes.length / 6).round()).toRadixString(16);
     if (numberOfNodes.length < 2) {
       numberOfNodes = "0$numberOfNodes";
     }
-    int len = 12 + length;
+    int len = 11 + length;
     String messageLength = len.toRadixString(16).toUpperCase();
     if (messageLength.length < 2) {
       messageLength = "0$messageLength";

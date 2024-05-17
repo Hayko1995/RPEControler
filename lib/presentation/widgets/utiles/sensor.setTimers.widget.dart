@@ -90,7 +90,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
     if (int.parse(timerId) < 9) {
       timerId = '0$timerId';
     }
-    logger.i(timerId);
     dataDevice.timI = dataDevice.timI++;
     if (dataDevice.isActivation == 1) {
       typeOfControl = ["ON", "Off"];
@@ -277,6 +276,11 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
 
     Future<void> periodicTimeCommand(meshTimer) async {
       timerType = "01";
+      if (controlType == "ON") {
+        actionType = "81";
+      } else {
+        actionType = "00";
+      }
       sensorActionNumber = '01';
 
       String inStartTime = _startTime.text.toString();

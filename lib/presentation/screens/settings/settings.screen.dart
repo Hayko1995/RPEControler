@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/core/logger/logger.dart';
@@ -145,6 +146,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         _databaseService
                             .insertNetwork(RpeNetwork(url: url, preDef: 1));
                         meshNotifier.sendE1();
+                        fieldText.text = '';
+                        showToast("Saved", context: context);
                       },
                       child: const Text("Save"),
                     ),

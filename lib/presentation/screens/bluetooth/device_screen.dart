@@ -12,7 +12,7 @@
 // import 'package:rpe_c/core/logger/logger.dart';
 // import 'package:rpe_c/core/models/db.models.dart';
 // import 'package:rpe_c/core/service/database.service.dart';
-// import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
+// import 'package:rpe_c/presentation/screens/homeScreen/debug.screen.dart';
 // import 'package:rpe_c/presentation/widgets/custom.text.field.dart';
 // import '../../../widgets/service_tile.dart';
 // import '../../../widgets/characteristic_tile.dart';

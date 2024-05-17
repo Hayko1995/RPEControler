@@ -158,7 +158,7 @@ class MeshThreshold {
       {reserved = '00'}) {
     //todo need to understand
     String subCommand = "01";
-    String messageLength = "31";
+    String messageLength = "1F";
     String command = threshold +
         subCommand +
         messageLength +

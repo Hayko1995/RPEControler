@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
 import 'package:rpe_c/core/logger/logger.dart';
@@ -9,6 +8,7 @@ import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/models.dart';
 import 'package:rpe_c/presentation/screens/manipulation/widgets/widgets.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class ClusteringScreen extends StatefulWidget {
   final ClusteringArgs clusteringArguments;
@@ -100,7 +100,10 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                             String clusterNodes = '';
                             for (var item in activeAreas[0].items) {
                               clusterItems.add(item.macAddress);
-                              clusterNodes = clusterNodes + item.nodeNumber;
+                              clusterNodes = clusterNodes +
+                                  item.netId +
+                                  item.nodeNumber +
+                                  item.nodeType;
                             }
                             String netNumber = activeAreas[0].items[0].netId;
                             //todo change to multi network
@@ -175,7 +178,8 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
 
                             String _url = await meshNotifier
                                 .getNetworkUrlByNetId(dataDevice.netId);
-                            RpeNetwork network = meshNotifier.getNetworkByUrl(_url);
+                            RpeNetwork network =
+                                meshNotifier.getNetworkByUrl(_url);
                             var networkTimers = jsonDecode(network.clusters);
                             var networkTimersArr = networkTimers['clusters'];
                             networkTimersArr.add(newClusterName);
@@ -183,14 +187,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
                             network.clusters = jsonEncode(networkTimers);
                             meshNotifier.updateNetwork(network);
 
-                            Fluttertoast.showToast(
-                                msg: "Saved",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
+                            showToast("Saved", context: context);
                             setState(() {
                               newClusterName = '';
                               activeAreas[0].items = [];
