@@ -31,8 +31,8 @@ coverage/
 .packages
 .pub-cache/
 .pub/
-/build/
-!build/windows/x64/runner/Release
+/build/*
+!build/windows/
 
 # Symbolication related
 app.*.symbols
