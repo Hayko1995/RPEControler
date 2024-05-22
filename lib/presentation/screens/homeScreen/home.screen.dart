@@ -44,7 +44,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final DatabaseService _databaseService = DatabaseService(); //todo change
   late List<RpeNetwork> devices;
   var _currentIndex = 0;
 

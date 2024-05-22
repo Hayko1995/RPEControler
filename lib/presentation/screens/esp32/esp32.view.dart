@@ -28,12 +28,14 @@ class _ESP32ScreenState extends State<ESP32Screen> {
     //     userNotifier.getUserData(context: context, token: token),
     //   },
     // );
-    Timer.periodic(const Duration(seconds: 5), (timer) {
-      _updateTables();
-    });
+    // Timer.periodic(const Duration(seconds: 5), (timer) {
+    //   _updateTables();
+    // });
 
     super.initState();
   }
+
+
 
   void _updateTables() async {
     // final MeshAPI _mashAPI = MeshAPI();

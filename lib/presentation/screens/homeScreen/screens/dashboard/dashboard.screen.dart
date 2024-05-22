@@ -1,4 +1,5 @@
 //TODO fix designer responsive when kayboard come out
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.constants.dart';
@@ -16,7 +17,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final PageController _pageController =
-  PageController(viewportFraction: 0.8, initialPage: 0);
+      PageController(viewportFraction: 0.8, initialPage: 0);
   double _page = 0;
 
   Color caughtColor = Colors.grey;
@@ -46,11 +47,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: true);
     List<RpeNetwork> networks = meshNotifier.networks!;
     for (var i = 0; i < networks.length; i++) {
-      List<RpeDevice> devices = meshNotifier.getDeviceByNetId(networks.elementAt(i).netId);
+      List<RpeDevice> devices =
+          meshNotifier.getDeviceByNetId(networks.elementAt(i).netId);
       int countOfDevices = devices.length;
       // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
       sensorList.add(airQualityWidget(context, networks.elementAt(i), 0,
-          "dashboard", countOfDevices, GlobalKey()));
+          "dashboard", countOfDevices, Key("network Widget $i")));
     }
 
     setState(() {});
@@ -60,14 +62,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,

@@ -32,7 +32,6 @@ class AppRouter {
   static const String productRoute = "/product";
   static const String loginRoute = "/login";
   static const String signUpRoute = "/signUp";
-  static const String appSettingsRoute = "/appSettings";
   static const String homeRoute = "/home";
   static const String watcherRoute = "/watcher";
   static const String controllerRoute = "/controller";

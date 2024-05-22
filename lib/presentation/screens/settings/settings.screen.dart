@@ -131,6 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Container(
                         decoration: BoxDecoration(border: Border.all()),
                         child: TextField(
+                          key: Key('networkIpAddress'),
                           controller: fieldText,
                           onChanged: (text) {
                             url = text;
@@ -142,6 +143,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     FilledButton(
+                      key: const Key('saveNetwork'),
                       onPressed: () {
                         _databaseService
                             .insertNetwork(RpeNetwork(url: url, preDef: 1));
