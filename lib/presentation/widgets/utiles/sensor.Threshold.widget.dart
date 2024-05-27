@@ -158,7 +158,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         var subSensorDict =
             AppConstants.deviceTypes[deviceType]['dSub'][subDeviceType]["senT"];
         for (var sensor in subSensorDict.values) {
-          sensorType.add(AppConstants.Sensortype_id[sensor]);
+          sensorType.add(AppConstants.sensorTypeId[sensor]);
         }
       }
     }
@@ -198,7 +198,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       if (thresholdType == "Below") {
         _thresholdType = 1;
       }
-      if (thresholdType == "Ablove") {
+      if (thresholdType == "Above") {
         _thresholdType = 2;
       }
       if (thresholdType == "Inside") {
@@ -353,6 +353,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         }
 
       }
+      sensorTypeValue = AppConstants.sensorTypeIdRevers[sensorTypeValue].toString();
 
       String clusterId = "00";
       String accTimerIndex = "00";
