@@ -61,6 +61,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   String thresholdStatus = '';
   String actionType = '';
   String timerId = '01';
+  String opened = "Opened";
   String threshParam1 = '00000000';
   String threshParam2 = '00000000';
 
@@ -510,6 +511,32 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                               // _startValueController.value = value;
                             )),
                       )
+                  ],
+                ),
+              if (sensorTypeValue == "Contact")
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: SizedBox(
+                        child: DropdownMenu<String>(
+                          onSelected: (String? value) {
+                            // This is called when the user selects an item.
+                            setState(() {
+                              opened = value!;
+                            });
+                          },
+                          label: const Text("Opened"),
+                          dropdownMenuEntries: ['Opened', 'Closed' ]
+                              .map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                                value: value, label: value);
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               Column(
