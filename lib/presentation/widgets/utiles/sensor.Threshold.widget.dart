@@ -30,8 +30,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   final DatabaseService _databaseService = DatabaseService();
   List<String> data = [];
   late RpeDevice dataDevice;
-  List<String> sensorType = <String>["00"];
+  List<String> sensorType =[];
   List<String> typeOfThreshold = <String>[
+    "00",
     "Below",
     "Above",
     "Inside",
@@ -128,7 +129,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
 
   @override
   void initState() {
-    sensorTypeValue = sensorType.first;
+    // sensorTypeValue = sensorType.first;
     thresholdType = typeOfThreshold.first;
     setnotificationType = stateOfNotifications.first;
     super.initState();
@@ -159,9 +160,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         for (var sensor in subSensorDict.values) {
           sensorType.add(AppConstants.Sensortype_id[sensor]);
         }
-        sensorType.add("00");
-      } else {
-        sensorTypeValue = "00";
       }
     }
 
@@ -431,7 +429,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                     children: [
                       SizedBox(
                         child: DropdownMenu<String>(
-                          width: MediaQuery.sizeOf(context).width * 0.6,
+                          width: MediaQuery.sizeOf(context).width * 0.4,
                           initialSelection: sensorTypeValue,
                           onSelected: (String? value) {
                             // This is called when the user selects an item.
@@ -467,7 +465,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                         padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: SizedBox(
                           child: DropdownMenu<String>(
-                            width: MediaQuery.sizeOf(context).width * 0.6,
+                            width: MediaQuery.sizeOf(context).width * 0.4,
                             // initialSelection: typeOfThreshold.first,
                             onSelected: (String? value) {
                               setState(() {

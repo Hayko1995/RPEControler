@@ -20,10 +20,12 @@ class AppConstants {
     "15": "assets/images/icons/Temperature.jpg",
     "40": "assets/images/icons/Relay.jpg",
     "1A": "assets/images/icons/buzzer.png",
+    "1a": "assets/images/icons/buzzer.png",
     "00": "assets/images/icons/air-quality-sensor.png",
+    "06": "assets/images/icons/contact_sensor.jpg",
   };
 
-  static List<String> buttonActivators = ['02', '03', '1A', '40'];
+  static List<String> buttonActivators = ['02', '03', '1A', '1a', '06', '40'];
   static List<String> dimmerActivators = ['01'];
   static List<String> buttonSensor = ['06'];
   static List<String> dimmerSensor = ['06'];

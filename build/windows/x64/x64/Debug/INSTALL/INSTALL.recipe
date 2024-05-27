@@ -8,10 +8,16 @@
       <FullPath>D:\Rpecontrols\controller\build\windows\x64\flutter\x64\Debug\flutter_assemble</FullPath>
     </ProjectOutput>
     <ProjectOutput>
+      <FullPath>D:\Rpecontrols\controller\build\windows\x64\plugins\flutter_libserialport\Debug\flutter_libserialport_plugin.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
       <FullPath>D:\Rpecontrols\controller\build\windows\x64\plugins\permission_handler_windows\Debug\permission_handler_windows_plugin.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
       <FullPath>D:\Rpecontrols\controller\build\windows\x64\runner\Debug\rpecontrols_controller.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\Rpecontrols\controller\build\windows\x64\plugins\flutter_libserialport\libserialport\Debug\serialport.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
       <FullPath>D:\Rpecontrols\controller\build\windows\x64\x64\Debug\ALL_BUILD</FullPath>

@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.keys.dart';
@@ -30,9 +32,12 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
   late List<RpeDevice> allDevices;
   late List<Cluster> allClusters = [];
   List<String> typeOfTimer = <String>['One Time', "Periodic"];
+  String timerType = 'One Time';
 
   List<String> typeOfControl = <String>["ON", "Off", "Up", "Down"];
+  String controlType = "ON";
   List<String> stateOfTimer = <String>['ON', "Off"];
+  String timerStatus = 'ON';
 
   List<String> types = <String>['Devices', 'Clusters'];
   bool oneTimeOrPereudic = false;
@@ -45,12 +50,12 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
     "SA": true,
     "SU": true,
   };
-  String timerType = '';
   String statusType = '';
-  String controlType = '';
-  String timerStatus = '';
   String actionType = '';
   String timerId = '01';
+
+  List<String> _locations = ['A', 'B', 'C', 'D']; // Option 2
+  String _selectedLocation = 'A'; // Option 2
 
   final TextEditingController _startDate = new TextEditingController();
   final TextEditingController _endDate = new TextEditingController();
@@ -70,8 +75,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
   @override
   Widget build(BuildContext context) {
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
-    timerStatus = stateOfTimer.first;
-    controlType = typeOfControl.first;
 
     // CacheManagerUtils.conditionalCache(
     //   key: AppKeys.timerId,
@@ -95,7 +98,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
       typeOfControl = ["ON", "Off"];
     }
     allClusters == meshNotifier.getAllClusters;
-    timerType = typeOfTimer.first;
 
     String hexEndTimer = '';
 
@@ -107,8 +109,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
     String secEndTime = "";
 
     var selectedIndexes = [];
-    List<RpeDevice> data = meshNotifier.allDevices!;
-
     List<Widget> getSensors() {
       List<Widget> sensorList = [];
       List<RpeDevice> data = meshNotifier.allDevices!;
@@ -117,47 +117,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
         sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
       }
       return sensorList;
-    }
-
-    Future openDevices() {
-      String dropdownValue = types.first;
-      return showModalBottomSheet<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 600,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  DropdownMenu<String>(
-                    initialSelection: types.first,
-                    onSelected: (String? value) {
-                      // This is called when the user selects an item.
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
-                    dropdownMenuEntries:
-                        types.map<DropdownMenuEntry<String>>((String value) {
-                      return DropdownMenuEntry<String>(
-                          value: value, label: value);
-                    }).toList(),
-                  ),
-                  SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(children: getSensors())),
-                  ElevatedButton(
-                    child: const Text('Submit'),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
     }
 
     String hexPadding(num) {
@@ -204,74 +163,79 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
       }
 
       String startDay = _startDate.text.toString();
-      logger.i(startDay);
-      int day = int.parse((startDay.substring(0, 2)));
-
-      int mounts = int.parse(startDay.substring(3, 5));
-      int year = int.parse("20" + startDay.substring(6, 8));
-      int hour = int.parse(startDay.substring(9, 11));
-      int minute = int.parse(startDay.substring(12));
-
-      var d2 = DateTime.now();
-      int dh = d2.millisecondsSinceEpoch ~/ 1000;
-      var d1 = DateTime(year, mounts, day, hour, minute);
-      var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
-      int StartTimeInSec = d1t2;
-      hexStartTime = StartTimeInSec.toRadixString(16);
-
-      String timStatus = '';
-      if (timerStatus == "ON") {
-        timStatus = '81';
+      if (startDay == "") {
+        showToast("Enter start date", context: context);
       } else {
-        timStatus = '00';
-      }
-      if (actionType == "00") {
-        timerType = '01';
-        secEndTime = '00000000';
-      } else {
-        String endDay = _endDate.text.toString();
-        if (endDay == '') {
-          hexEndTimer = '00000000';
+        int day = int.parse((startDay.substring(0, 2)));
+
+        int mounts = int.parse(startDay.substring(3, 5));
+        int year = int.parse("20" + startDay.substring(6, 8));
+        int hour = int.parse(startDay.substring(9, 11));
+        int minute = int.parse(startDay.substring(12));
+
+        var d2 = DateTime.now();
+        int dh = d2.millisecondsSinceEpoch ~/ 1000;
+        var d1 = DateTime(year, mounts, day, hour, minute);
+        var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
+        int StartTimeInSec = d1t2;
+        hexStartTime = StartTimeInSec.toRadixString(16);
+
+        String timStatus = '';
+        if (timerStatus == "ON") {
+          timStatus = '81';
         } else {
-          logger.i(endDay);
-          int day = int.parse((endDay.substring(0, 2)));
-
-          int mounts = int.parse(endDay.substring(3, 5));
-          int year = int.parse("20" + endDay.substring(6, 8));
-          int hour = int.parse(endDay.substring(9, 11));
-          int minute = int.parse(endDay.substring(12));
-
-          var d1 = DateTime(year, mounts, day, hour, minute);
-          var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
-          int endTimeInSec = d1t2 - 946713600;
-
-          hexEndTimer = endTimeInSec.toRadixString(16);
+          timStatus = '00';
         }
-        if (timerType == "Off") {
+        if (actionType == "00") {
           timerType = '01';
+          secEndTime = '00000000';
         } else {
-          timerType = '11';
-          sensorActionNumber = '00';
-        }
-      }
+          String endDay = _endDate.text.toString();
+          if (endDay == '') {
+            hexEndTimer = '00000000';
+          } else {
+            logger.i(endDay);
+            int day = int.parse((endDay.substring(0, 2)));
 
-      command = meshTimer.sendSetTimer(
-          dataDevice.nodeNumber,
-          dataDevice.netId,
-          timerId,
-          hexStartTime,
-          hexEndTimer,
-          timerType,
-          actionType,
-          sensorActionNumber,
-          "FF",
-          'FF',
-          '08',
-          timStatus);
-      logger.i(dataDevice.nodeNumber + " " + dataDevice.netId + " " + timerId);
-      logger.i(hexStartTime + " " + hexEndTimer);
-      logger.i("$timerType $actionType $sensorActionNumber $timStatus");
-      bool response = await meshNotifier.sendCommand(command, dataDevice.netId);
+            int mounts = int.parse(endDay.substring(3, 5));
+            int year = int.parse("20" + endDay.substring(6, 8));
+            int hour = int.parse(endDay.substring(9, 11));
+            int minute = int.parse(endDay.substring(12));
+
+            var d1 = DateTime(year, mounts, day, hour, minute);
+            var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
+            int endTimeInSec = d1t2 - 946713600;
+
+            hexEndTimer = endTimeInSec.toRadixString(16);
+          }
+          if (timerType == "Off") {
+            timerType = '01';
+          } else {
+            timerType = '11';
+            sensorActionNumber = '00';
+          }
+        }
+
+        command = meshTimer.sendSetTimer(
+            dataDevice.nodeNumber,
+            dataDevice.netId,
+            timerId,
+            hexStartTime,
+            hexEndTimer,
+            timerType,
+            actionType,
+            sensorActionNumber,
+            "FF",
+            'FF',
+            '08',
+            timStatus);
+        logger
+            .i(dataDevice.nodeNumber + " " + dataDevice.netId + " " + timerId);
+        logger.i(hexStartTime + " " + hexEndTimer);
+        logger.i("$timerType $actionType $sensorActionNumber $timStatus");
+        bool response =
+            await meshNotifier.sendCommand(command, dataDevice.netId);
+      }
     }
 
     Future<void> periodicTimeCommand(meshTimer) async {
@@ -456,6 +420,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
           ),
           TextButton(
             child: const Text('Confirm'),
+            key: Key('Confirm'),
             onPressed: () {
               saveAction();
               Navigator.of(context).pop();
@@ -478,60 +443,78 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.5,
+                              width: 500,
+                              height: 300,
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    SizedBox(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.6,
-                                      child: DropdownMenu<String>(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.6,
-                                        initialSelection: typeOfTimer.first,
-                                        label: const Text("Timer Type"),
-                                        dropdownMenuEntries: typeOfTimer
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList(),
-                                        onSelected: (String? value) {
-                                          setState(() {
-                                            timerType = value!;
-                                            if (timerType == 'Periodic') {
-                                              oneTimeOrPereudic = true;
-                                            } else {
-                                              oneTimeOrPereudic = false;
-                                            }
-                                          });
-                                        },
-                                      ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Timer Type"),
+                                        SizedBox(
+                                          width: 420,
+                                          height: 100,
+                                          child: DropdownButton(
+                                            key: Key('Timer type'),
+                                            hint: Text(
+                                                'Please choose a location'),
+                                            // Not necessary for Option 1
+                                            value: timerType,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                timerType = newValue!;
+                                                if (timerType == 'Periodic') {
+                                                  oneTimeOrPereudic = true;
+                                                } else {
+                                                  oneTimeOrPereudic = false;
+                                                }
+                                              });
+                                            },
+                                            items: typeOfTimer.map((location) {
+                                              return DropdownMenuItem(
+                                                child: new Text(location),
+                                                value: location,
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 20, 0, 0),
-                                      child: DropdownMenu<String>(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.6,
-                                        initialSelection: typeOfControl.first,
-                                        onSelected: (String? value) {
-                                          // This is called when the user selects an item.
-                                          setState(() {
-                                            controlType = value!;
-                                          });
-                                        },
-                                        label: const Text("Control"),
-                                        dropdownMenuEntries: typeOfControl
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList(),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Control"),
+                                          SizedBox(
+                                            width: 420,
+                                            height: 100,
+                                            child: DropdownButton(
+                                              hint: Text(
+                                                  'Please choose a location'),
+                                              // Not necessary for Option 1
+                                              value: controlType,
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  controlType = newValue!;
+                                                });
+                                              },
+                                              items:
+                                                  typeOfControl.map((location) {
+                                                return DropdownMenuItem(
+                                                  child: new Text(location),
+                                                  value: location,
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ]),
@@ -581,6 +564,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                             MediaQuery.sizeOf(context).width *
                                                 0.6,
                                         child: TextField(
+                                          key: Key("startTime"),
                                           controller: _startTime,
                                           //editing controller of this TextField
                                           decoration: const InputDecoration(
@@ -655,6 +639,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                               MediaQuery.sizeOf(context).width *
                                                   0.6,
                                           child: TextField(
+                                            key:  Key("startTime"),
                                             controller: _startDate,
                                             //editing controller of this TextField
                                             decoration: const InputDecoration(
@@ -772,24 +757,31 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    child: DropdownMenu<String>(
-                                      initialSelection: stateOfTimer.first,
-                                      onSelected: (String? value) {
-                                        // This is called when the user selects an item.
-                                        setState(() {
-                                          timerStatus = value!;
-                                          logger.i(timerStatus);
-                                        });
-                                      },
-                                      label: const Text("Status"),
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.6,
-                                      dropdownMenuEntries: stateOfTimer
-                                          .map<DropdownMenuEntry<String>>(
-                                              (String value) {
-                                        return DropdownMenuEntry<String>(
-                                            value: value, label: value);
-                                      }).toList(),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Control"),
+                                        SizedBox(
+                                          child: DropdownButton(
+                                            hint: Text(
+                                                'Please choose a location'),
+                                            // Not necessary for Option 1
+                                            value: timerStatus,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                timerStatus = newValue!;
+                                              });
+                                            },
+                                            items: stateOfTimer.map((location) {
+                                              return DropdownMenuItem(
+                                                child: new Text(location),
+                                                value: location,
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ]),

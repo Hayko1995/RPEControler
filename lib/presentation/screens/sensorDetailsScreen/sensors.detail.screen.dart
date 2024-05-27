@@ -22,7 +22,6 @@ class SensorDetailsScreen extends StatefulWidget {
 
 class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
   Color caughtColor = Colors.grey;
-  final DatabaseService _databaseService = DatabaseService();
   MeshTimer meshTimer = MeshTimer();
   MeshThreshold meshThreshold = MeshThreshold();
   List<String> data = [];
@@ -332,6 +331,7 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                                   Row(
                                     children: [
                                       IconButton(
+                                        key:Key("Open Timers"),
                                         icon: const Icon(Icons.add),
                                         onPressed: () {
                                           setState(() {
@@ -350,6 +350,7 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                                   Column(
                                     children: [
                                       OutlinedButton(
+                                        key: Key("add timer"),
                                           onPressed: setTimer,
                                           child: Text("Add timer")),
                                       for (var timer in deviceTimersList)

@@ -144,6 +144,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{01DE6DA4-466B-3250-B2AE-53EE99DAA95A}</Project>
       <Name>bitsdojo_window_windows_plugin</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Rpecontrols\controller\build\windows\x64\plugins\flutter_libserialport\flutter_libserialport_plugin.vcxproj">
+      <Project>{4B5FD919-4C1D-3708-928A-F9CCA6ED5E33}</Project>
+      <Name>flutter_libserialport_plugin</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\Rpecontrols\controller\build\windows\x64\flutter\flutter_wrapper_app.vcxproj">
       <Project>{545E0B73-5398-358E-8175-9922E5B7BD51}</Project>
       <Name>flutter_wrapper_app</Name>
@@ -159,6 +163,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="D:\Rpecontrols\controller\build\windows\x64\runner\rpecontrols_controller.vcxproj">
       <Project>{F020D323-5648-3889-9E7F-1745AE75C84E}</Project>
       <Name>rpecontrols_controller</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Rpecontrols\controller\build\windows\x64\plugins\flutter_libserialport\libserialport\serialport.vcxproj">
+      <Project>{EE213F8A-D570-3679-8ACE-9963F2F29E04}</Project>
+      <Name>serialport</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

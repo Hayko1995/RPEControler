@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 Future<void> initializeService() async {
-  if (Platform.isAndroid && Platform.isIOS) {
+  if (Platform.isAndroid || Platform.isIOS) {
     final service = FlutterBackgroundService();
 
     /// OPTIONAL, using custom notification channel id
