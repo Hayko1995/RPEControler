@@ -342,6 +342,17 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         secStartTime = '00000000';
         weekDays = '0000';
       }
+      if (sensorTypeValue == "Contact"){
+        if (opened== "Opened"){
+          threshParam1 = '00000064';
+          threshParam2 = '00000000';
+        }
+        else{
+          threshParam1 = '00000000';
+          threshParam2 = '00000000';
+        }
+
+      }
 
       String clusterId = "00";
       String accTimerIndex = "00";

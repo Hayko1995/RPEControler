@@ -181,7 +181,7 @@ class MeshAPI {
       int number;
 
       for (int i = 32; i <= length - 16; i = i + 16) {
-        number = (i / 16).round();
+        number = (i / 16).round()-1;
         RpeDevice device = RpeDevice();
         device.dNetNum = netNum;
         device.networkTableMAC = network.name;
