@@ -30,9 +30,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   final DatabaseService _databaseService = DatabaseService();
   List<String> data = [];
   late RpeDevice dataDevice;
-  List<String> sensorType =[];
+  List<String> sensorType = [];
   List<String> typeOfThreshold = <String>[
-    "00",
+    "State",
     "Below",
     "Above",
     "Inside",
@@ -51,7 +51,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   List<String> boolActivation = <String>['ON', "OFF"];
   bool openCheckboxes = false;
   bool needTimer = false;
-  String sensorTypeValue = '00';
+  String sensorTypeValue = '';
   String thresholdType = '';
   String setnotificationType = "";
   String thresholdId = "01";
@@ -191,6 +191,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         String actionValue = _actionValueController.text;
         threshParam1 = hexPadding(int.parse(actionValue));
         threshParam2 = '00000000';
+      }
+      if (thresholdType == "Below") {
+        _thresholdType = 1;
       }
       if (thresholdType == "Below") {
         _thresholdType = 1;
@@ -435,22 +438,17 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                             // This is called when the user selects an item.
                             setState(() {
                               sensorTypeValue = value!;
-                              if (sensorTypeValue == "00") {
-                                setState(() {
-                                  typeOfThreshold = <String>["ON", "OFF"];
-                                  thresholdType = typeOfThreshold.first;
-                                });
-                              } else {
-                                setState(() {
-                                  typeOfThreshold = <String>[
-                                    "Below",
-                                    "Above",
-                                    "Inside",
-                                    "Outside"
-                                  ];
-                                  thresholdType = typeOfThreshold.first;
-                                });
-                              }
+                              logger.w(sensorTypeValue);
+                              setState(() {
+                                typeOfThreshold = <String>[
+                                  'State',
+                                  "Below",
+                                  "Above",
+                                  "Inside",
+                                  "Outside"
+                                ];
+                                thresholdType = typeOfThreshold.first;
+                              });
                             });
                           },
                           label: const Text("Sensor Type"),
@@ -461,6 +459,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                           }).toList(),
                         ),
                       ),
+                      if (sensorTypeValue != "Contact")
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: SizedBox(
@@ -487,7 +486,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
               const SizedBox(
                 height: 10,
               ),
-              if (sensorTypeValue != "00")
+              if (sensorTypeValue != "Contact")
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
