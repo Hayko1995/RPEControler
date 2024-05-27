@@ -353,7 +353,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         }
 
       }
-      sensorTypeValue = AppConstants.sensorTypeIdRevers[sensorTypeValue].toString();
+      sensorTypeValue = AppConstants.sensorTypeIdRevers[sensorTypeValue]!.toRadixString(16);
 
       String clusterId = "00";
       String accTimerIndex = "00";
