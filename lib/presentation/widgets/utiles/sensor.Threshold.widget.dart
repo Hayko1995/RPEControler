@@ -32,7 +32,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   late RpeDevice dataDevice;
   List<String> sensorType = [];
   List<String> typeOfThreshold = <String>[
-    "State",
     "Below",
     "Above",
     "Inside",
@@ -441,7 +440,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                               logger.w(sensorTypeValue);
                               setState(() {
                                 typeOfThreshold = <String>[
-                                  'State',
                                   "Below",
                                   "Above",
                                   "Inside",
