@@ -73,6 +73,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   String secStartTime = '';
   String hexEndTimer = '';
   String inTimType = '';
+  String weekDays = '';
 
   String secEndTime = '';
   Map<String, bool> values = {
@@ -344,7 +345,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       int inEndThres = 0;
       String secEndTime = "";
       String secStartTime = "";
-      String weekDays;
+
       if (dataDevice.isActivation == 1) {
         if (boolActivation == "OFF") {
           threshParam1 = '00000000';
@@ -432,59 +433,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         weekDays = '00';
       }
 
-      int suDay;
-      int mDay;
-      int tDay;
-      int wDay;
-      int thDay;
-      int fDay;
-      int saDay;
-      if (values['MA'] == true) {
-        suDay = 1;
-      } else {
-        suDay = 0;
-      }
-      if (values["TU"] == true) {
-        mDay = 2;
-      } else {
-        mDay = 0;
-      }
-      if (values['WE'] == true) {
-        tDay = 4;
-      } else {
-        tDay = 0;
-      }
-      if (values['TH'] == true) {
-        wDay = 8;
-      } else {
-        wDay = 0;
-      }
-      if (values['FR'] == true) {
-        thDay = 16;
-      } else {
-        thDay = 0;
-      }
-      if (values['SA'] == true) {
-        fDay = 32;
-      } else {
-        fDay = 0;
-      }
-      if (values['SU'] == true) {
-        saDay = 64;
-      } else {
-        saDay = 0;
-      }
-      int days = suDay + mDay + tDay + wDay + thDay + fDay + saDay;
-      if (days == 0) {
-        logger.i("days need to be not 0");
-      }
-
-      if (days < 16) {
-        weekDays = days.toRadixString(16);
-        weekDays = '0$weekDays';
-      } else {
-        weekDays = days.toRadixString(16);
-      }
+      setWeek();
       if (sensorTypeValue == "Contact") {
         if (opened == "Opened") {
           threshParam1 = '00000064';
