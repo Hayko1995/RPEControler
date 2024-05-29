@@ -29,12 +29,13 @@ import 'package:mockito/mockito.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/home.screen.dart';
 import 'package:rpe_c/presentation/screens/homeScreen/screens/dashboard/dashboard.screen.dart';
 import 'package:rpe_c/presentation/screens/sensorDetailsScreen/sensors.detail.screen.dart';
+import 'package:rpe_c/presentation/widgets/utiles/sensor.Threshold.widget.dart';
 import 'package:rpe_c/presentation/widgets/utiles/sensor.setTimers.widget.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class MockMeshNotifier extends Mock implements MeshNotifier {
   @override
-  Future getNetworkUrlByNetId(value){
+  Future getNetworkUrlByNetId(value) {
     Future<String> futureString = Future.value("192.168.1.1");
     return futureString;
   }
@@ -44,7 +45,7 @@ void main() {
   Provider.debugCheckInvalidValueType = null;
   RpeDevice device =
       RpeDevice(name: "aaa", image: AppConstants.images['00'], deviceType: 1);
-  var rpeNetwork =  RpeNetwork(name: 'aaaa');
+  var rpeNetwork = RpeNetwork(name: 'aaaa');
 
   // getNetworkUrlByNetId
   final mock = MockMeshNotifier();
@@ -57,7 +58,7 @@ void main() {
       home: Provider<MeshNotifier>(
         create: (_) => mock,
         child: Scaffold(
-          body: SensorSetTImerScreen(
+          body: SensorThresholdScreen(
             mac: 'any',
           ),
         ),
@@ -66,14 +67,19 @@ void main() {
 
     // find needed buttons
     await tester.pumpAndSettle();
-    var confirmButton = find.byKey(Key('Confirm'),);
+    var confirmButton = find.byKey(
+      Key('Confirm'),
+    );
     expect(confirmButton, findsOneWidget);
 
     // find timer drop down and test it
-    var timerType = find.byKey(Key('Timer type'),);
+    var timerType = find.byKey(
+      Key('Timer type'),
+    );
     expect(timerType, findsOneWidget);
     await tester.tap(timerType);
     await tester.pumpAndSettle();
+
     ///if you want to tap first item
     final dropdownItem = find.text('One Time').last;
     //

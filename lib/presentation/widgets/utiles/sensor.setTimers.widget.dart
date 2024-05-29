@@ -54,9 +54,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
   String actionType = '';
   String timerId = '01';
 
-  List<String> _locations = ['A', 'B', 'C', 'D']; // Option 2
-  String _selectedLocation = 'A'; // Option 2
-
   final TextEditingController _startDate = new TextEditingController();
   final TextEditingController _endDate = new TextEditingController();
   final TextEditingController _startTime = new TextEditingController();
@@ -639,7 +636,7 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
                                               MediaQuery.sizeOf(context).width *
                                                   0.6,
                                           child: TextField(
-                                            key:  Key("startTime"),
+                                            key: Key("startTime"),
                                             controller: _startDate,
                                             //editing controller of this TextField
                                             decoration: const InputDecoration(
