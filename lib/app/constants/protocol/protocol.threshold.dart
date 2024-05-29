@@ -1,3 +1,5 @@
+import 'package:rpe_c/core/logger/logger.dart';
+
 class MeshThreshold {
   final threshold = '90';
 
@@ -159,6 +161,27 @@ class MeshThreshold {
     //todo need to understand
     String subCommand = "01";
     String messageLength = "1F";
+    var results = {};
+    results['threshold'] = threshold;
+    results['subCommand'] = subCommand;
+    results['messageLength'] = messageLength;
+    results['nodeNumber'] = nodeNumber;
+    results['networkNumber'] = networkNumber;
+    results['reserved'] = reserved;
+    results['thresholdId'] = thresholdId;
+    results['param1'] = param1;
+    results['param2'] = param2;
+    results['thresholdType'] = thresholdType;
+    results['activationType'] = activationType;
+    results['senActivationNum'] = senActivationNum;
+    results['sensorType'] = sensorType;
+    results['clusterId'] = clusterId;
+    results['accTimerIndex'] = accTimerIndex;
+    results['status'] = status;
+    results['tparam1'] = tparam1;
+    results['tparam2'] = tparam2;
+    results['weekday'] = weekday;
+    logger.i(results);
     String command = threshold +
         subCommand +
         messageLength +
