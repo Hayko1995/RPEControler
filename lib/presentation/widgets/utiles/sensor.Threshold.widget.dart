@@ -75,6 +75,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   String inTimType = '';
   String weekDays = '';
   String _thresholdType = 'Below';
+  String actionValue = '';
 
   String secEndTime = '';
   Map<String, bool> values = {
@@ -107,7 +108,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         if (num < 4096) {
           if (num < 256) {
             num = num.toRadixString(16);
-            num = '000000' + num;
+            num = '0000000' + num;
           } else {
             num = num.toRadixString(16);
             num = '00000' + num;
@@ -359,15 +360,13 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         }
       }
       if (dataDevice.isActivation == 2) {
-        String actionValue = _actionValueController.text;
+         actionValue = _actionValueController.text;
+        logger.i(actionValue);
         threshParam1 = hexPadding(int.parse(actionValue));
         if (threshParam1 == '') {
           threshParam1 = '00000000';
         }
         threshParam2 = '00000000';
-      }
-      if (thresholdType == "Below") {
-        _thresholdType = '1';
       }
       if (thresholdType == "Below") {
         _thresholdType = '1';
@@ -388,9 +387,10 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         actionType = '00';
       }
 
-      if (_thresholdType == 1 || _thresholdType == 2) {
+      if (_thresholdType == '1' || _thresholdType == '2') {
         try {
           inStartThresh = int.parse(_startValueController.text);
+          logger.e(inStartThresh);
         } catch (e) {
           inStartThresh = 0;
         }
@@ -528,8 +528,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       meshNotifier.updateNetwork(network);
     }
 
-    logger.e(sensorTypeValue);
-
     return AlertDialog(
       actions: <Widget>[
         TextButton(
@@ -569,7 +567,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                             // This is called when the user selects an item.
                             setState(() {
                               sensorTypeValue = value!;
-                              logger.w(sensorTypeValue);
                               setState(() {
                                 typeOfThreshold = <String>[
                                   "Below",
