@@ -315,7 +315,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
           int.parse(inStartTime.substring(inStartTime.indexOf(":") + 1));
       int startTimeinSec = (3600 * hStartTime) + (60 * mStartTime);
 
-      secStartTime = hexPadding(startTimeinSec);
+      hexStartTime = hexPadding(startTimeinSec);
 
       String inEndTime = _endTime.text.toString();
       if (inEndTime == '') {
@@ -326,7 +326,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         int mEndTime =
             int.parse(inEndTime.substring(inEndTime.indexOf(":") + 1));
         int endTimeinSec = (3600 * hEndTime) + (60 * mEndTime);
-        secEndTime = hexPadding(endTimeinSec);
+        hexEndTimer = hexPadding(endTimeinSec);
         _thresholdType = _thresholdType.substring(1);
         _thresholdType = '5$_thresholdType';
       }
@@ -380,7 +380,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       if (thresholdType == "Outside") {
         _thresholdType = '4';
       }
-      logger.w(_thresholdType);
       if (threshodStatus == "ON") {
         actionType = '81';
       } else {
@@ -466,7 +465,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       if (thVal.length < 2) {
         thVal = "0$thVal";
       }
-      if (hexStartTime == "") {
+      if (121 == "") {
         hexStartTime = '00000000';
       }
       if (hexEndTimer == "") {
