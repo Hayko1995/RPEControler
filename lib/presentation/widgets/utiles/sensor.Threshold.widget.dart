@@ -51,11 +51,11 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   List<String> boolActivation = <String>['ON', "OFF"];
   bool openCheckboxes = false;
   bool needTimer = false;
-  String sensorTypeValue = "";
-  String thresholdType = '';
+  String sensorTypeValue = 'Battery_pwr_sen';
+  String thresholdType = 'Below';
   String setnotificationType = "";
   String thresholdId = "01";
-  String threshodStatus = "";
+  String threshodStatus = "ON";
   String timerType = '';
   String statusType = '';
   String controlType = '';
@@ -74,7 +74,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   String hexEndTimer = '';
   String inTimType = '';
   String weekDays = '';
-  String _thresholdType = '';
+  String _thresholdType = 'Below';
 
   String secEndTime = '';
   Map<String, bool> values = {
@@ -180,9 +180,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
     }
     dataDevice.thI = dataDevice.thI++;
     getSubSensors(dataDevice);
-    sensorTypeValue = sensorType.first;
-    thresholdType = typeOfThreshold.first;
-    threshodStatus = boolActivation.first;
+    // thresholdType = typeOfThreshold.first;
+    // threshodStatus = boolActivation.first;
 
     void oneTimeCommand() {
       timerType = "00";
@@ -309,8 +308,10 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
 
       String inStartTime = _startTime.text.toString();
 
-      int hStartTime = int.parse((inStartTime.substring(0, 2)));
-      int mStartTime = int.parse(inStartTime.substring(3));
+      int hStartTime =
+          int.parse((inStartTime.substring(0, inStartTime.indexOf(":"))));
+      int mStartTime =
+          int.parse(inStartTime.substring(inStartTime.indexOf(":") + 1));
       int startTimeinSec = (3600 * hStartTime) + (60 * mStartTime);
 
       secStartTime = hexPadding(startTimeinSec);
@@ -319,8 +320,10 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       if (inEndTime == '') {
         secEndTime = '00000000';
       } else {
-        int hEndTime = int.parse((inEndTime.substring(0, 2)));
-        int mEndTime = int.parse(inEndTime.substring(3));
+        int hEndTime =
+            int.parse((inEndTime.substring(0, inEndTime.indexOf(":"))));
+        int mEndTime =
+            int.parse(inEndTime.substring(inEndTime.indexOf(":") + 1));
         int endTimeinSec = (3600 * hEndTime) + (60 * mEndTime);
         secEndTime = hexPadding(endTimeinSec);
         _thresholdType = _thresholdType.substring(1);
@@ -358,6 +361,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       if (dataDevice.isActivation == 2) {
         String actionValue = _actionValueController.text;
         threshParam1 = hexPadding(int.parse(actionValue));
+        if (threshParam1 == '') {
+          threshParam1 = '00000000';
+        }
         threshParam2 = '00000000';
       }
       if (thresholdType == "Below") {
@@ -398,6 +404,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
           }
         }
         threshParam1 = hexPadding(inStartThresh);
+        if (threshParam1 == '') {
+          threshParam1 = '00000000';
+        }
         threshParam2 = "00000000";
       } else {
         try {
@@ -420,6 +429,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
           inEndThres = 0;
         }
         threshParam2 = hexPadding(inEndThres);
+        if (threshParam2 == '') {
+          threshParam2 = '00000000';
+        }
       }
 
       if (needTimer) {
@@ -453,6 +465,12 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       String thVal = _thresholdType.toString();
       if (thVal.length < 2) {
         thVal = "0$thVal";
+      }
+      if (hexStartTime == "") {
+        hexStartTime = '00000000';
+      }
+      if (hexEndTimer == "") {
+        hexEndTimer = '00000000';
       }
       String command = meshThreshold.sendSetThreshold(
           dataDevice.nodeNumber,
@@ -509,6 +527,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       network.thresholds = jsonEncode(networkThresholds);
       meshNotifier.updateNetwork(network);
     }
+
+    logger.e(sensorTypeValue);
 
     return AlertDialog(
       actions: <Widget>[
