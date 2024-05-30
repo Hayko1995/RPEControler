@@ -153,7 +153,8 @@ class MeshNotifier with ChangeNotifier {
   sendCommand(String command, String netId) async {
     String url = await _databaseService.getUrlByNetId([netId]);
     bool result = await meshAPI.sendToMesh(command, url);
-    return result;
+    return true;
+    // return result;
   }
 
   insertCluster(clusterId, clusterName, type, netNumber, items, status) async {

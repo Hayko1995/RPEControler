@@ -51,7 +51,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   List<String> boolActivation = <String>['ON', "OFF"];
   bool openCheckboxes = false;
   bool needTimer = false;
-  String sensorTypeValue = '';
+  String sensorTypeValue = "";
   String thresholdType = '';
   String setnotificationType = "";
   String thresholdId = "01";
@@ -74,6 +74,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   String hexEndTimer = '';
   String inTimType = '';
   String weekDays = '';
+  String _thresholdType = '';
 
   String secEndTime = '';
   Map<String, bool> values = {
@@ -138,7 +139,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   @override
   void initState() {
     // sensorTypeValue = sensorType.first;
-    thresholdType = typeOfThreshold.first;
+
     setnotificationType = stateOfNotifications.first;
     super.initState();
   }
@@ -179,6 +180,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
     }
     dataDevice.thI = dataDevice.thI++;
     getSubSensors(dataDevice);
+    sensorTypeValue = sensorType.first;
+    thresholdType = typeOfThreshold.first;
+    threshodStatus = boolActivation.first;
 
     void oneTimeCommand() {
       timerType = "00";
@@ -208,33 +212,30 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
 
         String timStatus = '';
 
-        if (actionType == "00") {
-          timerType = '01';
+        String endDay = _endDate.text.toString();
+        if (endDay == '') {
           hexEndTimer = '00000000';
         } else {
-          String endDay = _endDate.text.toString();
-          if (endDay == '') {
-            hexEndTimer = '00000000';
-          } else {
-            logger.i(endDay);
-            int day = int.parse((endDay.substring(0, 2)));
+          _thresholdType = _thresholdType.substring(1);
+          _thresholdType = '5$_thresholdType';
+          logger.i(endDay);
+          int day = int.parse((endDay.substring(0, 2)));
 
-            int mounts = int.parse(endDay.substring(3, 5));
-            int year = int.parse("20" + endDay.substring(6, 8));
-            int hour = int.parse(endDay.substring(9, 11));
-            int minute = int.parse(endDay.substring(12));
+          int mounts = int.parse(endDay.substring(3, 5));
+          int year = int.parse("20" + endDay.substring(6, 8));
+          int hour = int.parse(endDay.substring(9, 11));
+          int minute = int.parse(endDay.substring(12));
 
-            var d1 = DateTime(year, mounts, day, hour, minute);
-            var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
-            int endTimeInSec = d1t2 - 946713600;
+          var d1 = DateTime(year, mounts, day, hour, minute);
+          var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
+          int endTimeInSec = d1t2 - 946713600;
 
-            hexEndTimer = endTimeInSec.toRadixString(16);
-          }
-          if (timerType == "Off") {
-            timerType = '01';
-          } else {
-            timerType = '11';
-          }
+          hexEndTimer = endTimeInSec.toRadixString(16);
+        }
+        if (timerType == "Off") {
+          timerType = '01';
+        } else {
+          timerType = '11';
         }
       }
     }
@@ -283,10 +284,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         saDay = 0;
       }
       int days = suDay + mDay + tDay + wDay + thDay + fDay + saDay;
-      if (days == 0) {
-        logger.i("days need to be not 0");
-      }
-      String weekDays;
+      if (days == 0) {}
       if (days < 16) {
         weekDays = days.toRadixString(16);
         weekDays = '0$weekDays';
@@ -325,6 +323,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         int mEndTime = int.parse(inEndTime.substring(3));
         int endTimeinSec = (3600 * hEndTime) + (60 * mEndTime);
         secEndTime = hexPadding(endTimeinSec);
+        _thresholdType = _thresholdType.substring(1);
+        _thresholdType = '5$_thresholdType';
       }
 
       setWeek();
@@ -340,7 +340,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
 
     Future<void> saveAction() async {
       MeshThreshold meshThreshold = MeshThreshold();
-      int _thresholdType = 0;
+
       int inStartThresh = 0;
       int inEndThres = 0;
       String secEndTime = "";
@@ -361,20 +361,21 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         threshParam2 = '00000000';
       }
       if (thresholdType == "Below") {
-        _thresholdType = 1;
+        _thresholdType = '1';
       }
       if (thresholdType == "Below") {
-        _thresholdType = 1;
+        _thresholdType = '1';
       }
       if (thresholdType == "Above") {
-        _thresholdType = 2;
+        _thresholdType = '2';
       }
       if (thresholdType == "Inside") {
-        _thresholdType = 3;
+        _thresholdType = '3';
       }
       if (thresholdType == "Outside") {
-        _thresholdType = 4;
+        _thresholdType = '4';
       }
+      logger.w(_thresholdType);
       if (threshodStatus == "ON") {
         actionType = '81';
       } else {
@@ -422,6 +423,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       }
 
       if (needTimer) {
+        _thresholdType = '4$_thresholdType';
         if (oneTimeOrPereudic == false) {
           oneTimeCommand();
         } else {
@@ -555,7 +557,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                   "Inside",
                                   "Outside"
                                 ];
-                                thresholdType = typeOfThreshold.first;
                               });
                             });
                           },
@@ -573,7 +574,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                           child: SizedBox(
                             child: DropdownMenu<String>(
                               width: MediaQuery.sizeOf(context).width * 0.4,
-                              // initialSelection: typeOfThreshold.first,
+                              initialSelection: thresholdType,
                               onSelected: (String? value) {
                                 setState(() {
                                   thresholdType = value!;
@@ -674,8 +675,10 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                         padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: SizedBox(
                           child: DropdownMenu<String>(
+                            initialSelection: threshodStatus,
                             onSelected: (String? value) {
                               // This is called when the user selects an item.
+
                               setState(() {
                                 threshodStatus = value!;
                               });
@@ -740,7 +743,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                           onChanged: (value) {
                             setState(() {
                               needTimer = value!;
-                              logger.i(needTimer);
                             });
                           },
                         ),
@@ -997,28 +999,6 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                             )),
                                       ),
                                     ]),
-                          Column(
-                            children: [
-                              SizedBox(
-                                child: DropdownMenu<String>(
-                                  width: MediaQuery.sizeOf(context).width * 0.6,
-                                  onSelected: (String? value) {
-                                    // This is called when the user selects an item.
-                                    setState(() {
-                                      thresholdStatus = value!;
-                                    });
-                                  },
-                                  label: const Text("Status"),
-                                  dropdownMenuEntries: stateOfthreshold
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList(),
-                                ),
-                              ),
-                            ],
-                          ),
                           SizedBox(
                             height: 20,
                           ),
