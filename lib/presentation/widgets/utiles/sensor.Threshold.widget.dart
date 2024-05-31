@@ -366,8 +366,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
 
       if (_thresholdType == '1' || _thresholdType == '2') {
         try {
-          inStartThresh = int.parse(_startValueController.text);
-          inStartThresh = inStartThresh * 100;
+          double inStartThreshDouble = double.parse(_startValueController.text);
+          inStartThresh = (inStartThreshDouble * 100).round();
         } catch (e) {
           inStartThresh = 0;
         }
@@ -387,7 +387,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         threshParam2 = "00000000";
       } else {
         try {
-          inStartThresh = int.parse(_startValueController.text);
+          double inStartThreshDouble = double.parse(_startValueController.text);
+          inStartThresh = (inStartThreshDouble*100).round();
         } catch (e) {
           inStartThresh = 0;
         }
@@ -401,8 +402,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
           }
         }
         try {
-          inEndThres = int.parse(_endValueController.text);
-          inEndThres = inEndThres * 100;
+          double inEndThresDouble = double.parse(_endValueController.text);
+          inEndThres = (inEndThresDouble*100).round();
         } catch (e) {
           inEndThres = 0;
         }
