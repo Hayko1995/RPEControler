@@ -117,8 +117,8 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
         String _url = await meshNotifier.getNetworkUrlByNetId(dataDevice.netId);
         var network = meshNotifier.getNetworkByUrl(_url);
         var networkTimers = jsonDecode(network.timers);
-        List networkTimersArr = networkTimers['thresholds'];
-        networkTimersArr.remove(data['name']);
+        List? networkTimersArr = networkTimers['thresholds'];
+        networkTimersArr?.remove(data['name']);
         networkTimers['thresholds'] = networkTimersArr;
         network.timers = jsonEncode(networkTimers);
 

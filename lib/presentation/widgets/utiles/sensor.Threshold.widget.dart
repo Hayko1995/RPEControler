@@ -103,35 +103,12 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       new TextEditingController();
 
   String hexPadding(num) {
-    if (num < 16777217) {
-      if (num < 65536) {
-        if (num < 4096) {
-          if (num < 256) {
-            num = num.toRadixString(16);
-            num = '0000000' + num;
-          } else {
-            num = num.toRadixString(16);
-            num = '00000' + num;
-          }
-        } else {
-          num = num.toRadixString(16);
-          num = '000000' + num;
-        }
-      } else {
-        if (num < 1048576) {
-          num = num.toRadixString(16);
-          num = '00000' + num;
-        } else {
-          num = num.toRadixString(16);
-          num = '00000' + num;
-        }
-      }
-    } else {
-      if (num < 268435456) {
-        num = num.toRadixString(16);
-        num = '0' + num;
-      } else {
-        num = num.toRadixString(16);
+    num = num.toRadixString(16);
+    if (num.length<8){
+      var len =  num.length;
+      for(var i = 0; i<8-len; i++){
+        num = '0$num';
+
       }
     }
     return num;
@@ -458,6 +435,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       }
       sensorTypeValue =
           AppConstants.sensorTypeIdRevers[sensorTypeValue]!.toRadixString(16);
+      if (sensorTypeValue.length<2){
+        sensorTypeValue = "0$sensorTypeValue";
+      }
 
       String clusterId = "00";
       String accTimerIndex = "00";
@@ -465,7 +445,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       if (thVal.length < 2) {
         thVal = "0$thVal";
       }
-      if (121 == "") {
+      if (hexStartTime == "") {
         hexStartTime = '00000000';
       }
       if (hexEndTimer == "") {
