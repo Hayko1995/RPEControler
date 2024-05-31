@@ -32,6 +32,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   List<String> data = [];
   late RpeDevice dataDevice;
   List<String> sensorType = [];
+  TimeOfDay? pickeTime;
   List<String> typeOfThreshold = <String>[
     "Below",
     "Above",
@@ -104,11 +105,10 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
 
   String hexPadding(num) {
     num = num.toRadixString(16);
-    if (num.length<8){
-      var len =  num.length;
-      for(var i = 0; i<8-len; i++){
+    if (num.length < 8) {
+      var len = num.length;
+      for (var i = 0; i < 8 - len; i++) {
         num = '0$num';
-
       }
     }
     return num;
@@ -190,12 +190,13 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         String timStatus = '';
 
         String endDay = _endDate.text.toString();
+        logger.e(endDay);
         if (endDay == '') {
           hexEndTimer = '00000000';
         } else {
           _thresholdType = _thresholdType.substring(1);
           _thresholdType = '5$_thresholdType';
-          logger.i(endDay);
+
           int day = int.parse((endDay.substring(0, 2)));
 
           int mounts = int.parse(endDay.substring(3, 5));
@@ -205,7 +206,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
 
           var d1 = DateTime(year, mounts, day, hour, minute);
           var d1t2 = d1.millisecondsSinceEpoch ~/ 1000;
-          int endTimeInSec = d1t2 - 946713600;
+          int endTimeInSec = d1t2;
 
           hexEndTimer = endTimeInSec.toRadixString(16);
         }
@@ -337,7 +338,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         }
       }
       if (dataDevice.isActivation == 2) {
-         actionValue = _actionValueController.text;
+        actionValue = _actionValueController.text;
         logger.i(actionValue);
         threshParam1 = hexPadding(int.parse(actionValue));
         if (threshParam1 == '') {
@@ -352,10 +353,10 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         _thresholdType = '2';
       }
       if (thresholdType == "Inside") {
-        _thresholdType = '3';
+        _thresholdType = '4';
       }
       if (thresholdType == "Outside") {
-        _thresholdType = '4';
+        _thresholdType = '8';
       }
       if (threshodStatus == "ON") {
         actionType = '81';
@@ -366,7 +367,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       if (_thresholdType == '1' || _thresholdType == '2') {
         try {
           inStartThresh = int.parse(_startValueController.text);
-          logger.e(inStartThresh);
+          inStartThresh = inStartThresh * 100;
         } catch (e) {
           inStartThresh = 0;
         }
@@ -401,6 +402,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         }
         try {
           inEndThres = int.parse(_endValueController.text);
+          inEndThres = inEndThres * 100;
         } catch (e) {
           inEndThres = 0;
         }
@@ -439,7 +441,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       }
       sensorTypeValue =
           AppConstants.sensorTypeIdRevers[sensorTypeValue]!.toRadixString(16);
-      if (sensorTypeValue.length<2){
+      if (sensorTypeValue.length < 2) {
         sensorTypeValue = "0$sensorTypeValue";
       }
 
@@ -463,7 +465,8 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
           threshParam2,
           thVal,
           actionType,
-          '00', // sensor Activation Num
+          '00',
+          // sensor Activation Num
           sensorTypeValue,
           clusterId,
           accTimerIndex,
@@ -603,22 +606,72 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                     SizedBox(
                       child: SizedBox(
                           width: MediaQuery.sizeOf(context).width * 0.4,
-                          child: NumberTextField(
-                            max: 100,
-                            min: 0,
+                          child: TextField(
                             controller: _startValueController,
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) {
+                              final floatPattern = RegExp(
+                                  r'^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$');
+                              if (floatPattern.hasMatch(value)) {
+                                _startValueController.text = value;
+                              } else {
+                                if (value.length > 1) {
+                                  _startValueController.text =
+                                      value.substring(0, value.length - 1);
+                                }
+                              }
+                              if (value.indexOf('.') > 0) {
+                                if (value.indexOf('.') < value.length - 3) {
+                                  _startValueController.text =
+                                      value.substring(0, value.length - 1);
+                                }
+                              }
+                              if (value.length > 1) {
+                                if (double.parse(value) > 100) {
+                                  _startValueController.text = "100";
+                                }
+
+                                if (double.parse(value) < -100) {
+                                  _startValueController.text = "-100";
+                                }
+                              }
+                            },
                           )),
                     ),
                     if (thresholdType == "Inside" || thresholdType == "Outside")
                       SizedBox(
                         child: SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.6,
-                            child: NumberTextField(
-                              max: 100,
-                              min: 0,
+                            width: MediaQuery.sizeOf(context).width * 0.4,
+                            child: TextField(
                               controller: _endValueController,
-                              // onChanged: (value) {
-                              // _startValueController.value = value;
+                              keyboardType: TextInputType.number,
+                              onChanged: (value) {
+                                final floatPattern = RegExp(
+                                    r'^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$');
+                                if (floatPattern.hasMatch(value)) {
+                                  _endValueController.text = value;
+                                } else {
+                                  if (value.length > 1) {
+                                    _endValueController.text =
+                                        value.substring(0, value.length - 1);
+                                  }
+                                }
+                                if (value.indexOf('.') > 0) {
+                                  if (value.indexOf('.') < value.length - 3) {
+                                    _endValueController.text =
+                                        value.substring(0, value.length - 1);
+                                  }
+                                }
+                                if (value.length > 1) {
+                                  if (double.parse(value) > 100) {
+                                    _endValueController.text = "100";
+                                  }
+
+                                  if (double.parse(value) < -100) {
+                                    _endValueController.text = "-100";
+                                  }
+                                }
+                              },
                             )),
                       )
                   ],
@@ -845,6 +898,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                 setState(() {
                                                   _startTime.text =
                                                       "${pickeTime.hour}:${pickeTime.minute}";
+                                                  logger.e(_startTime);
                                                 });
                                               } else {
                                                 logger
@@ -878,6 +932,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
                                                 setState(() {
                                                   _endTime.text =
                                                       "${pickeTime.hour}:${pickeTime.minute}";
+                                                  logger.e(_endTime);
                                                 });
                                               } else {
                                                 logger
