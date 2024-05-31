@@ -404,6 +404,10 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
         } catch (e) {
           inEndThres = 0;
         }
+        threshParam1 = hexPadding(inStartThresh);
+        if (threshParam1 == '') {
+          threshParam1 = '00000000';
+        }
         threshParam2 = hexPadding(inEndThres);
         if (threshParam2 == '') {
           threshParam2 = '00000000';
