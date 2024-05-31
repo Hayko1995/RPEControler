@@ -54,7 +54,7 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
   String sensorTypeValue = 'Battery_pwr_sen';
   String thresholdType = 'Below';
   String setnotificationType = "";
-  String thresholdId = "01";
+  String deviceThresholdId = "01";
   String threshodStatus = "ON";
   String timerType = '';
   String statusType = '';
@@ -152,9 +152,9 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
     final meshNotifier = Provider.of<MeshNotifier>(context, listen: false);
     dataDevice = meshNotifier.getDeviceByMac(widget.mac);
 
-    thresholdId = dataDevice.thI.toRadixString(16);
-    if (thresholdId.length < 2) {
-      thresholdId = "0$thresholdId";
+    deviceThresholdId = dataDevice.thI.toRadixString(16);
+    if (deviceThresholdId.length < 2) {
+      deviceThresholdId = "0$deviceThresholdId";
     }
     dataDevice.thI = dataDevice.thI++;
     getSubSensors(dataDevice);
@@ -458,12 +458,12 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
       String command = meshThreshold.sendSetThreshold(
           dataDevice.nodeNumber,
           dataDevice.netId,
-          thresholdId,
+          deviceThresholdId,
           threshParam1,
           threshParam2,
           thVal,
           actionType,
-          thresholdId,
+          '00', // sensor Activation Num
           sensorTypeValue,
           clusterId,
           accTimerIndex,
@@ -473,20 +473,19 @@ class _SensorThresholdScreenState extends State<SensorThresholdScreen> {
           weekDays);
       logger.i(command);
       bool response = await meshNotifier.sendCommand(command, dataDevice.netId);
-      int intThresholdId = int.parse(thresholdId);
+      int intThresholdId = int.parse(deviceThresholdId);
       intThresholdId = intThresholdId + 1;
       if (intThresholdId < 9) {
         timerId = "0$intThresholdId";
       } else {
         timerId = intThresholdId.toString();
       }
-      WriteCache.setString(key: AppKeys.timerId, value: timerId);
 
       ////////////////////////
       Map<String, dynamic> newThreshold = {
         'sensorType': sensorTypeValue,
         'thresholdType': thresholdType.toString(),
-        'thresholdId': thresholdId,
+        'thresholdId': deviceThresholdId,
         'oneTime': oneTimeOrPereudic,
         'weeks': values,
         'control': controlType,
