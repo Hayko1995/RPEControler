@@ -156,6 +156,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{B505FD4F-B7EE-3D2B-B3C8-C57C6F5F449D}</Project>
       <Name>flutter_wrapper_plugin</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Rpecontrols\controller\build\windows\x64\plugins\local_auth_windows\local_auth_windows_plugin.vcxproj">
+      <Project>{02A57042-4BB4-3CCE-8D83-302DCC86073F}</Project>
+      <Name>local_auth_windows_plugin</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\Rpecontrols\controller\build\windows\x64\plugins\permission_handler_windows\permission_handler_windows_plugin.vcxproj">
       <Project>{510D5B69-B92F-3557-AA21-141F16888724}</Project>
       <Name>permission_handler_windows_plugin</Name>

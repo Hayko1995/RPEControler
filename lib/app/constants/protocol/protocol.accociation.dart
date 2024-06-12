@@ -1,3 +1,5 @@
+import 'package:rpe_c/core/logger/logger.dart';
+
 class MeshAssociation {
   final association = "93";
   final setAssociation = "01";
@@ -99,12 +101,57 @@ class MeshAssociation {
     return command;
   }
 
-  String sendSetAssociation(nodeNumber, networkNumber) {
-    //todo need talk
+  String sendSetAssociation(
+      nodeNumber,
+      networkNumber,
+      associationId,
+      associationType,
+      numberInitiators,
+      numberListeners,
+      status,
+      actuatorList,
+      sensorList,
+      initiatorNodes,
+      listenerNodes,
+      {reserved1 = '00',
+      reserved2 = '00'}) {
     String subCommand = "01";
     String messageLength = "06";
-    String command =
-        "00" + subCommand + messageLength + nodeNumber + networkNumber + "00";
+    var results = {};
+    results['association'] = association;
+    results['subCommand'] = subCommand;
+    results['messageLength'] = messageLength;
+    results['nodeNumber'] = nodeNumber;
+    results['networkNumber'] = networkNumber;
+    results['reserved1'] = reserved1;
+    results['associationId'] = associationId;
+    results['associationType'] = associationType;
+    results['numberInitiators'] = numberInitiators;
+    results['numberListeners'] = numberListeners;
+    results['status'] = status;
+    results['reserved2'] = reserved2;
+    results['actuatorList'] = actuatorList;
+    results['sensorList'] = sensorList;
+    results['initiatorNodes'] = initiatorNodes;
+    results['listenerNodes'] = listenerNodes;
+
+    logger.i(results);
+    String command = association +
+        subCommand +
+        messageLength +
+        nodeNumber +
+        networkNumber +
+        reserved1 +
+        associationId +
+        associationType +
+        numberInitiators +
+        numberListeners +
+        status +
+        reserved2 +
+        actuatorList +
+        sensorList +
+        initiatorNodes +
+        listenerNodes;
     return command;
   }
 }

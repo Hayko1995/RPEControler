@@ -41,7 +41,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
   List<String> manipulatngType = <String>['Clustering', 'Associations'];
   List<String> sensorsType = <String>['All', 'Light', 'Buzzers'];
   List<String> clusters = <String>['New']; //todo change form DB
-  List devices = [];
+  List<RpeDevice> devices = [];
   List items = [];
   String newClusterName = "";
 
@@ -57,6 +57,7 @@ class _ClusteringScreenState extends State<ClusteringScreen> {
             name: devices[i].name,
             netId: devices[i].netId,
             nodeType: devices[i].nodeType,
+            nodeSubType:  devices[i].nodeSubType,
             nodeNumber: devices[i].nodeNumber,
             macAddress: devices[i].macAddress,
             imageProvider: AssetImage(devices[i].image)));

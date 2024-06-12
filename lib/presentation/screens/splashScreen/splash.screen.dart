@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/app.colors.dart';
 import 'package:rpe_c/app/constants/app.keys.dart';
 import 'package:rpe_c/app/routes/app.routes.dart';
+import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/notifiers/theme.notifier.dart';
+import 'package:local_auth/local_auth.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -15,35 +18,83 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final LocalAuthentication auth = LocalAuthentication();
+  _SupportState _supportState = _SupportState.unknown;
+  bool? _canCheckBiometrics;
+  List<BiometricType>? _availableBiometrics;
+  String _authorized = 'Not Authorized';
+  bool _isAuthenticating = false;
+
+  @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 1), _initiateCache);
+    super.initState();
+    auth.isDeviceSupported().then(
+          (bool isSupported) => setState(() => _supportState = isSupported
+              ? _SupportState.supported
+              : _SupportState.unsupported),
+        );
+  }
+
+  Future<void> _authenticate() async {
+
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+
+      authenticated = await auth.authenticate(
+        localizedReason: 'Let OS determine authentication method',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+        ),
+      );
+      setState(() {
+        _isAuthenticating = false;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Error - ${e.message}';
+      });
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(
+        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+  }
+
   Future _initiateCache() async {
     return CacheManagerUtils.conditionalCache(
       key: AppKeys.onBoardDone,
       valueType: ValueType.StringValue,
       actionIfNull: () {
-        Navigator.of(context).pushReplacementNamed(AppRouter.onBoardRoute).whenComplete(
-            () => WriteCache.setString(
+        Navigator.of(context)
+            .pushReplacementNamed(AppRouter.onBoardRoute)
+            .whenComplete(() => WriteCache.setString(
                 key: AppKeys.onBoardDone, value: 'Something'));
       },
       actionIfNotNull: () {
         CacheManagerUtils.conditionalCache(
             key: AppKeys.userData,
             valueType: ValueType.StringValue,
-            actionIfNull: () {
+            actionIfNull: () async {
+              await _authenticate();
               Navigator.of(context)
                   .pushReplacementNamed(AppRouter.homeRoute); //todo change
             },
-            actionIfNotNull: () {
-              Navigator.of(context).pushReplacementNamed(
-                  AppRouter.homeRoute);
+            actionIfNotNull: () async {
+              await _authenticate();
+              Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
             });
       },
     );
-  }
-
-  @override
-  void initState() {
-    Future.delayed(const Duration(seconds: 1), _initiateCache);
-    super.initState();
   }
 
   @override
@@ -69,4 +120,10 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
+}
+
+enum _SupportState {
+  unknown,
+  supported,
+  unsupported,
 }

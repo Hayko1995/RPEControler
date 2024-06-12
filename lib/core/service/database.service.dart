@@ -23,7 +23,6 @@ class DatabaseService {
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, AppConstants.dbName);
-    logger.i(path);
     return await openDatabase(
       path,
       onCreate: _onCreate,

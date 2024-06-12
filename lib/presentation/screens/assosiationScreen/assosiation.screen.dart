@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rpe_c/app/constants/protocol/protocol.accociation.dart';
 import 'package:rpe_c/core/logger/logger.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
@@ -20,6 +21,8 @@ class AssociationScreen extends StatefulWidget {
 
 class AssociationScreenState extends State<AssociationScreen> {
   final DatabaseService _databaseService = DatabaseService();
+  MeshAssociation meshAssociation = MeshAssociation();
+  List<RpeDevice> devices = [];
 
   final List<ActiveArea> activeAreas = [
     ActiveArea(),
@@ -34,8 +37,6 @@ class AssociationScreenState extends State<AssociationScreen> {
     required Item item,
     required ActiveArea customer,
   }) {
-
-
     setState(() {
       if (!customer.items.contains(item)) {
         customer.items.add(item);
@@ -46,20 +47,27 @@ class AssociationScreenState extends State<AssociationScreen> {
 
   List<String> manipulatngType = <String>['Clustering', 'Associations'];
   List<String> sensorsType = <String>['All', 'Light', 'Buzzers'];
+  List<String> statusType = <String>[
+    'ONE to ONE',
+    'ONE to Many',
+    'MANY to ONE',
+    'MANY to MANY'
+  ];
+  String statusValue = '';
   List<String> clusters = <String>['New'];
   List dataDevices = [];
   List _items = [];
   List items = [];
 
   void _updateData() async {
-    List<RpeDevice> devices =
-        await _databaseService.getAllDevices(); //TODO change
+    devices = await _databaseService.getAllDevices(); //TODO change
     for (int i = 0; i < devices.length; i++) {
       items.add(
         Item(
             name: devices[i].name,
             netId: devices[i].netId,
             nodeType: devices[i].nodeType,
+            nodeSubType: devices[i].nodeSubType,
             nodeNumber: devices[i].nodeNumber,
             macAddress: devices[i].macAddress,
             imageProvider: AssetImage(devices[i].image)),
@@ -137,12 +145,50 @@ class AssociationScreenState extends State<AssociationScreen> {
                       } else {
                         associationId = '0$_associationId';
                       }
-                      // todo add command
-                      // meshNotifier.sendClusterCommand(
-                      //     singleNet,
-                      //     activeAreas[0].items[0].netId,
-                      //     associationId,
-                      //     fromAssociationNodes);
+
+                      //todo Calculate length
+
+                      String listenerNodes = '';
+                      String initiators = '';
+                      String initiatorsLength = '';
+                      String listenerLenght = '';
+                      for (var item in activeAreas[0].items) {
+                        initiators =
+                            item.netId + item.nodeNumber + item.nodeSubType;
+                      }
+                      for (var item in activeAreas[1].items) {
+                        listenerNodes =
+                            item.netId + item.nodeNumber + item.nodeSubType;
+                      }
+                      String _initiatorsLength =
+                          (activeAreas[0].items.length / 2)
+                              .round()
+                              .toRadixString(16);
+                      if (_initiatorsLength.length < 2) {
+                        initiatorsLength = '0$_initiatorsLength';
+                      }
+                      String _listenerLenght = (activeAreas[1].items.length / 2)
+                          .round()
+                          .toRadixString(16);
+                      if (_listenerLenght.length < 2) {
+                        listenerLenght = '0$_listenerLenght';
+                      }
+                      const nodeNumber = '00';
+                      String command = meshAssociation.sendSetAssociation(
+                          nodeNumber,
+                          devices[0].netId,
+                          associationId,
+                          '??',
+                          initiatorsLength,
+                          listenerLenght,
+                          '--',
+                          '--',
+                          '--',
+                          initiators,
+                          listenerNodes);
+                      logger.i(command);
+
+                      // bool response = await meshNotifier.sendCommand(command, device.netId);
 
                       meshNotifier.insertAssociation(
                           _associationId,
@@ -204,6 +250,21 @@ class AssociationScreenState extends State<AssociationScreen> {
                     child: const Text("Save"),
                   ),
                 ]),
+                SizedBox(
+                  child: DropdownMenu<String>(
+                    initialSelection: statusType.first,
+                    onSelected: (String? value) {
+                      setState(() {
+                        statusValue = value!;
+                      });
+                    },
+                    dropdownMenuEntries: statusType
+                        .map<DropdownMenuEntry<String>>((String value) {
+                      return DropdownMenuEntry<String>(
+                          value: value, label: value);
+                    }).toList(),
+                  ),
+                ),
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width,
                   height: MediaQuery.sizeOf(context).height * 0.82,

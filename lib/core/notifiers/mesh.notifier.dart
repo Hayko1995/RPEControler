@@ -78,20 +78,10 @@ class MeshNotifier with ChangeNotifier {
 
     final MeshAPI meshAPI = MeshAPI();
     String url = await _databaseService.getUrlByNetId([netId]);
-    logger.w(clusterNodes);
     meshAPI.createCluster(
         singleNet, netId, clusterId, clusterNodes, url); //todo Ask Harry
   }
 
-  Future sendAssociationCommand(
-      singleNet, netId, clusterId, clusterNodes) async {
-    //todo add cluster command
-
-    final MeshAPI meshAPI = MeshAPI();
-    String url = await _databaseService.getUrlByNetId([netId]);
-    meshAPI.createCluster(
-        singleNet, netId, clusterId, clusterNodes, url); //todo Ask Harry
-  }
 
   Future sendE1() async {
     //todo add cluster command

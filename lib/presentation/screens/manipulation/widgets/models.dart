@@ -7,6 +7,7 @@ class Item {
     required this.netId,
     required this.macAddress,
     required this.nodeType,
+    required this.nodeSubType,
     required this.imageProvider,
   });
 
@@ -14,6 +15,7 @@ class Item {
   final String nodeNumber;
   final String netId;
   final String nodeType;
+  final String nodeSubType;
   final String macAddress;
   final ImageProvider imageProvider;
 }

@@ -244,6 +244,15 @@ flutter_libserialport_IS_TOP_LEVEL:STATIC=OFF
 flutter_libserialport_SOURCE_DIR:STATIC=D:/Rpecontrols/controller/windows/flutter/ephemeral/.plugin_symlinks/flutter_libserialport/windows
 
 //Value Computed by CMake
+local_auth_windows_BINARY_DIR:STATIC=D:/Rpecontrols/controller/build/windows/x64/plugins/local_auth_windows
+
+//Value Computed by CMake
+local_auth_windows_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+local_auth_windows_SOURCE_DIR:STATIC=D:/Rpecontrols/controller/windows/flutter/ephemeral/.plugin_symlinks/local_auth_windows/windows
+
+//Value Computed by CMake
 permission_handler_windows_BINARY_DIR:STATIC=D:/Rpecontrols/controller/build/windows/x64/plugins/permission_handler_windows
 
 //Value Computed by CMake
@@ -375,7 +384,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=7
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=8
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib

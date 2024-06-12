@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.threshold.dart';
 import 'package:rpe_c/app/constants/protocol/protocol.time.dart';
+import 'package:rpe_c/app/routes/app.routes.dart';
 import 'package:rpe_c/core/models/db.models.dart';
 import 'package:rpe_c/core/notifiers/mesh.notifier.dart';
 import 'package:rpe_c/core/service/database.service.dart';
+import 'package:rpe_c/presentation/screens/manipulation/manipulation.screen.dart';
 import 'package:rpe_c/presentation/widgets/utiles/sensor.Threshold.widget.dart';
 import 'package:rpe_c/presentation/widgets/utiles/sensor.setTimers.widget.dart';
 
@@ -323,15 +325,15 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: Column(
                       children: [
-                        Container(
-                            decoration: BoxDecoration(border: Border.all()),
-                            child: Column(
-                              children: [
-                                if (dataDevice.deviceType < 3)
+                        if (dataDevice.deviceType < 3)
+                          Container(
+                              decoration: BoxDecoration(border: Border.all()),
+                              child: Column(
+                                children: [
                                   Row(
                                     children: [
                                       IconButton(
-                                        key:Key("Open Timers"),
+                                        key: Key("Open Timers"),
                                         icon: const Icon(Icons.add),
                                         onPressed: () {
                                           setState(() {
@@ -346,31 +348,31 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                                       )
                                     ],
                                   ),
-                                if (timersOpen)
-                                  Column(
-                                    children: [
-                                      OutlinedButton(
-                                        key: Key("add timer"),
-                                          onPressed: setTimer,
-                                          child: Text("Add timer")),
-                                      for (var timer in deviceTimersList)
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(timer['name'].toString()),
-                                            OutlinedButton(
-                                                onPressed: () {
-                                                  deleteTimer(
-                                                      dataDevice, timer);
-                                                },
-                                                child: Text("Delete")),
-                                          ],
-                                        )
-                                    ],
-                                  ),
-                              ],
-                            )),
+                                  if (timersOpen)
+                                    Column(
+                                      children: [
+                                        OutlinedButton(
+                                            key: Key("add timer"),
+                                            onPressed: setTimer,
+                                            child: Text("Add timer")),
+                                        for (var timer in deviceTimersList)
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(timer['name'].toString()),
+                                              OutlinedButton(
+                                                  onPressed: () {
+                                                    deleteTimer(
+                                                        dataDevice, timer);
+                                                  },
+                                                  child: Text("Delete")),
+                                            ],
+                                          )
+                                      ],
+                                    ),
+                                ],
+                              )),
                         Container(
                             decoration: BoxDecoration(border: Border.all()),
                             child: Column(
@@ -436,10 +438,29 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                                   ],
                                 ),
                                 if (zonesOpen)
-                                  Row(
+                                  Column(
                                     children: [
-                                      for (String cluster in deviceClusterList)
-                                        Text("$cluster, ")
+                                      Row(
+                                        children: [
+                                          OutlinedButton(
+                                              key: Key("add_cluster"),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pushNamed(
+                                                  AppRouter
+                                                      .manipulationsRoute,
+                                                  arguments:
+                                                      const ManipulationsArgs(
+                                                          preDef: 1),
+                                                );
+                                              },
+                                              child: const Text(
+                                                  "Add Cluster")),
+                                        ],
+                                      ),
+                                      for (String cluster
+                                          in deviceClusterList)
+                                        Text("$cluster, "),
                                     ],
                                   ),
                               ],
@@ -463,8 +484,23 @@ class _SensorDetailsScreenState extends State<SensorDetailsScreen> {
                                   ],
                                 ),
                                 if (associationsOpen)
-                                  Row(
+                                  Column(
                                     children: [
+                                      Row(
+                                        children: [
+                                          OutlinedButton(
+                                              key: Key("add_cluster"),
+                                              onPressed: () {
+                                                Navigator.of(context).pushNamed(
+                                                  AppRouter.manipulationsRoute,
+                                                  arguments:
+                                                      const ManipulationsArgs(
+                                                          preDef: 1),
+                                                );
+                                              },
+                                              child: const Text("Add Cluster")),
+                                        ],
+                                      ),
                                       for (var association
                                           in deviceAssociationList)
                                         Text("$association, ")
