@@ -65,7 +65,6 @@ class MeshAPI {
       final http.Response response =
           await client.post(uri, headers: headers, body: command);
       final body = response.body;
-      logger.w(body);
       return body;
     } catch (e) {
       return Null;
@@ -90,7 +89,7 @@ class MeshAPI {
 
     try {
       final http.Response response =
-      await client.post(uri, headers: headers, body: command);
+          await client.post(uri, headers: headers, body: command);
       final body = response.body;
       return body; // todo change
       if (body == "") {
@@ -103,6 +102,7 @@ class MeshAPI {
       return Null;
     }
   }
+
   Future sendToMesh(command, url) async {
     final Uri uri = Uri.parse(url);
 
@@ -118,7 +118,7 @@ class MeshAPI {
       }
     } catch (e) {
       logger.e(" service = internet problem");
-      return Null;
+      return false;
     }
   }
 
@@ -181,7 +181,7 @@ class MeshAPI {
       int number;
 
       for (int i = 32; i <= length - 16; i = i + 16) {
-        number = (i / 16).round()-1;
+        number = (i / 16).round() - 1;
         RpeDevice device = RpeDevice();
         device.dNetNum = netNum;
         device.networkTableMAC = network.name;
@@ -386,7 +386,6 @@ class MeshAPI {
 
       // return body;
     } catch (e) {
-
       logger.e('internet problem');
       return Null;
     }

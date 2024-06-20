@@ -30,14 +30,15 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 1), _initiateCache);
     super.initState();
     auth.isDeviceSupported().then(
-          (bool isSupported) => setState(() => _supportState = isSupported
+          (bool isSupported) =>
+          setState(() =>
+          _supportState = isSupported
               ? _SupportState.supported
               : _SupportState.unsupported),
-        );
+    );
   }
 
   Future<void> _authenticate() async {
-
     bool authenticated = false;
     try {
       setState(() {
@@ -50,24 +51,14 @@ class _SplashScreenState extends State<SplashScreen> {
         options: const AuthenticationOptions(
           stickyAuth: true,
         ),
-      );
-      setState(() {
-        _isAuthenticating = false;
-      });
-    } on PlatformException catch (e) {
-      print(e);
-      setState(() {
-        _isAuthenticating = false;
-        _authorized = 'Error - ${e.message}';
-      });
-      return;
-    }
-    if (!mounted) {
-      return;
-    }
 
-    setState(
-        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+
+      );
+      if (authenticated) {
+        Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
+      }
+    }
+    on PlatformException catch (e) {}
   }
 
   Future _initiateCache() async {
@@ -77,7 +68,8 @@ class _SplashScreenState extends State<SplashScreen> {
       actionIfNull: () {
         Navigator.of(context)
             .pushReplacementNamed(AppRouter.onBoardRoute)
-            .whenComplete(() => WriteCache.setString(
+            .whenComplete(() =>
+            WriteCache.setString(
                 key: AppKeys.onBoardDone, value: 'Something'));
       },
       actionIfNotNull: () {
@@ -86,12 +78,9 @@ class _SplashScreenState extends State<SplashScreen> {
             valueType: ValueType.StringValue,
             actionIfNull: () async {
               await _authenticate();
-              Navigator.of(context)
-                  .pushReplacementNamed(AppRouter.homeRoute); //todo change
             },
             actionIfNotNull: () async {
               await _authenticate();
-              Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
             });
       },
     );
@@ -115,6 +104,12 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontSize: 39.0,
               ),
             ),
+            OutlinedButton(
+                child: Text(" Login "),
+                style: OutlinedButton.styleFrom(),
+                onPressed: () async {
+                  await _authenticate();
+                }),
           ],
         ),
       ),

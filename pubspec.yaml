@@ -27,22 +27,22 @@ dependencies:
   shared_preferences: ^2.0.8
   shimmer: ^3.0.0
   url_strategy: ^0.2.0
-  network_info_plus: ^4.0.2
+  network_info_plus: ^5.0.3
   dart_ping_ios: ^4.0.0
   lan_scanner: ^4.0.0+1
   flutter_background_service: ^5.0.0
   flutter_background_service_ios: ^5.0.0
   flutter_background_service_android: ^6.0.1
   permission_handler: ^11.0.1
-  device_info_plus: ^9.0.2
+  device_info_plus: ^10.1.0
   sqflite: ^2.3.0
-  flutter_local_notifications: ^16.1.0
+  flutter_local_notifications: ^17.1.2
   sleek_circular_slider: ^2.0.1
   qr_code_scanner: ^1.0.1
   hex: ^0.2.0
-  intl: ^0.18.1
+  intl: ^0.19.0
   logger: ^2.0.2+1
-  syncfusion_flutter_gauges: ^23.2.7
+  syncfusion_flutter_gauges: ^26.1.35
   wifi_iot: ^0.3.18+1
   getwidget: ^4.0.0
   double_back_to_close_app: ^2.1.0
@@ -57,7 +57,7 @@ dependencies:
   local_auth: ^2.2.0
 
 dev_dependencies:
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
   test: ^1.24.9

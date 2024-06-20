@@ -174,6 +174,20 @@ class AssociationScreenState extends State<AssociationScreen> {
                         listenerLenght = '0$_listenerLenght';
                       }
                       const nodeNumber = '00';
+
+                      String status = '';
+                      if (statusValue == 'ONE to ONE') {
+                        status = '00';
+                      }
+                      if (statusValue == 'ONE to Many') {
+                        status = '01';
+                      }
+                      if (statusValue == 'MANY to ONE') {
+                        status = '10';
+                      }
+                      if (statusValue == 'MANY to MANY') {
+                        status = '11';
+                      }
                       String command = meshAssociation.sendSetAssociation(
                           nodeNumber,
                           devices[0].netId,
@@ -181,9 +195,11 @@ class AssociationScreenState extends State<AssociationScreen> {
                           '??',
                           initiatorsLength,
                           listenerLenght,
-                          '--',
-                          '--',
-                          '--',
+                          status,
+                          '00',
+                          // todo ??
+                          '00',
+                          //todo ??
                           initiators,
                           listenerNodes);
                       logger.i(command);

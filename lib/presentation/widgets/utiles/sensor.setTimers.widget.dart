@@ -226,10 +226,6 @@ class _SensorSetTImerScreenState extends State<SensorSetTImerScreen> {
             'FF',
             '08',
             timStatus);
-        logger
-            .i(dataDevice.nodeNumber + " " + dataDevice.netId + " " + timerId);
-        logger.i(hexStartTime + " " + hexEndTimer);
-        logger.i("$timerType $actionType $sensorActionNumber $timStatus");
         bool response =
             await meshNotifier.sendCommand(command, dataDevice.netId);
       }

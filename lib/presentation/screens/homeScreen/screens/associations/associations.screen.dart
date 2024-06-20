@@ -183,7 +183,6 @@ class AssociationsScreenState extends State<AssociationsScreen> {
 
         // sensorList.add(sensorWidget(context, data.elementAt(i), GlobalKey()));
       }
-      logger.i(sensorList.length);
 
       return sensorList;
     }
