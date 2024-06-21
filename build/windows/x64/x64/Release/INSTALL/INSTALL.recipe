@@ -11,6 +11,9 @@
       <FullPath>D:\Rpecontrols\controller\build\windows\x64\plugins\flutter_libserialport\Release\flutter_libserialport_plugin.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
+      <FullPath>D:\Rpecontrols\controller\build\windows\x64\plugins\local_auth_windows\Release\local_auth_windows_plugin.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
       <FullPath>D:\Rpecontrols\controller\build\windows\x64\plugins\permission_handler_windows\Release\permission_handler_windows_plugin.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
